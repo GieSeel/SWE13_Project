@@ -1,2 +1,4 @@
-SWE13_Project
-=============
+Campinplatzverwaltung
+=====================
+
+Campingplatzverwaltung für SWE-DHBW-Projekt 2013
