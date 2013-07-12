@@ -1,5 +1,5 @@
 package de.dhbw.swe.campingplatzverwaltung.booking_mgt;
 
-public class Invoice {
+public class Bill {
 
 }
