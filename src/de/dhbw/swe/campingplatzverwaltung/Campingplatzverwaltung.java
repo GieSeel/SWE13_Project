@@ -1,5 +1,7 @@
 package de.dhbw.swe.campingplatzverwaltung;
 
+import de.dhbw.swe.campingplatzverwaltung.common.language_mgt.LanguageMgr;
+
 /**
  * Insert description for Campingplatzverwaltung
  * 
@@ -9,8 +11,7 @@ package de.dhbw.swe.campingplatzverwaltung;
 public class Campingplatzverwaltung {
 
     public static void main(final String[] args) {
-	// TODO Auto-generated method stub
-
+	LanguageMgr.getInstance();
     }
 
 }
