@@ -16,6 +16,13 @@ public class Language {
 	parseLanguageFile(languageFile);
     }
 
+    /**
+     * Get a language value for a property.
+     * 
+     * @param languageProperty
+     *            the {@link LanguageProperties} field value.
+     * @return the value for this {@link Language} if available - else default.
+     */
     public String get(final String languageProperty) {
 	if (snippets.containsKey(languageProperty)) {
 	    return snippets.get(languageProperty);

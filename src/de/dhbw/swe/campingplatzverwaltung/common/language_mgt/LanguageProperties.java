@@ -6,9 +6,11 @@ package de.dhbw.swe.campingplatzverwaltung.common.language_mgt;
  * @author GieSeel
  * @version 1.0
  */
-public class LanguageProperties {
+public interface LanguageProperties {
     /** Delivery point property. */
-    public static String DELIVERY_POINT = "delivery.point";
+    String DELIVERY_POINT = "Delivery Point";
     /** The comment marker. */
-    public static String JUST_A_COMMENT = "//";
+    String JUST_A_COMMENT = "//";
+    /** The map (word) property */
+    String MAP = "Map";
 }

@@ -1,8 +1,15 @@
 package de.dhbw.swe.campingplatzverwaltung.common.language_mgt;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.util.*;
 
+/**
+ * Class to manage the {@link Language}s.
+ * 
+ * @author GieSeel
+ * @version 1.0
+ */
 public class LanguageMgr {
     /**
      * The cell separator.
@@ -28,6 +35,10 @@ public class LanguageMgr {
 	return languageMgr;
     }
 
+    /**
+     * Constructor.
+     * 
+     */
     private LanguageMgr() {
 	languages = new HashMap<>();
 	initLanguageFiles();
@@ -62,11 +73,21 @@ public class LanguageMgr {
 	content = new StringBuilder();
 	addContent(LanguageProperties.JUST_A_COMMENT,
 		" Put all words/phrases used in the program in this File!");
-	addContent(LanguageProperties.JUST_A_COMMENT + " language property",
+	addContent(LanguageProperties.JUST_A_COMMENT
+		+ " language property (default",
 		"value for this property in this files language");
-	addContent(LanguageProperties.DELIVERY_POINT, "Delivery Point");
-	// TODO
-
+	System.out.println("FIELDS:");
+	for (final Field field : LanguageProperties.class.getDeclaredFields()) {
+	    field.setAccessible(true);
+	    try {
+		addContent(field.getName() + "(" + field.get(null) + ")",
+			field.get(null) + "");
+	    } catch (final IllegalArgumentException e) {
+		e.printStackTrace();
+	    } catch (final IllegalAccessException e) {
+		e.printStackTrace();
+	    }
+	}
 	writeFile(defaultFilePath, content);
 	System.out.println("INFO: Wrote default language file at: "
 		+ defaultFilePath);
