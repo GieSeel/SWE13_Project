@@ -73,14 +73,17 @@ public class LanguageMgr {
 	content = new StringBuilder();
 	addContent(LanguageProperties.JUST_A_COMMENT,
 		" Put all words/phrases used in the program in this File!");
+	addContent(LanguageProperties.JUST_A_COMMENT + "To generate new language:",
+		"copy this file into the language "
+			+ "direktory, rename it with the new Language and "
+			+ "translate the property values.");
 	addContent(LanguageProperties.JUST_A_COMMENT
-		+ " language property (default",
-		"value for this property in this files language");
-	System.out.println("FIELDS:");
+		+ " LANGUAGE PROPERTY - (DEFAULT PROPERTY VALUE)",
+		"VALUE for this property in this files language");
 	for (final Field field : LanguageProperties.class.getDeclaredFields()) {
 	    field.setAccessible(true);
 	    try {
-		addContent(field.getName() + "(" + field.get(null) + ")",
+		addContent(field.getName() + " - (" + field.get(null) + ")",
 			field.get(null) + "");
 	    } catch (final IllegalArgumentException e) {
 		e.printStackTrace();
