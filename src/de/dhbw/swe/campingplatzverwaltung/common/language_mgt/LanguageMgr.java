@@ -77,14 +77,12 @@ public class LanguageMgr {
 		"copy this file into the language "
 			+ "direktory, rename it with the new Language and "
 			+ "translate the property values.");
-	addContent(LanguageProperties.JUST_A_COMMENT
-		+ " LANGUAGE PROPERTY - (DEFAULT PROPERTY VALUE)",
+	addContent(LanguageProperties.JUST_A_COMMENT + " LANGUAGE PROPERTY",
 		"VALUE for this property in this files language");
 	for (final Field field : LanguageProperties.class.getDeclaredFields()) {
 	    field.setAccessible(true);
 	    try {
-		addContent(field.getName() + " - (" + field.get(null) + ")",
-			field.get(null) + "");
+		addContent(field.get(null).toString(), field.get(null) + "");
 	    } catch (final IllegalArgumentException e) {
 		e.printStackTrace();
 	    } catch (final IllegalAccessException e) {
