@@ -7,5 +7,6 @@ package de.dhbw.swe.campingplatzverwaltung.common;
  * @version 1.0
  */
 public class Country {
-
+    private String acronym;
+    private String name;
 }

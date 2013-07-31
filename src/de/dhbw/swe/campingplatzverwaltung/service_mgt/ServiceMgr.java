@@ -5,7 +5,7 @@ import java.util.Date;
 import de.dhbw.swe.campingplatzverwaltung.person_mgt.EmployeeRole;
 import de.dhbw.swe.campingplatzverwaltung.place_mgt.*;
 
-public class ServiceManager {
+public class ServiceMgr {
     /**
      * Adds an entry to the {@link ServiceList}.
      * 
@@ -42,14 +42,13 @@ public class ServiceManager {
     }
 
     /**
-     * TODO hatten wir dies wirklich vor? Deletes the entrys on that
-     * {@link Date}.
+     * Deletes the {@link Service} with the given ID.
      * 
-     * @param date
-     *            is the {@link Date} of the entry
+     * @param serviceNumber
+     *            is the ID of the entry
      * @return
      */
-    public boolean delete(final Date date) {
+    public boolean delete(final int serviceNumber) {
 	return false;
     }
 
@@ -65,11 +64,23 @@ public class ServiceManager {
     }
 
     /**
-     * TODO ???
+     * When the service was done this entry has to be set.
+     * 
      * 
      * @return
      */
     public boolean done() {
+	return false;
+    }
+
+    /**
+     * When the service was done this entry has to be set.
+     * 
+     * @param date
+     *            is the {@link Date} when the service was done
+     * @return
+     */
+    public boolean done(final Date date) {
 	return false;
     }
 

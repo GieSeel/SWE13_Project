@@ -1,6 +1,11 @@
 package de.dhbw.swe.campingplatzverwaltung;
 
+import de.dhbw.swe.campingplatzverwaltung.booking_mgt.BookingMgr;
 import de.dhbw.swe.campingplatzverwaltung.common.language_mgt.*;
+import de.dhbw.swe.campingplatzverwaltung.gui_mgt.Gui;
+import de.dhbw.swe.campingplatzverwaltung.person_mgt.EmployeeMgr;
+import de.dhbw.swe.campingplatzverwaltung.place_mgt.*;
+import de.dhbw.swe.campingplatzverwaltung.service_mgt.ServiceMgr;
 
 /**
  * Insert description for Campingplatzverwaltung
@@ -18,5 +23,12 @@ public class Campingplatzverwaltung {
     public static void main(final String[] args) {
 	System.out.println(lm.get(lp.MAP));
     }
+
+    private BookingMgr bookingManager;
+    private EmployeeMgr employeeManager;
+    private Gui gui;
+    private PitchMgr pitchManager;
+    private ServiceMgr serviceManager;
+    private SiteMgr siteManager;
 
 }

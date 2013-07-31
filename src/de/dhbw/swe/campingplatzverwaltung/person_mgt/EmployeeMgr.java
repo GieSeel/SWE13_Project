@@ -2,22 +2,32 @@ package de.dhbw.swe.campingplatzverwaltung.person_mgt;
 
 import java.util.Date;
 
-import de.dhbw.swe.campingplatzverwaltung.common.Address;
+import de.dhbw.swe.campingplatzverwaltung.common.*;
 
-public class GuestMgr {
+public class EmployeeMgr {
     /**
-     * Creates an {@link Guest}.
+     * If the password is incorrect five times consecutively the user will be
+     * blocked.
      * 
-     * @param guest
-     *            is the entry
      * @return
      */
-    public boolean create(final Guest guest) {
+    public boolean block() {
 	return false;
     }
 
     /**
-     * Creates an {@link Guest}.
+     * Creates an {@link Employee}.
+     * 
+     * @param employee
+     *            is the entry
+     * @return
+     */
+    public boolean create(final Employee employee) {
+	return false;
+    }
+
+    /**
+     * Creates an {@link Employee}.
      * 
      * @param identificationNumber
      *            is the ID of the {@link Person}
@@ -29,40 +39,52 @@ public class GuestMgr {
      *            is the date of birth of the {@link Person}
      * @param principalResidence
      *            is the {@link Address} of the {@link Person}
-     * 
-     * @param visitorsTaxClass
-     *            is the {@link VisitorsTaxClass} of the {@link Person}
+     * @param userName
+     *            is the username of the {@link Person}s user
+     * @param password
+     *            is the password of the {@link Person}s user
+     * @param chipCard
+     *            is the {@link ChipCard} that the {@link Person} has
+     * @param role
+     *            is the {@link EmployeeRole}
      * @return
      */
     public boolean create(final int identificationNumber, final String name,
 	    final String firstName, final Date dateOfBirth,
-	    final Address principalResidence,
-	    final VisitorsTaxClass visitorsTaxClass) {
+	    final Address principalResidence, final String userName,
+	    final String password, final ChipCard chipCard, final EmployeeRole role) {
 	return false;
     }
 
     /**
-     * Creates an {@link Guest}.
+     * Creates an {@link Employee}.
      * 
      * @param person
      *            is the {@link Person}
-     * @param visitorsTaxClass
-     *            is the {@link VisitorsTaxClass} of the {@link Person}
+     * @param userName
+     *            is the username of the {@link Person}s user
+     * @param password
+     *            is the password of the {@link Person}s user
+     * @param chipCard
+     *            is the {@link ChipCard} that the {@link Person} has
+     * @param role
+     *            is the {@link EmployeeRole}
+     * 
      * @return
      */
-    public boolean create(final Person person,
-	    final VisitorsTaxClass visitorsTaxClass) {
+    public boolean create(final Person person, final String userName,
+	    final String password, final ChipCard chipCard, final EmployeeRole role) {
 	return false;
     }
 
     /**
-     * Deletes the given {@link Guest}.
+     * Deletes the given {@link Employee}.
      * 
-     * @param guest
+     * @param employee
      *            is the entry
      * @return
      */
-    public boolean delete(final Guest guest) {
+    public boolean delete(final Employee employee) {
 	return false;
     }
 
@@ -70,7 +92,7 @@ public class GuestMgr {
      * Deletes the entry with the given ID.
      * 
      * @param identificationNumber
-     *            si the number of the {@link Person}
+     *            is the ID of the {@link Person}
      * @return
      */
     public boolean delete(final int identificationNumber) {
@@ -90,15 +112,20 @@ public class GuestMgr {
      *            is the date of birth of the {@link Person}
      * @param principalResidence
      *            is the {@link Address} of the {@link Person}
-     * 
-     * @param visitorsTaxClass
-     *            is the {@link VisitorsTaxClass} of the {@link Person}
+     * @param userName
+     *            is the username of the {@link Person}s user
+     * @param password
+     *            is the password of the {@link Person}s user
+     * @param chipCard
+     *            is the {@link ChipCard} that the {@link Person} has
+     * @param role
+     *            is the {@link EmployeeRole}
      * @return
      */
     public boolean edit(final int identificationNumber, final String name,
 	    final String firstName, final Date dateOfBirth,
-	    final Address principalResidence,
-	    final VisitorsTaxClass visitorsTaxClass) {
+	    final Address principalResidence, final String userName,
+	    final String password, final ChipCard chipCard, final EmployeeRole role) {
 	return false;
     }
 
@@ -124,9 +151,10 @@ public class GuestMgr {
      * Searchs for the {@link Person} with the given ID.
      * 
      * @param identificationNumber
+     *            is the ID of the enty
      * @return
      */
-    public Guest search(final int identificationNumber) {
+    public Employee search(final int identificationNumber) {
 	return null;
     }
 
@@ -141,16 +169,32 @@ public class GuestMgr {
      *            is the date of birth of the {@link Person}
      * @param principalResidence
      *            is the {@link Address} of the {@link Person}
-     * 
-     * @param visitorsTaxClass
-     *            is the {@link VisitorsTaxClass} of the {@link Person}
+     * @param userName
+     *            is the username of the {@link Person}s user
+     * @param password
+     *            is the password of the {@link Person}s user
+     * @param chipCard
+     *            is the {@link ChipCard} that the {@link Person} has
+     * @param role
+     *            is the {@link EmployeeRole}
      * @return
      */
-    public GuestList search(final String name, final String firstName,
+    public EmployeeList search(final String name, final String firstName,
 	    final Date dateOfBirth, final Address principalResidence,
-	    final VisitorsTaxClass visitorsTaxClass) {
+	    final String userName, final String password, final ChipCard chipCard,
+	    final EmployeeRole role) {
 	return null;
     }
 
-    private GuestList guests;
+    /**
+     * Unblocks the user.
+     * 
+     * @return
+     */
+    public boolean unblock() {
+	return false;
+    }
+
+    private EmployeeList employee;
+
 }

@@ -1,5 +1,9 @@
 package de.dhbw.swe.campingplatzverwaltung.common;
 
-public class ChipCard {
+import java.util.Date;
 
+public class ChipCard {
+    private int number;
+    private Date validFrom;
+    private Date validTo;
 }

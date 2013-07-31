@@ -9,7 +9,7 @@ public class SiteMgr {
      * @param labeling
      *            name of the entry
      * @param siteType
-     *            {@link SiteType} of the site
+     *            {@link Site_Type} of the site
      * @param openingHours
      *            time when the {@link Site} is open
      * @param description
@@ -17,7 +17,7 @@ public class SiteMgr {
      * @return
      */
     public boolean edit(final int number, final String labeling,
-	    final SiteType siteType, final String openingHours,
+	    final Site_Type siteType, final String openingHours,
 	    final String description) {
 	return false;
     }
@@ -75,7 +75,7 @@ public class SiteMgr {
      * @param labeling
      * @return
      */
-    public SiteList search(final String labeling, final SiteType siteType,
+    public SiteList search(final String labeling, final Site_Type siteType,
 	    final String openingHours, final String description) {
 	return null;
     }

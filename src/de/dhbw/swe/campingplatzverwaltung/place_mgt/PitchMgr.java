@@ -1,8 +1,5 @@
 package de.dhbw.swe.campingplatzverwaltung.place_mgt;
 
-import de.dhbw.swe.campingplatzverwaltung.place_mgt.Pitch.NatureOfSoil;
-import de.dhbw.swe.campingplatzverwaltung.place_mgt.Pitch.PitchType;
-
 public class PitchMgr {
     /**
      * Edits the entry with the number.
@@ -12,13 +9,13 @@ public class PitchMgr {
      * @param district
      *            is a grouped area
      * @param pitchType
-     *            the {@link PitchType} of the entry
+     *            the {@link Pitch_Type} of the entry
      * @param length
      *            is a indication of size
      * @param width
      *            is a indication of size
      * @param natureOfSoil
-     *            is the {@link NatureOfSoil} of the entry
+     *            is the {@link Pitch_NatureOfSoil} of the entry
      * @param deliveryPoint
      *            is a {@link Site} for the electrical Power
      * @param characteristics
@@ -26,8 +23,8 @@ public class PitchMgr {
      * @return
      */
     public boolean edit(final int pitchNumber, final String district,
-	    final PitchType pitchType, final int length, final int width,
-	    final NatureOfSoil natureOfSoil, final Site deliveryPoint,
+	    final Pitch_Type pitchType, final int length, final int width,
+	    final Pitch_NatureOfSoil natureOfSoil, final Site deliveryPoint,
 	    final String characteristics) {
 	return false;
     }
@@ -92,8 +89,8 @@ public class PitchMgr {
      * @return
      */
     public PitchList search(final int pitchNumber, final String district,
-	    final PitchType pitchType, final int length, final int width,
-	    final NatureOfSoil natureOfSoil, final Site deliveryPoint,
+	    final Pitch_Type pitchType, final int length, final int width,
+	    final Pitch_NatureOfSoil natureOfSoil, final Site deliveryPoint,
 	    final String characteristics) {
 	return null;
     }
