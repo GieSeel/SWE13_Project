@@ -1,6 +1,7 @@
 package de.dhbw.swe.campingplatzverwaltung;
 
 import de.dhbw.swe.campingplatzverwaltung.booking_mgt.BookingMgr;
+import de.dhbw.swe.campingplatzverwaltung.common.database_mgt.DatabaseController;
 import de.dhbw.swe.campingplatzverwaltung.common.language_mgt.*;
 import de.dhbw.swe.campingplatzverwaltung.gui_mgt.Gui;
 import de.dhbw.swe.campingplatzverwaltung.person_mgt.EmployeeMgr;
@@ -22,6 +23,14 @@ public class Campingplatzverwaltung {
 
     public static void main(final String[] args) {
 	System.out.println(lm.get(lp.MAP));
+
+	final DatabaseController dbController = new DatabaseController();
+	// dbController.connect("jdbc:mysql://gieseel.gi.funpicsql.de/mysql1157678",
+	// "mysql1157678", "blubber1bis3");
+	dbController.connect("jdbc:mysql://localhost/camping", "camping", "geheim");
+	dbController.doQueryTest();
+	dbController.disconnect();
+
     }
 
     private BookingMgr bookingManager;
