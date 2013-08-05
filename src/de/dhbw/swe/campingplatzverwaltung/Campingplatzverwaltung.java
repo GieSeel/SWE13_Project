@@ -24,12 +24,15 @@ public class Campingplatzverwaltung {
     public static void main(final String[] args) {
 	System.out.println(lm.get(lp.MAP));
 
-	final DatabaseController dbController = new DatabaseController();
+	final DatabaseController dbController = DatabaseController.getInstance();
+	// TODO Connect with online Database?
 	// dbController.connect("jdbc:mysql://gieseel.gi.funpicsql.de/mysql1157678",
 	// "mysql1157678", "blubber1bis3");
-	dbController.connect("jdbc:mysql://localhost/camping", "camping", "geheim");
-	dbController.doQueryTest();
-	dbController.disconnect();
+
+	// dbController.connect("jdbc:mysql://localhost/camping", "camping",
+	// "geheim");
+	// final Guest test = dbController.querySelectGuest(1);
+	// dbController.disconnect();
 
     }
 
