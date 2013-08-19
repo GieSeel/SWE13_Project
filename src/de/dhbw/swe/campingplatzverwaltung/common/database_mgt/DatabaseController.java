@@ -37,7 +37,7 @@ public class DatabaseController {
      * Constructor.
      * 
      */
-    private DatabaseController() {
+    public DatabaseController() {
 	sqlObjects = new HashMap<String, String[][]>();
 	final HashMap<String, String[][]> columns = new HashMap<String, String[][]>();
 
