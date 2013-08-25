@@ -32,30 +32,29 @@ public class Gui extends JFrame {
 	initDisplay();
     }
 
-    public boolean clearOutput() {
-	return this.statusBar.clearOutput();
+    public boolean clearStatus() {
+	return statusBar.clearStatus();
     }
 
     public void initGui() {
-	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	setExtendedState(JFrame.MAXIMIZED_BOTH);
 	// this.setUndecorated(true); // FULL-fullscreen :)
 
-	this.tab = new CampingplaceAdministrationTabbedPane();
-	this.loginScreen = new LoginPanel();
-	this.statusBar = new StatusBarPanel();
-	this.statusBar.setPreferredSize(new Dimension(
-		this.getPreferredSize().width, 20));
+	tabs = new CampingplaceAdministrationTabbedPane();
+	loginScreen = new LoginPanel();
+	statusBar = new StatusBarPanel();
+	statusBar.setPreferredSize(new Dimension(this.getPreferredSize().width, 20));
 
-	this.setLayout(new BorderLayout());
-	this.add(tab, BorderLayout.CENTER);
-	this.add(statusBar, BorderLayout.SOUTH);
+	setLayout(new BorderLayout());
+	add(tabs, BorderLayout.CENTER);
+	add(statusBar, BorderLayout.SOUTH);
 
-	this.setVisible(true);
+	setVisible(true);
     }
 
-    public boolean outputMessage(final String txt) {
-	return this.statusBar.outputMessage(txt);
+    public boolean setStatusBarStatus(final String txt) {
+	return statusBar.setStatus(txt);
     }
 
     /**
@@ -65,6 +64,12 @@ public class Gui extends JFrame {
 	mainPanel = new JPanel();
 	mainPanel.setBackground(new Color(44, 15, 23));
 	mainPanel.requestFocus();
+	statusBar = new StatusBarPanel();
+	statusBar.setPreferredSize(new Dimension(this.getPreferredSize().width, 20));
+	mainPanel.add(statusBar, BorderLayout.SOUTH);
+
+	// tabs = new CampingplaceAdministrationTabbedPane();
+	// mainPanel.add(tabs, BorderLayout.CENTER);
 	return mainPanel;
     }
 
@@ -117,5 +122,5 @@ public class Gui extends JFrame {
     private JPanel mainPanel;
 
     private StatusBarPanel statusBar;
-    private CampingplaceAdministrationTabbedPane tab;
+    private CampingplaceAdministrationTabbedPane tabs;
 }

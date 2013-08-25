@@ -168,10 +168,10 @@ public class SearchPanel extends JPanel {
 			final int viewRow = bodyTable.getSelectedRow();
 			if (viewRow < 0) {
 			    // Selection got filtered away.
-			    gui.clearOutput();
+			    gui.clearStatus();
 			} else {
 			    final int modelRow = bodyTable.convertRowIndexToModel(viewRow);
-			    gui.outputMessage(String.format(
+			    gui.setStatusBarStatus(String.format(
 				    "Selected Row in view: %d. "
 					    + "Selected Row in model: %d.",
 				    viewRow, modelRow));
@@ -191,7 +191,7 @@ public class SearchPanel extends JPanel {
 		final String columnName = tableModel.getColumnName(columnNumber);
 		final Object cellData = tableModel.getValueAt(rowNumber,
 			columnNumber);
-		gui.outputMessage(columnName + ": " + cellData.toString());
+		gui.setStatusBarStatus(columnName + ": " + cellData.toString());
 
 		// Filter
 		RowFilter<Object, Object> rowFilter = RowFilter.regexFilter("(?i)^"
@@ -232,7 +232,7 @@ public class SearchPanel extends JPanel {
 		    final String val = (String) headTable.getModel().getValueAt(0,
 			    i);
 		    if (val.equals("")) {
-			gui.outputMessage("Alle Felder müssen gefüllt sein!!");
+			gui.setStatusBarStatus("Alle Felder müssen gefüllt sein!!");
 			dataList.clear();
 			break;
 		    } else {
