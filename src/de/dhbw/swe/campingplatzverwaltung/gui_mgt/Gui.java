@@ -29,7 +29,7 @@ public class Gui extends JFrame {
      */
     public Gui() {
 	super(lm.get(LanguageProperties.GUI_MAINFRAME_TITLE));
-	initDisplay();
+	// initDisplay();
     }
 
     public boolean clearStatus() {
@@ -68,8 +68,9 @@ public class Gui extends JFrame {
 	statusBar.setPreferredSize(new Dimension(this.getPreferredSize().width, 20));
 	mainPanel.add(statusBar, BorderLayout.SOUTH);
 
-	// tabs = new CampingplaceAdministrationTabbedPane();
-	// mainPanel.add(tabs, BorderLayout.CENTER);
+	tabs = new CampingplaceAdministrationTabbedPane();
+	mainPanel.add(tabs, BorderLayout.CENTER);
+
 	return mainPanel;
     }
 

@@ -31,24 +31,22 @@ public class Campingplatzverwaltung {
      * 
      */
     public Campingplatzverwaltung() {
-	dbController = new DatabaseController();
-	// configDatabaseController();
-	gui = new Gui();
+	configDatabaseController();
     }
 
     /**
      * Configuring the {@link DatabaseController}.
      */
     private void configDatabaseController() {
-	final DatabaseController dbController = DatabaseController.getInstance();
+	dbController = DatabaseController.getInstance();
 	// TODO Connect with online Database?
 	// dbController.connect("jdbc:mysql://gieseel.gi.funpicsql.de/mysql1157678",
 	// "mysql1157678", "blubber1bis3");
 
-	dbController.connect("jdbc:mysql://localhost/camping", "camping", "geheim");
+	dbController.connect("jdbc:mysql://localhost/camping", "willi", "bald");
 	// final Guest test = dbController.querySelectGuest(1);
 	// dbController.disconnect();
-	final Gui gui = Gui.getInstance();
+	gui = Gui.getInstance();
 	gui.initGui(); // damit gui eine instance hat und ich sie z.B. im
 		       // searchpanel verwenden kann
 
@@ -57,9 +55,9 @@ public class Campingplatzverwaltung {
     private BookingMgr bookingManager;
 
     /** The {@link DatabaseController}. */
-    private final DatabaseController dbController;
+    private DatabaseController dbController;
     private EmployeeMgr employeeManager;
-    private final Gui gui;
+    private Gui gui;
     private PitchMgr pitchManager;
     private ServiceMgr serviceManager;
     private SiteMgr siteManager;
