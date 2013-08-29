@@ -5,21 +5,20 @@ import java.util.*;
 import de.dhbw.swe.campingplatzverwaltung.common.database_mgt.DatabaseController;
 
 public class Town {
+    public Town() {
+	super();
+	this.id = 0;
+	this.country = null;
+	this.name = null;
+	this.postalCode = null;
+    }
+
     public Town(final Country country, final String name, final String postalCode) {
 	super();
 	this.id = 0;
 	this.country = country;
 	this.name = name;
 	this.postalCode = postalCode;
-    }
-
-    public Town(final HashMap<String, Object> elements) {
-	super();
-	this.id = (int) elements.get("id");
-	this.country = DatabaseController.getInstance().querySelectCountry(
-		(int) elements.get("country_ID"));
-	this.name = (String) elements.get("name");
-	this.postalCode = (String) elements.get("postalCode");
     }
 
     public Town(final int id, final Country country, final String name,
@@ -35,15 +34,7 @@ public class Town {
 	return country;
     }
 
-    public List<Object> getData() {
-	final List<Object> data = new ArrayList<Object>();
-	data.add(this.postalCode);
-	data.add(this.name);
-	data.addAll(this.country.getData());
-	return data;
-    }
-
-    public HashMap<String, Object> getHashMap() {
+    public HashMap<String, Object> getDatabaseData() {
 	final HashMap<String, Object> elements = new HashMap<String, Object>();
 	elements.put("id", this.id);
 	elements.put(
@@ -67,8 +58,53 @@ public class Town {
 	return postalCode;
     }
 
-    private final Country country;
-    private final int id;
-    private final String name;
-    private final String postalCode;
+    public HashMap<String, Object> getTableData(final String parentClass) {
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
+	final String className = parentClass + "town_";
+	objects.put(className + "id", new Integer(this.id));
+	objects.put(className + "postalCode", new String(this.postalCode));
+	objects.put(className + "name", new String(this.name));
+	objects.putAll(this.country.getTableData(className));
+	return objects;
+    }
+
+    public Town setDatabaseData(final HashMap<String, Object> objects) {
+	final DatabaseController db = DatabaseController.getInstance();
+	this.country = db.querySelectCountry((int) objects.get("country_ID"));
+	setData(objects);
+	return this;
+    }
+
+    public Town setTableData(final HashMap<String, Object> objects) {
+	final String className = "town_";
+	final int classNameLength = className.length();
+	final HashMap<String, Object> thisMap = new HashMap<String, Object>(), countryMap = new HashMap<String, Object>();
+
+	Object val;
+	final Set<String> keys = objects.keySet();
+	for (String key : keys) {
+	    val = objects.get(key);
+	    key = key.substring(classNameLength);
+	    if (key.startsWith("country_")) {
+		countryMap.put(key, val);
+	    } else {
+		thisMap.put(key, val);
+	    }
+	}
+	this.country = new Country().setTableData(countryMap);
+	setData(thisMap);
+	return this;
+    }
+
+    private void setData(final HashMap<String, Object> objects) {
+	this.id = (int) objects.get("id");
+	this.name = (String) objects.get("name");
+	this.postalCode = (String) objects.get("postalCode");
+
+    }
+
+    private Country country;
+    private int id;
+    private String name;
+    private String postalCode;
 }

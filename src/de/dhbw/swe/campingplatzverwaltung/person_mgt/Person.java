@@ -7,6 +7,17 @@ import de.dhbw.swe.campingplatzverwaltung.common.Address;
 import de.dhbw.swe.campingplatzverwaltung.common.database_mgt.DatabaseController;
 
 public class Person {
+
+    public Person() {
+	super();
+	this.id = 0;
+	this.address = null;
+	this.dateOfBirth = null;
+	this.firstName = null;
+	this.identificationNumber = null;
+	this.name = null;
+    }
+
     public Person(final Address address, final String dateOfBirth,
 	    final String firstName, final String identificationNumber,
 	    final String name) {
@@ -25,17 +36,6 @@ public class Person {
 	this.name = name;
     }
 
-    public Person(final HashMap<String, Object> elements) {
-	super();
-	this.id = (int) elements.get("id");
-	this.address = DatabaseController.getInstance().querySelectAddress(
-		(int) elements.get("address_ID"));
-	this.dateOfBirth = (Date) elements.get("dateOfBirth");
-	this.firstName = (String) elements.get("firstName");
-	this.identificationNumber = (String) elements.get("identificationNumber");
-	this.name = (String) elements.get("name");
-    }
-
     public Person(final int id, final Address address, final Date dateOfBirth,
 	    final String firstName, final String identificationNumber,
 	    final String name) {
@@ -52,25 +52,7 @@ public class Person {
 	return address;
     }
 
-    public List<Object> getData() {
-	final List<Object> data = new ArrayList<Object>();
-	data.add(this.identificationNumber);
-	data.add(this.firstName);
-	data.add(this.name);
-	data.add(new SimpleDateFormat("dd.MM.yyyy").format(dateOfBirth));
-	data.addAll(this.address.getData());
-	return data;
-    }
-
-    public Date getDateOfBirth() {
-	return dateOfBirth;
-    }
-
-    public String getFirstName() {
-	return firstName;
-    }
-
-    public HashMap<String, Object> getHashMap() {
+    public HashMap<String, Object> getDatabaseData() {
 	final HashMap<String, Object> elements = new HashMap<String, Object>();
 	elements.put("id", this.id);
 	elements.put(
@@ -82,6 +64,14 @@ public class Person {
 	elements.put("identificationNumber", this.identificationNumber);
 	elements.put("name", this.name);
 	return elements;
+    }
+
+    public Date getDateOfBirth() {
+	return dateOfBirth;
+    }
+
+    public String getFirstName() {
+	return firstName;
     }
 
     public int getId() {
@@ -96,10 +86,60 @@ public class Person {
 	return name;
     }
 
-    private final Address address;
+    public HashMap<String, Object> getTableData(final String parentClass) {
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
+	final String className = parentClass + "person_";
+	objects.put(className + "id", new Integer(this.id));
+	objects.put(className + "identificationNumber", new String(
+		this.identificationNumber));
+	objects.put(className + "firstName", new String(this.firstName));
+	objects.put(className + "name", new String(this.name));
+	objects.put(className + "dateOfBirth", new String(new SimpleDateFormat(
+		"dd.MM.yyyy").format(this.dateOfBirth)));
+	objects.putAll(this.address.getTableData(className));
+	return objects;
+    }
+
+    public Person setDatabaseData(final HashMap<String, Object> objects) {
+	final DatabaseController db = DatabaseController.getInstance();
+	this.address = db.querySelectAddress((int) objects.get("address_ID"));
+	setData(objects);
+	return this;
+    }
+
+    public Person setTableData(final HashMap<String, Object> objects) {
+	final String className = "person_";
+	final int classNameLength = className.length();
+	final HashMap<String, Object> thisMap = new HashMap<String, Object>(), addressMap = new HashMap<String, Object>();
+
+	Object val;
+	final Set<String> keys = objects.keySet();
+	for (String key : keys) {
+	    val = objects.get(key);
+	    key = key.substring(classNameLength);
+	    if (key.startsWith("address_")) {
+		addressMap.put(key, val);
+	    } else {
+		thisMap.put(key, val);
+	    }
+	}
+	this.address = new Address().setTableData(addressMap);
+	setData(thisMap);
+	return this;
+    }
+
+    private void setData(final HashMap<String, Object> objects) {
+	this.id = (int) objects.get("id");
+	this.dateOfBirth = (Date) objects.get("dateOfBirth");
+	this.firstName = (String) objects.get("firstName");
+	this.identificationNumber = (String) objects.get("identificationNumber");
+	this.name = (String) objects.get("name");
+    }
+
+    private Address address;
     private Date dateOfBirth;
-    private final String firstName;
-    private final int id;
-    private final String identificationNumber;
-    private final String name;
+    private String firstName;
+    private int id;
+    private String identificationNumber;
+    private String name;
 }

@@ -83,7 +83,7 @@ public class Booking {
 	data.addAll(this.extraBooking.getData());
 	data.addAll(this.fellowTravelers.getData());
 	data.addAll(this.pitchBooking.getData());
-	data.addAll(this.responsiblePerson.getData());
+	// TODO data.addAll(this.responsiblePerson.getData());
 	return data;
     }
 

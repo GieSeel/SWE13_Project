@@ -54,7 +54,7 @@ public class Employee {
 	data.add(this.password);
 	data.add(this.userName);
 	data.addAll(this.chipCard.getData());
-	data.addAll(this.person.getData());
+	// TODO data.addAll(this.person.getData());
 	data.addAll(this.role.getData());
 	return data;
     }

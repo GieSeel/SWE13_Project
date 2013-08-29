@@ -30,7 +30,7 @@ public class GuestList {
     public List<Object> getData() {
 	final List<Object> data = new ArrayList<Object>();
 	data.add(this.number);
-	data.addAll(this.guest.getData());
+	// TODO data.addAll(this.guest.getData());
 	return data;
     }
 
