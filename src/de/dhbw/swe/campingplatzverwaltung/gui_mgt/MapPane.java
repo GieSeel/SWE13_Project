@@ -2,8 +2,11 @@ package de.dhbw.swe.campingplatzverwaltung.gui_mgt;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.Vector;
 
+import javax.imageio.ImageIO;
 import javax.swing.JScrollPane;
 
 public class MapPane extends JScrollPane implements MouseListener {
@@ -21,19 +24,19 @@ public class MapPane extends JScrollPane implements MouseListener {
 	}
 
 	public int[] getScaledxPoints() {
-	    final int[] scaledYPoints = new int[getyPoints().length];
-	    for (int n = 0; n < getyPoints().length; n++) {
-		scaledYPoints[n] = (int) (getyPoints()[n] * SCALE_FACTOR);
+	    final int[] scaledXPoints = new int[getxPoints().length];
+	    for (int n = 0; n < getxPoints().length; n++) {
+		scaledXPoints[n] = (int) (getxPoints()[n] * scaleFactor);
 	    }
-	    return scaledYPoints;
+	    return scaledXPoints;
 	}
 
 	public int[] getScaledyPoints() {
-	    final int[] scaledXPoints = new int[getxPoints().length];
-	    for (int n = 0; n < getxPoints().length; n++) {
-		scaledXPoints[n] = (int) (getxPoints()[n] * SCALE_FACTOR);
+	    final int[] scaledYPoints = new int[getyPoints().length];
+	    for (int n = 0; n < getyPoints().length; n++) {
+		scaledYPoints[n] = (int) (getyPoints()[n] * scaleFactor);
 	    }
-	    return scaledXPoints;
+	    return scaledYPoints;
 	}
 
 	public int[] getxPoints() {
@@ -50,24 +53,30 @@ public class MapPane extends JScrollPane implements MouseListener {
 	int[] yPoints;
     }
 
-    private static final float SCALE_FACTOR = 0.75f;
+    /** The percentage of the space of screen covered by the map. */
+    private static final float MAP_SCREEN_COVERAGE = 0.69f;
 
     /**   */
     private static final long serialVersionUID = 1L;
 
     public MapPane(final String mapPicturePath) {
 	final Toolkit toolkit = Toolkit.getDefaultToolkit();
-	img = toolkit.getImage(mapPicturePath);
-	img = getScaledImage(img);
+	try {
+	    img = ImageIO.read(new File(mapPicturePath));
+	} catch (final IOException e) {
+	    e.printStackTrace();
+	}
+	final Dimension screenSize = toolkit.getScreenSize();
+	scaleFactor = (screenSize.width * MAP_SCREEN_COVERAGE) / img.getWidth();
+	imgScaled = getScaledImage(img);
 	currentMap = -1;
 	addMouseListener(this);
 	alpha = 0.1f;
 	fill = Color.BLUE;
 
-	final Dimension screenSize = toolkit.getScreenSize();
 	final Dimension mapSize = new Dimension(
-		(int) (screenSize.width * SCALE_FACTOR),
-		(int) (screenSize.height * SCALE_FACTOR));
+		(int) (img.getWidth() * scaleFactor),
+		(int) (img.getHeight() * scaleFactor));
 	setPreferredSize(mapSize);
 
 	setDefaultAreaPolygons();
@@ -105,27 +114,26 @@ public class MapPane extends JScrollPane implements MouseListener {
     @Override
     public void paint(final Graphics g) {
 	final Graphics2D g2 = (Graphics2D) g;
-	g2.drawImage(img, 0, 0, this);
+	g2.drawImage(imgScaled, 0, 0, null);
 
-	g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-		this.alpha));
-	g2.setColor(this.fill);
-	if (this.currentMap > -1) {
-	    g2.fillPolygon(this.polys.get(this.currentMap));
+	g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+	g2.setColor(fill);
+	if (currentMap > -1) {
+	    g2.fillPolygon(polys.get(currentMap));
 	}
     }
 
     public void setFill(final Color color) {
-	this.fill = color;
+	fill = color;
     }
 
     public void setFill(final Color color, final float alpha) {
-	this.fill = color;
+	fill = color;
 	this.alpha = alpha;
     }
 
     public void setPolygons(final Vector<Polygon> polygons) {
-	this.polys = polygons;
+	polys = polygons;
     }
 
     private Vector<AreaCoordinate> getAreaCoordinates() {
@@ -148,14 +156,13 @@ public class MapPane extends JScrollPane implements MouseListener {
 	return areaCoordinates;
     }
 
-    private Image getScaledImage(final Image image) {
-	final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private Image getScaledImage(final BufferedImage image) {
 	final Dimension mapSize = new Dimension(
-		(int) (screenSize.width * SCALE_FACTOR),
-		(int) (screenSize.height * SCALE_FACTOR));
+		(int) (image.getWidth() * scaleFactor),
+		(int) (image.getHeight() * scaleFactor));
 
 	return image.getScaledInstance(mapSize.width, mapSize.height,
-		Image.SCALE_FAST);
+		BufferedImage.SCALE_FAST);
     }
 
     private void setDefaultAreaPolygons() {
@@ -166,13 +173,6 @@ public class MapPane extends JScrollPane implements MouseListener {
 	for (final AreaCoordinate areaCord : areaCoordinates) {
 	    xPoints = areaCord.getScaledxPoints();
 	    yPoints = areaCord.getScaledyPoints();
-	    System.out.println("X Coordinates");
-	    System.out.println(Arrays.toString(areaCord.getxPoints()));
-	    System.out.println(Arrays.toString(areaCord.getScaledxPoints()));
-	    System.out.println("X Coordinates");
-	    System.out.println(Arrays.toString(areaCord.getyPoints()));
-	    System.out.println(Arrays.toString(areaCord.getScaledxPoints()));
-	    System.out.println("-----------------------------------------");
 	    if (xPoints.length == yPoints.length) {
 		final Polygon area = new Polygon(xPoints, yPoints, xPoints.length);
 		polys.add(area);
@@ -190,7 +190,11 @@ public class MapPane extends JScrollPane implements MouseListener {
 
     private Color fill;
 
-    private Image img;
+    private BufferedImage img;
+
+    private final Image imgScaled;
 
     private Vector<Polygon> polys;
+
+    private final float scaleFactor;
 }

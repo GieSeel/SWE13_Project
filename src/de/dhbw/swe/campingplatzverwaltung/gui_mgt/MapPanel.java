@@ -14,7 +14,7 @@ public class MapPanel extends JPanel {
 
 	mapPane = new MapPane("maps/Valalta_BigMap.png");
 
-	add(mapPane, BorderLayout.CENTER);
+	add(mapPane, BorderLayout.WEST);
 	add(new JLabel("ADDITIONAL INFORMATION"), BorderLayout.EAST);
     }
 
