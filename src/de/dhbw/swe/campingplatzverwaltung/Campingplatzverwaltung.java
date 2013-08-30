@@ -43,10 +43,11 @@ public class Campingplatzverwaltung {
 	// dbController.connect("jdbc:mysql://gieseel.gi.funpicsql.de/mysql1157678",
 	// "mysql1157678", "blubber1bis3");
 
+	gui = Gui.getInstance();
+
 	dbController.connect("jdbc:mysql://localhost/camping", "willi", "bald");
 	// final Guest test = dbController.querySelectGuest(1);
 	// dbController.disconnect();
-	gui = Gui.getInstance();
     }
 
     private BookingMgr bookingManager;
