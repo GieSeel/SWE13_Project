@@ -26,7 +26,7 @@ public class LanguageMgr {
     private static String LINE_SEPARATOR = "\r\n";
 
     private static String PROGRAM_PROPERTY_DIR = System.getProperty("user.home")
-	    + "\\Documents\\Campinplatzverwaltung\\";
+	    + "/Documents/Campinplatzverwaltung/";
 
     static public LanguageMgr getInstance() {
 	if (languageMgr == null) {
@@ -114,8 +114,8 @@ public class LanguageMgr {
     }
 
     private void initLanguageFiles() {
-	languageFileDir = new File(PROGRAM_PROPERTY_DIR + "Languages\\");
-	final String defaultFilePath = languageFileDir.getAbsolutePath() + "\\"
+	languageFileDir = new File(PROGRAM_PROPERTY_DIR + "Languages/");
+	final String defaultFilePath = languageFileDir.getAbsolutePath() + "/"
 		+ DEFAULT_LANGUAGE + ".csv";
 	if (!languageFileDir.exists()) {
 	    languageFileDir.mkdirs();

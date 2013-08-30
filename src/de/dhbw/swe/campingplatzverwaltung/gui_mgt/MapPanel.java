@@ -12,7 +12,7 @@ public class MapPanel extends JPanel {
 	final LayoutManager mapPanelLayout = new BorderLayout();
 	setLayout(mapPanelLayout);
 
-	mapPane = new MapPane("maps/Valalta_BigMap.png");
+	mapPane = new MapPane("map/Valalta_BigMap.png");
 
 	add(mapPane, BorderLayout.WEST);
 	add(new JLabel("ADDITIONAL INFORMATION"), BorderLayout.EAST);

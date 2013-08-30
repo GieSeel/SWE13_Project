@@ -3,11 +3,13 @@ package de.dhbw.swe.campingplatzverwaltung.gui_mgt;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.IOException;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.JScrollPane;
+
+import de.dhbw.swe.campingplatzverwaltung.common.ResourceLoader;
 
 public class MapPane extends JScrollPane implements MouseListener {
 
@@ -59,12 +61,13 @@ public class MapPane extends JScrollPane implements MouseListener {
     /**   */
     private static final long serialVersionUID = 1L;
 
-    public MapPane(final String mapPicturePath) {
+    public MapPane(final String mapImagePath) {
 	final Toolkit toolkit = Toolkit.getDefaultToolkit();
 	try {
-	    img = ImageIO.read(new File(mapPicturePath));
+	    img = ImageIO.read(ResourceLoader.load(mapImagePath));
 	} catch (final IOException e) {
-	    e.printStackTrace();
+	    System.err.println("Kann Datei " + System.getProperty("user.dir")
+		    + mapImagePath + " nicht lesen!");
 	}
 	final Dimension screenSize = toolkit.getScreenSize();
 	scaleFactor = (screenSize.width * MAP_SCREEN_COVERAGE) / img.getWidth();
