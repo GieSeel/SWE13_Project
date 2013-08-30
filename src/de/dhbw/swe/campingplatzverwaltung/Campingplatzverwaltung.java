@@ -47,9 +47,6 @@ public class Campingplatzverwaltung {
 	// final Guest test = dbController.querySelectGuest(1);
 	// dbController.disconnect();
 	gui = Gui.getInstance();
-	gui.initGui(); // damit gui eine instance hat und ich sie z.B. im
-		       // searchpanel verwenden kann
-
     }
 
     private BookingMgr bookingManager;
