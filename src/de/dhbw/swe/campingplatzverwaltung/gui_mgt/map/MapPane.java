@@ -1,4 +1,4 @@
-package de.dhbw.swe.campingplatzverwaltung.gui_mgt;
+package de.dhbw.swe.campingplatzverwaltung.gui_mgt.map;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JScrollPane;
 
 import de.dhbw.swe.campingplatzverwaltung.common.ResourceLoader;
+import de.dhbw.swe.campingplatzverwaltung.gui_mgt.Gui;
 import de.dhbw.swe.campingplatzverwaltung.gui_mgt.map.*;
 
 public class MapPane extends JScrollPane implements MouseListener {

@@ -2,6 +2,8 @@ package de.dhbw.swe.campingplatzverwaltung.gui_mgt;
 
 import javax.swing.JTabbedPane;
 
+import de.dhbw.swe.campingplatzverwaltung.gui_mgt.map.MapPanel;
+
 public class CampingplaceAdministrationTabbedPane extends JTabbedPane {
 
     /**   */

@@ -1,4 +1,4 @@
-package de.dhbw.swe.campingplatzverwaltung.gui_mgt;
+package de.dhbw.swe.campingplatzverwaltung.gui_mgt.map;
 
 import java.awt.*;
 
