@@ -11,8 +11,12 @@ public interface LanguageProperties {
     String DELIVERY_POINT = "Delivery Point";
     /** The close dialog title. */
     String GUI_CLOSE_DIALOG_TITLE = "Close application";
+    /** The languages property. */
+    String GUI_LANGUAGE = "Language";
     /** The main graphical user interface title. */
     String GUI_MAINFRAME_TITLE = "The Camper Manager";
+    /** The options property. */
+    String GUI_TAB_OPTIONS = "Options";
     /** The comment marker. */
     String JUST_A_COMMENT = "//";
     /** The map (word) property */

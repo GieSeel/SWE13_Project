@@ -20,11 +20,11 @@ public class LanguageMgr {
 
     /** The singleton. */
     private static LanguageMgr languageMgr;
+
     /**
      * The line separator.
      * */
     private static String LINE_SEPARATOR = "\r\n";
-
     private static String PROGRAM_PROPERTY_DIR = System.getProperty("user.home")
 	    + "/Documents/Campinplatzverwaltung/";
 
@@ -54,6 +54,17 @@ public class LanguageMgr {
      */
     public String get(final String languageProperty) {
 	return selectedLanguage.get(languageProperty);
+    }
+
+    public HashMap<String, Language> getLanguages() {
+	return languages;
+    }
+
+    /**
+     * @return the selected {@link Language}.
+     */
+    public Language getSelectedLanguage() {
+	return selectedLanguage;
     }
 
     private void addContent(final String languageProperty, final String value) {

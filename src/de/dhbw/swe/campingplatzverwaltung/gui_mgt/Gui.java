@@ -116,7 +116,7 @@ public class Gui extends JFrame {
      * Set close handling.
      */
     private void setCloseAppOn(final int keyEvent) {
-	addKeyListener(new KeyAdapter() {
+	mainPanel.addKeyListener(new KeyAdapter() {
 	    @Override
 	    public void keyPressed(final KeyEvent keyE) {
 		if (keyE.getKeyCode() == keyEvent) {
