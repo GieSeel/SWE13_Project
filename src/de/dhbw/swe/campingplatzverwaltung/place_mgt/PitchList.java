@@ -5,12 +5,11 @@ import java.util.*;
 import de.dhbw.swe.campingplatzverwaltung.common.database_mgt.DatabaseController;
 
 public class PitchList {
-    public PitchList(final HashMap<String, Object> elements) {
+    public PitchList() {
 	super();
-	this.id = (int) elements.get("id");
-	this.number = (int) elements.get("number");
-	this.pitch = DatabaseController.getInstance().querySelectPitch(
-		(int) elements.get("pitch_ID"));
+	this.id = 0;
+	this.number = 0;
+	this.pitch = null;
     }
 
     public PitchList(final int id, final int number, final Pitch pitch) {
@@ -27,20 +26,13 @@ public class PitchList {
 	this.pitch = pitch;
     }
 
-    public List<Object> getData() {
-	final List<Object> data = new ArrayList<Object>();
-	data.add(this.number);
-	data.addAll(this.pitch.getData());
-	return data;
-    }
-
-    public HashMap<String, Object> getHashMap() {
-	final HashMap<String, Object> elements = new HashMap<String, Object>();
-	elements.put("id", this.id);
-	elements.put("number", this.number);
-	elements.put("pitch_ID",
+    public HashMap<String, Object> getDatabaseData() {
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
+	objects.put("id", this.id);
+	objects.put("number", this.number);
+	objects.put("pitch_ID",
 		DatabaseController.getInstance().queryInsertUpdatePitch(this.pitch));
-	return elements;
+	return objects;
     }
 
     public int getId() {
@@ -55,7 +47,52 @@ public class PitchList {
 	return pitch;
     }
 
-    private final int id;
-    private final int number;
-    private final Pitch pitch;
+    public HashMap<String, Object> getTableData(final String parentClass) {
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
+	final String className = parentClass + "pitchlist_";
+
+	objects.put(className + "id", new Integer(this.id));
+	objects.put(className + "number", new Integer(this.number));
+
+	objects.putAll(this.pitch.getTableData(className));
+
+	return objects;
+    }
+
+    public PitchList setDatabaseData(final HashMap<String, Object> objects) {
+	this.pitch = DatabaseController.getInstance().querySelectPitch(
+		(int) objects.get("pitch_ID"));
+	setData(objects);
+	return this;
+    }
+
+    public PitchList setTableData(final HashMap<String, Object> objects) {
+	final String className = "pitchlist_";
+	final int classNameLength = className.length();
+	final HashMap<String, Object> thisMap = new HashMap<String, Object>(), pitchMap = new HashMap<String, Object>();
+
+	Object val;
+	final Set<String> keys = objects.keySet();
+	for (String key : keys) {
+	    val = objects.get(key);
+	    key = key.substring(classNameLength);
+	    if (key.startsWith("pitch_")) {
+		pitchMap.put(key, val);
+	    } else {
+		thisMap.put(key, val);
+	    }
+	}
+	this.pitch = new Pitch().setTableData(pitchMap);
+	setData(thisMap);
+	return this;
+    }
+
+    private void setData(final HashMap<String, Object> objects) {
+	this.id = (int) objects.get("id");
+	this.number = (int) objects.get("number");
+    }
+
+    private int id;
+    private int number;
+    private Pitch pitch;
 }

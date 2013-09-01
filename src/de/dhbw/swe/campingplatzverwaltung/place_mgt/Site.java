@@ -3,13 +3,13 @@ package de.dhbw.swe.campingplatzverwaltung.place_mgt;
 import java.util.*;
 
 public class Site {
-    public Site(final HashMap<String, Object> elements) {
+    public Site() {
 	super();
-	this.id = (int) elements.get("id");
-	this.description = (String) elements.get("description");
-	this.labeling = (String) elements.get("labeling");
-	this.openingHours = (String) elements.get("openingHours");
-	this.type = (String) elements.get("type");
+	this.id = 0;
+	this.description = null;
+	this.labeling = null;
+	this.openingHours = null;
+	this.type = null;
     }
 
     public Site(final int id, final String description, final String labeling,
@@ -32,27 +32,18 @@ public class Site {
 	this.type = type;
     }
 
-    public List<Object> getData() {
-	final List<Object> data = new ArrayList<Object>();
-	data.add(this.description);
-	data.add(this.labeling);
-	data.add(this.openingHours);
-	data.add(this.type);
-	return data;
+    public HashMap<String, Object> getDatabaseData() {
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
+	objects.put("id", this.id);
+	objects.put("description", this.description);
+	objects.put("labeling", this.labeling);
+	objects.put("openingHours", this.openingHours);
+	objects.put("type", this.type);
+	return objects;
     }
 
     public String getDescription() {
 	return description;
-    }
-
-    public HashMap<String, Object> getHashMap() {
-	final HashMap<String, Object> elements = new HashMap<String, Object>();
-	elements.put("id", this.id);
-	elements.put("description", this.description);
-	elements.put("labeling", this.labeling);
-	elements.put("openingHours", this.openingHours);
-	elements.put("type", this.type);
-	return elements;
     }
 
     public int getId() {
@@ -67,14 +58,56 @@ public class Site {
 	return openingHours;
     }
 
+    public HashMap<String, Object> getTableData(final String parentClass) {
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
+	final String className = parentClass + "site_";
+
+	objects.put(className + "id", new Integer(this.id));
+	objects.put(className + "description", new String(this.description));
+	objects.put(className + "labeling", new String(this.labeling));
+	objects.put(className + "openingHours", new String(this.openingHours));
+	objects.put(className + "type", new String(this.type));
+
+	return objects;
+    }
+
     public String getType() {
 	return type;
     }
 
-    private final String description;
-    private final int id;
-    private final String labeling;
-    private final String openingHours;
+    public Site setDatabaseData(final HashMap<String, Object> objects) {
+	setData(objects);
+	return this;
+    }
+
+    public Site setTableData(final HashMap<String, Object> objects) {
+	final String className = "site_";
+	final int classNameLength = className.length();
+	final HashMap<String, Object> thisMap = new HashMap<String, Object>();
+
+	Object val;
+	final Set<String> keys = objects.keySet();
+	for (String key : keys) {
+	    val = objects.get(key);
+	    key = key.substring(classNameLength);
+	    thisMap.put(key, val);
+	}
+	setData(thisMap);
+	return this;
+    }
+
+    private void setData(final HashMap<String, Object> objects) {
+	this.id = (int) objects.get("id");
+	this.description = (String) objects.get("description");
+	this.labeling = (String) objects.get("labeling");
+	this.openingHours = (String) objects.get("openingHours");
+	this.type = (String) objects.get("type");
+    }
+
+    private String description;
+    private int id;
+    private String labeling;
+    private String openingHours;
     // private final Site_Type type;
-    private final String type;
+    private String type;
 }

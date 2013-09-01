@@ -8,18 +8,17 @@ import de.dhbw.swe.campingplatzverwaltung.person_mgt.EmployeeRole;
 import de.dhbw.swe.campingplatzverwaltung.place_mgt.*;
 
 public class Service {
-    public Service(final HashMap<String, Object> elements) {
+    public Service() {
 	super();
-	this.id = (int) elements.get("id");
-	final DatabaseController db = DatabaseController.getInstance();
-	this.creationDate = (Date) elements.get("creationDate");
-	this.description = (String) elements.get("description");
-	this.doneDate = (Date) elements.get("doneDate");
-	this.employeeRole = db.querySelectEmployeeRole((int) elements.get("employeeRole_ID"));
-	this.pitch = db.querySelectPitch((int) elements.get("pitch_ID"));
-	this.priority = (int) elements.get("priority");
-	this.serviceNumber = (int) elements.get("serviceNumber");
-	this.site = db.querySelectSite((int) elements.get("site_ID"));
+	this.id = 0;
+	this.creationDate = null;
+	this.description = null;
+	this.doneDate = null;
+	this.employeeRole = null;
+	this.pitch = null;
+	this.priority = 0;
+	this.serviceNumber = 0;
+	this.site = null;
     }
 
     public Service(final int id, final Date creationDate, final String description,
@@ -65,17 +64,20 @@ public class Service {
 	return creationDate;
     }
 
-    public List<Object> getData() {
-	final List<Object> data = new ArrayList<Object>();
-	data.add(new SimpleDateFormat("dd.MM.yyyy").format(creationDate));
-	data.add(this.description);
-	data.add(new SimpleDateFormat("dd.MM.yyyy").format(doneDate));
-	data.add(this.priority);
-	data.add(this.serviceNumber);
-	data.addAll(this.employeeRole.getData());
-	data.addAll(this.pitch.getData());
-	data.addAll(this.site.getData());
-	return data;
+    public HashMap<String, Object> getDatabaseData() {
+	final DatabaseController db = DatabaseController.getInstance();
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
+	objects.put("id", this.id);
+	objects.put("creationDate", this.creationDate);
+	objects.put("description", this.description);
+	objects.put("doneDate", this.doneDate);
+	objects.put("employeeRole_ID",
+		db.queryInsertUpdateEmployeeRole(this.employeeRole));
+	objects.put("pitch_ID", db.queryInsertUpdatePitch(this.pitch));
+	objects.put("priority", this.priority);
+	objects.put("serviceNumber", this.serviceNumber);
+	objects.put("site_ID", db.queryInsertUpdateSite(this.site));
+	return objects;
     }
 
     public String getDescription() {
@@ -88,22 +90,6 @@ public class Service {
 
     public EmployeeRole getEmployeeRole() {
 	return employeeRole;
-    }
-
-    public HashMap<String, Object> getHashMap() {
-	final DatabaseController db = DatabaseController.getInstance();
-	final HashMap<String, Object> elements = new HashMap<String, Object>();
-	elements.put("id", this.id);
-	elements.put("creationDate", this.creationDate);
-	elements.put("description", this.description);
-	elements.put("doneDate", this.doneDate);
-	elements.put("employeeRole_ID",
-		db.queryInsertUpdateEmployeeRole(this.employeeRole));
-	elements.put("pitch_ID", db.queryInsertUpdatePitch(this.pitch));
-	elements.put("priority", this.priority);
-	elements.put("serviceNumber", this.serviceNumber);
-	elements.put("site_ID", db.queryInsertUpdateSite(this.site));
-	return elements;
     }
 
     public int getId() {
@@ -126,13 +112,77 @@ public class Service {
 	return site;
     }
 
+    public HashMap<String, Object> getTableData(final String parentClass) {
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
+	final String className = parentClass + "service_";
+
+	objects.put(className + "id", new Integer(this.id));
+	objects.put(className + "creationDate", new String(new SimpleDateFormat(
+		"dd.MM.yyyy").format(creationDate)));
+	objects.put(className + "doneDate", new String(new SimpleDateFormat(
+		"dd.MM.yyyy").format(doneDate)));
+	objects.put(className + "priority", new Integer(this.priority));
+	objects.put(className + "serviceNumber", new Integer(this.serviceNumber));
+
+	objects.putAll(this.employeeRole.getTableData(className));
+	objects.putAll(this.pitch.getTableData(className));
+	objects.putAll(this.site.getTableData(className));
+
+	return objects;
+    }
+
+    public Service setDatabaseData(final HashMap<String, Object> objects) {
+	final DatabaseController db = DatabaseController.getInstance();
+	this.employeeRole = db.querySelectEmployeeRole((int) objects.get("employeeRole_ID"));
+	this.pitch = db.querySelectPitch((int) objects.get("pitch_ID"));
+	this.site = db.querySelectSite((int) objects.get("site_ID"));
+	setData(objects);
+	return this;
+    }
+
+    public Service setTableData(final HashMap<String, Object> objects) {
+	final String className = "service_";
+	final int classNameLength = className.length();
+	final HashMap<String, Object> thisMap = new HashMap<String, Object>(), employeeroleMap = new HashMap<String, Object>(), pitchMap = new HashMap<String, Object>(), siteMap = new HashMap<String, Object>();
+
+	Object val;
+	final Set<String> keys = objects.keySet();
+	for (String key : keys) {
+	    val = objects.get(key);
+	    key = key.substring(classNameLength);
+	    if (key.startsWith("employeerole_")) {
+		employeeroleMap.put(key, val);
+	    } else if (key.startsWith("pitch_")) {
+		pitchMap.put(key, val);
+	    } else if (key.startsWith("site_")) {
+		siteMap.put(key, val);
+	    } else {
+		thisMap.put(key, val);
+	    }
+	}
+	this.employeeRole = new EmployeeRole().setTableData(employeeroleMap);
+	this.pitch = new Pitch().setTableData(pitchMap);
+	this.site = new Site().setTableData(siteMap);
+	setData(thisMap);
+	return this;
+    }
+
+    private void setData(final HashMap<String, Object> objects) {
+	this.id = (int) objects.get("id");
+	this.creationDate = (Date) objects.get("creationDate");
+	this.description = (String) objects.get("description");
+	this.doneDate = (Date) objects.get("doneDate");
+	this.priority = (int) objects.get("priority");
+	this.serviceNumber = (int) objects.get("serviceNumber");
+    }
+
     private Date creationDate;
-    private final String description;
+    private String description;
     private Date doneDate;
-    private final EmployeeRole employeeRole;
-    private final int id;
-    private final Pitch pitch;
-    private final int priority;
-    private final int serviceNumber;
-    private final Site site;
+    private EmployeeRole employeeRole;
+    private int id;
+    private Pitch pitch;
+    private int priority;
+    private int serviceNumber;
+    private Site site;
 }

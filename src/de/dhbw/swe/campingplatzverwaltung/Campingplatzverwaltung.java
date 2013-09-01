@@ -45,8 +45,7 @@ public class Campingplatzverwaltung {
 
 	gui = Gui.getInstance();
 
-	// dbController.connect("jdbc:mysql://localhost/camping", "willi",
-	// "bald");
+	dbController.connect("jdbc:mysql://localhost/camping", "willi", "bald");
 	// final Guest test = dbController.querySelectGuest(1);
 	// dbController.disconnect();
     }

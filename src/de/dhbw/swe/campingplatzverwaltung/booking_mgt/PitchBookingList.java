@@ -5,12 +5,11 @@ import java.util.*;
 import de.dhbw.swe.campingplatzverwaltung.common.database_mgt.DatabaseController;
 
 public class PitchBookingList {
-    public PitchBookingList(final HashMap<String, Object> elements) {
+    public PitchBookingList() {
 	super();
-	this.id = (int) elements.get("id");
-	this.number = (int) elements.get("number");
-	this.pitchBooking = DatabaseController.getInstance().querySelectPitchBooking(
-		(int) elements.get("pitchBooking_ID"));
+	this.id = 0;
+	this.number = 0;
+	this.pitchBooking = null;
     }
 
     public PitchBookingList(final int id, final int number,
@@ -28,22 +27,15 @@ public class PitchBookingList {
 	this.pitchBooking = pitchBooking;
     }
 
-    public List<Object> getData() {
-	final List<Object> data = new ArrayList<Object>();
-	data.add(this.number);
-	data.addAll(this.pitchBooking.getData());
-	return data;
-    }
-
-    public HashMap<String, Object> getHashMap() {
-	final HashMap<String, Object> elements = new HashMap<String, Object>();
-	elements.put("id", this.id);
-	elements.put("number", this.number);
-	elements.put(
+    public HashMap<String, Object> getDatabaseData() {
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
+	objects.put("id", this.id);
+	objects.put("number", this.number);
+	objects.put(
 		"pitchBooking_ID",
 		DatabaseController.getInstance().queryInsertUpdatePitchBooking(
 			this.pitchBooking));
-	return elements;
+	return objects;
     }
 
     public int getId() {
@@ -58,7 +50,54 @@ public class PitchBookingList {
 	return pitchBooking;
     }
 
-    private final int id;
-    private final int number;
-    private final PitchBooking pitchBooking;
+    public HashMap<String, Object> getTableData(final String parentClass) {
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
+	final String className = parentClass + "pitchbookinglist_";
+
+	objects.put(className + "id", new Integer(this.id));
+	objects.put(className + "number", new Integer(this.number));
+
+	objects.putAll(this.pitchBooking.getTableData(className));
+
+	return objects;
+    }
+
+    public PitchBookingList setDatabaseData(final HashMap<String, Object> objects) {
+	final DatabaseController db = DatabaseController.getInstance();
+	this.pitchBooking = db.querySelectPitchBooking((int) objects.get("pitchBooking_ID"));
+	setData(objects);
+	return this;
+    }
+
+    public PitchBookingList setTableData(final HashMap<String, Object> objects) {
+	final String className = "pitchbookinglist_";
+	final int classNameLength = className.length();
+	final HashMap<String, Object> thisMap = new HashMap<String, Object>(), pitchbookingMap = new HashMap<String, Object>();
+
+	Object val;
+	final Set<String> keys = objects.keySet();
+	for (String key : keys) {
+	    val = objects.get(key);
+	    key = key.substring(classNameLength);
+	    if (key.startsWith("pitchbooking_")) {
+		pitchbookingMap.put(key, val);
+	    } else {
+		thisMap.put(key, val);
+	    }
+	}
+	this.pitchBooking = new PitchBooking().setTableData(pitchbookingMap);
+	setData(thisMap);
+	return this;
+    }
+
+    private void setData(final HashMap<String, Object> objects) {
+	this.id = (int) objects.get("id");
+	this.number = (int) objects.get("number");
+	this.pitchBooking = DatabaseController.getInstance().querySelectPitchBooking(
+		(int) objects.get("pitchBooking_ID"));
+    }
+
+    private int id;
+    private int number;
+    private PitchBooking pitchBooking;
 }

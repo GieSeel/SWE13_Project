@@ -6,19 +6,18 @@ import de.dhbw.swe.campingplatzverwaltung.common.database_mgt.DatabaseController
 import de.dhbw.swe.campingplatzverwaltung.place_mgt.Pitch;
 
 public class PitchBooking {
+    public PitchBooking() {
+	super();
+	this.id = 0;
+	this.electricity = false;
+	this.pitch = null;
+    }
+
     public PitchBooking(final boolean electricity, final Pitch pitch) {
 	super();
 	this.id = 0;
 	this.electricity = electricity;
 	this.pitch = pitch;
-    }
-
-    public PitchBooking(final HashMap<String, Object> elements) {
-	super();
-	this.id = (int) elements.get("id");
-	this.electricity = ((int) elements.get("electricity") == 1 ? true : false);
-	this.pitch = DatabaseController.getInstance().querySelectPitch(
-		(int) elements.get("pitch_ID"));
     }
 
     public PitchBooking(final int id, final boolean electricity, final Pitch pitch) {
@@ -28,20 +27,13 @@ public class PitchBooking {
 	this.pitch = pitch;
     }
 
-    public List<Object> getData() {
-	final List<Object> data = new ArrayList<Object>();
-	data.add((this.electricity ? "yes" : "no")); // TODO SPRACHE!!
-	data.addAll(this.pitch.getData());
-	return data;
-    }
-
-    public HashMap<String, Object> getHashMap() {
-	final HashMap<String, Object> elements = new HashMap<String, Object>();
-	elements.put("id", this.id);
-	elements.put("electricity", (this.electricity ? 1 : 0));
-	elements.put("pitch_ID",
+    public HashMap<String, Object> getDatabaseData() {
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
+	objects.put("id", this.id);
+	objects.put("electricity", (this.electricity ? 1 : 0));
+	objects.put("pitch_ID",
 		DatabaseController.getInstance().queryInsertUpdatePitch(this.pitch));
-	return elements;
+	return objects;
     }
 
     public int getId() {
@@ -52,11 +44,58 @@ public class PitchBooking {
 	return pitch;
     }
 
+    public HashMap<String, Object> getTableData(final String parentClass) {
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
+	final String className = parentClass + "pitchbooking_";
+
+	objects.put(className + "id", new Integer(this.id));
+	objects.put(className + "electricity", new String(this.electricity ? "yes"
+		: "no")); // TODO SPRACHE!!
+
+	objects.putAll(this.pitch.getTableData(className));
+
+	return objects;
+    }
+
     public boolean isElectricity() {
 	return electricity;
     }
 
-    private final boolean electricity;
-    private final int id;
-    private final Pitch pitch;
+    public PitchBooking setDatabaseData(final HashMap<String, Object> objects) {
+	final DatabaseController db = DatabaseController.getInstance();
+	this.pitch = db.querySelectPitch((int) objects.get("pitch_ID"));
+	setData(objects);
+	return this;
+    }
+
+    public PitchBooking setTableData(final HashMap<String, Object> objects) {
+	final String className = "pitchbooking_";
+	final int classNameLength = className.length();
+	final HashMap<String, Object> thisMap = new HashMap<String, Object>(), pitchMap = new HashMap<String, Object>();
+
+	Object val;
+	final Set<String> keys = objects.keySet();
+	for (String key : keys) {
+	    val = objects.get(key);
+	    key = key.substring(classNameLength);
+	    if (key.startsWith("pitch_")) {
+		pitchMap.put(key, val);
+	    } else {
+		thisMap.put(key, val);
+	    }
+	}
+	this.pitch = new Pitch().setTableData(pitchMap);
+	setData(thisMap);
+	return this;
+    }
+
+    private void setData(final HashMap<String, Object> objects) {
+	this.id = (int) objects.get("id");
+	this.electricity = ((int) objects.get("electricity") == 1 ? true : false);
+
+    }
+
+    private boolean electricity;
+    private int id;
+    private Pitch pitch;
 }

@@ -5,12 +5,11 @@ import java.util.*;
 import de.dhbw.swe.campingplatzverwaltung.common.database_mgt.DatabaseController;
 
 public class EquipmentList {
-    public EquipmentList(final HashMap<String, Object> elements) {
+    public EquipmentList() {
 	super();
-	this.id = (int) elements.get("id");
-	this.number = (int) elements.get("number");
-	this.equipment = DatabaseController.getInstance().querySelectEquipment(
-		(int) elements.get("equipment_ID"));
+	this.id = 0;
+	this.number = 0;
+	this.equipment = null;
     }
 
     public EquipmentList(final int number, final Equipment equipment) {
@@ -27,26 +26,19 @@ public class EquipmentList {
 	this.equipment = equipment;
     }
 
-    public List<Object> getData() {
-	final List<Object> data = new ArrayList<Object>();
-	data.add(this.number);
-	data.addAll(this.equipment.getData());
-	return data;
+    public HashMap<String, Object> getDatabaseData() {
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
+	objects.put("id", this.id);
+	objects.put("number", this.number);
+	objects.put(
+		"equipment_ID",
+		DatabaseController.getInstance().queryInsertUpdateEquipment(
+			this.equipment));
+	return objects;
     }
 
     public Equipment getEquipment() {
 	return equipment;
-    }
-
-    public HashMap<String, Object> getHashMap() {
-	final HashMap<String, Object> elements = new HashMap<String, Object>();
-	elements.put("id", this.id);
-	elements.put("number", this.number);
-	elements.put(
-		"equipment_ID",
-		DatabaseController.getInstance().queryInsertUpdateEquipment(
-			this.equipment));
-	return elements;
     }
 
     public int getId() {
@@ -57,7 +49,52 @@ public class EquipmentList {
 	return number;
     }
 
-    private final Equipment equipment;
-    private final int id;
-    private final int number;
+    public HashMap<String, Object> getTableData(final String parentClass) {
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
+	final String className = parentClass + "equipmentlist_";
+
+	objects.put(className + "id", new Integer(this.id));
+	objects.put(className + "number", new Integer(this.id));
+
+	objects.putAll(this.equipment.getTableData(className));
+
+	return objects;
+    }
+
+    public EquipmentList setDatabaseData(final HashMap<String, Object> objects) {
+	final DatabaseController db = DatabaseController.getInstance();
+	this.equipment = db.querySelectEquipment((int) objects.get("equipment_ID"));
+	setData(objects);
+	return this;
+    }
+
+    public EquipmentList setTableData(final HashMap<String, Object> objects) {
+	final String className = "equipmentlist_";
+	final int classNameLength = className.length();
+	final HashMap<String, Object> thisMap = new HashMap<String, Object>(), equipmentMap = new HashMap<String, Object>();
+
+	Object val;
+	final Set<String> keys = objects.keySet();
+	for (String key : keys) {
+	    val = objects.get(key);
+	    key = key.substring(classNameLength);
+	    if (key.startsWith("equipment_")) {
+		equipmentMap.put(key, val);
+	    } else {
+		thisMap.put(key, val);
+	    }
+	}
+	this.equipment = new Equipment().setTableData(equipmentMap);
+	setData(thisMap);
+	return this;
+    }
+
+    private void setData(final HashMap<String, Object> objects) {
+	this.id = (int) objects.get("id");
+	this.number = (int) objects.get("number");
+    }
+
+    private Equipment equipment;
+    private int id;
+    private int number;
 }

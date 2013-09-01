@@ -16,6 +16,12 @@ import de.dhbw.swe.campingplatzverwaltung.service_mgt.*;
  * @author GieSeel
  * @version 1.0
  */
+/**
+ * Insert description for DatabaseController
+ * 
+ * @author GieSeel
+ * @version 1.0
+ */
 public class DatabaseController {
 
     static DatabaseController databaseController;
@@ -301,7 +307,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateBill(final Bill obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final Bill tmpObj : querySelectBill()) {
@@ -326,7 +332,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateBillItem(final BillItem obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final BillItem tmpObj : querySelectBillItem()) {
@@ -353,7 +359,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateBooking(final Booking obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final Booking tmpObj : querySelectBooking()) {
@@ -384,7 +390,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateBookingList(final BookingList obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final BookingList tmpObj : querySelectBookingList()) {
@@ -408,7 +414,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateChipCard(final ChipCard obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final ChipCard tmpObj : querySelectChipCard()) {
@@ -433,7 +439,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateChipCardList(final ChipCardList obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final ChipCardList tmpObj : querySelectChipCardList()) {
@@ -481,7 +487,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateEmployee(final Employee obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final Employee tmpObj : querySelectEmployee()) {
@@ -509,7 +515,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateEmployeeList(final EmployeeList obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final EmployeeList tmpObj : querySelectEmployeeList()) {
@@ -533,7 +539,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateEmployeeRole(final EmployeeRole obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final EmployeeRole tmpObj : querySelectEmployeeRole()) {
@@ -557,7 +563,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateEquipment(final Equipment obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final Equipment tmpObj : querySelectEquipment()) {
@@ -582,7 +588,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateEquipmentList(final EquipmentList obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final EquipmentList tmpObj : querySelectEquipmentList()) {
@@ -606,7 +612,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateExtraBooking(final ExtraBooking obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final ExtraBooking tmpObj : querySelectExtraBooking()) {
@@ -632,7 +638,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateExtraBookingList(final ExtraBookingList obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final ExtraBookingList tmpObj : querySelectExtraBookingList()) {
@@ -680,7 +686,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateGuestList(final GuestList obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final GuestList tmpObj : querySelectGuestList()) {
@@ -732,7 +738,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdatePitch(final Pitch obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final Pitch tmpObj : querySelectPitch()) {
@@ -761,7 +767,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdatePitchBooking(final PitchBooking obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final PitchBooking tmpObj : querySelectPitchBooking()) {
@@ -786,7 +792,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdatePitchBookingList(final PitchBookingList obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final PitchBookingList tmpObj : querySelectPitchBookingList()) {
@@ -810,7 +816,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdatePitchList(final PitchList obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final PitchList tmpObj : querySelectPitchList()) {
@@ -834,7 +840,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateService(final Service obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final Service tmpObj : querySelectService()) {
@@ -864,7 +870,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateServiceList(final ServiceList obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final ServiceList tmpObj : querySelectServiceList()) {
@@ -888,7 +894,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateSite(final Site obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final Site tmpObj : querySelectSite()) {
@@ -914,7 +920,7 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateSiteList(final SiteList obj) {
-	final HashMap<String, Object> hashObj = obj.getHashMap();
+	final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final SiteList tmpObj : querySelectSiteList()) {
@@ -1012,7 +1018,7 @@ public class DatabaseController {
     public List<Bill> querySelectBill() {
 	final List<Bill> objectList = new ArrayList<Bill>();
 	for (final HashMap<String, Object> object : querySelect("bill")) {
-	    objectList.add(new Bill(object));
+	    objectList.add(new Bill().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1025,7 +1031,7 @@ public class DatabaseController {
      * @return
      */
     public Bill querySelectBill(final int id) {
-	return new Bill(querySelect("bill", id));
+	return new Bill().setDatabaseData(querySelect("bill", id));
     }
 
     /**
@@ -1036,7 +1042,7 @@ public class DatabaseController {
     public List<BillItem> querySelectBillItem() {
 	final List<BillItem> objectList = new ArrayList<BillItem>();
 	for (final HashMap<String, Object> object : querySelect("billitem")) {
-	    objectList.add(new BillItem(object));
+	    objectList.add(new BillItem().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1049,7 +1055,7 @@ public class DatabaseController {
      * @return
      */
     public BillItem querySelectBillItem(final int id) {
-	return new BillItem(querySelect("billitem", id));
+	return new BillItem().setDatabaseData(querySelect("billitem", id));
     }
 
     /**
@@ -1060,7 +1066,7 @@ public class DatabaseController {
     public List<Booking> querySelectBooking() {
 	final List<Booking> objectList = new ArrayList<Booking>();
 	for (final HashMap<String, Object> object : querySelect("booking")) {
-	    objectList.add(new Booking(object));
+	    objectList.add(new Booking().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1073,7 +1079,7 @@ public class DatabaseController {
      * @return
      */
     public Booking querySelectBooking(final int id) {
-	return new Booking(querySelect("booking", id));
+	return new Booking().setDatabaseData(querySelect("booking", id));
     }
 
     /**
@@ -1084,7 +1090,7 @@ public class DatabaseController {
     public List<BookingList> querySelectBookingList() {
 	final List<BookingList> objectList = new ArrayList<BookingList>();
 	for (final HashMap<String, Object> object : querySelect("bookinglist")) {
-	    objectList.add(new BookingList(object));
+	    objectList.add(new BookingList().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1097,7 +1103,7 @@ public class DatabaseController {
      * @return
      */
     public BookingList querySelectBookingList(final int id) {
-	return new BookingList(querySelect("bookinglist", id));
+	return new BookingList().setDatabaseData(querySelect("bookinglist", id));
     }
 
     /**
@@ -1108,7 +1114,7 @@ public class DatabaseController {
     public List<ChipCard> querySelectChipCard() {
 	final List<ChipCard> objectList = new ArrayList<ChipCard>();
 	for (final HashMap<String, Object> object : querySelect("chipcard")) {
-	    objectList.add(new ChipCard(object));
+	    objectList.add(new ChipCard().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1121,7 +1127,7 @@ public class DatabaseController {
      * @return
      */
     public ChipCard querySelectChipCard(final int id) {
-	return new ChipCard(querySelect("chipcard", id));
+	return new ChipCard().setDatabaseData(querySelect("chipcard", id));
     }
 
     /**
@@ -1132,7 +1138,7 @@ public class DatabaseController {
     public List<ChipCardList> querySelectChipCardList() {
 	final List<ChipCardList> objectList = new ArrayList<ChipCardList>();
 	for (final HashMap<String, Object> object : querySelect("chipcardlist")) {
-	    objectList.add(new ChipCardList(object));
+	    objectList.add(new ChipCardList().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1145,7 +1151,7 @@ public class DatabaseController {
      * @return
      */
     public ChipCardList querySelectChipCardList(final int id) {
-	return new ChipCardList(querySelect("chipcardlist", id));
+	return new ChipCardList().setDatabaseData(querySelect("chipcardlist", id));
     }
 
     /**
@@ -1180,7 +1186,7 @@ public class DatabaseController {
     public List<Employee> querySelectEmployee() {
 	final List<Employee> objectList = new ArrayList<Employee>();
 	for (final HashMap<String, Object> object : querySelect("employee")) {
-	    objectList.add(new Employee(object));
+	    objectList.add(new Employee().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1193,7 +1199,7 @@ public class DatabaseController {
      * @return
      */
     public Employee querySelectEmployee(final int id) {
-	return new Employee(querySelect("employee", id));
+	return new Employee().setDatabaseData(querySelect("employee", id));
     }
 
     /**
@@ -1204,7 +1210,7 @@ public class DatabaseController {
     public List<EmployeeList> querySelectEmployeeList() {
 	final List<EmployeeList> objectList = new ArrayList<EmployeeList>();
 	for (final HashMap<String, Object> object : querySelect("employeelist")) {
-	    objectList.add(new EmployeeList(object));
+	    objectList.add(new EmployeeList().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1217,7 +1223,7 @@ public class DatabaseController {
      * @return
      */
     public EmployeeList querySelectEmployeeList(final int id) {
-	return new EmployeeList(querySelect("employeelist", id));
+	return new EmployeeList().setDatabaseData(querySelect("employeelist", id));
     }
 
     /**
@@ -1228,7 +1234,7 @@ public class DatabaseController {
     public List<EmployeeRole> querySelectEmployeeRole() {
 	final List<EmployeeRole> objectList = new ArrayList<EmployeeRole>();
 	for (final HashMap<String, Object> object : querySelect("employeerole")) {
-	    objectList.add(new EmployeeRole(object));
+	    objectList.add(new EmployeeRole().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1241,7 +1247,7 @@ public class DatabaseController {
      * @return
      */
     public EmployeeRole querySelectEmployeeRole(final int id) {
-	return new EmployeeRole(querySelect("employeerole", id));
+	return new EmployeeRole().setDatabaseData(querySelect("employeerole", id));
     }
 
     /**
@@ -1252,7 +1258,7 @@ public class DatabaseController {
     public List<Equipment> querySelectEquipment() {
 	final List<Equipment> objectList = new ArrayList<Equipment>();
 	for (final HashMap<String, Object> object : querySelect("equipment")) {
-	    objectList.add(new Equipment(object));
+	    objectList.add(new Equipment().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1265,7 +1271,7 @@ public class DatabaseController {
      * @return
      */
     public Equipment querySelectEquipment(final int id) {
-	return new Equipment(querySelect("equipment", id));
+	return new Equipment().setDatabaseData(querySelect("equipment", id));
     }
 
     /**
@@ -1276,7 +1282,7 @@ public class DatabaseController {
     public List<EquipmentList> querySelectEquipmentList() {
 	final List<EquipmentList> objectList = new ArrayList<EquipmentList>();
 	for (final HashMap<String, Object> object : querySelect("equipmentlist")) {
-	    objectList.add(new EquipmentList(object));
+	    objectList.add(new EquipmentList().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1289,7 +1295,7 @@ public class DatabaseController {
      * @return
      */
     public EquipmentList querySelectEquipmentList(final int id) {
-	return new EquipmentList(querySelect("equipmentlist", id));
+	return new EquipmentList().setDatabaseData(querySelect("equipmentlist", id));
     }
 
     /**
@@ -1300,7 +1306,7 @@ public class DatabaseController {
     public List<ExtraBooking> querySelectExtraBooking() {
 	final List<ExtraBooking> objectList = new ArrayList<ExtraBooking>();
 	for (final HashMap<String, Object> object : querySelect("extrabooking")) {
-	    objectList.add(new ExtraBooking(object));
+	    objectList.add(new ExtraBooking().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1313,7 +1319,7 @@ public class DatabaseController {
      * @return
      */
     public ExtraBooking querySelectExtraBooking(final int id) {
-	return new ExtraBooking(querySelect("extrabooking", id));
+	return new ExtraBooking().setDatabaseData(querySelect("extrabooking", id));
     }
 
     /**
@@ -1324,7 +1330,7 @@ public class DatabaseController {
     public List<ExtraBookingList> querySelectExtraBookingList() {
 	final List<ExtraBookingList> objectList = new ArrayList<ExtraBookingList>();
 	for (final HashMap<String, Object> object : querySelect("extrabookinglist")) {
-	    objectList.add(new ExtraBookingList(object));
+	    objectList.add(new ExtraBookingList().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1337,7 +1343,8 @@ public class DatabaseController {
      * @return
      */
     public ExtraBookingList querySelectExtraBookingList(final int id) {
-	return new ExtraBookingList(querySelect("extrabookinglist", id));
+	return new ExtraBookingList().setDatabaseData(querySelect(
+		"extrabookinglist", id));
     }
 
     /**
@@ -1372,7 +1379,7 @@ public class DatabaseController {
     public List<GuestList> querySelectGuestList() {
 	final List<GuestList> objectList = new ArrayList<GuestList>();
 	for (final HashMap<String, Object> object : querySelect("guestlist")) {
-	    objectList.add(new GuestList(object));
+	    objectList.add(new GuestList().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1385,7 +1392,7 @@ public class DatabaseController {
      * @return
      */
     public GuestList querySelectGuestList(final int id) {
-	return new GuestList(querySelect("guestlist", id));
+	return new GuestList().setDatabaseData(querySelect("guestlist", id));
     }
 
     /**
@@ -1420,7 +1427,7 @@ public class DatabaseController {
     public List<Pitch> querySelectPitch() {
 	final List<Pitch> objectList = new ArrayList<Pitch>();
 	for (final HashMap<String, Object> object : querySelect("pitch")) {
-	    objectList.add(new Pitch(object));
+	    objectList.add(new Pitch().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1433,7 +1440,7 @@ public class DatabaseController {
      * @return
      */
     public Pitch querySelectPitch(final int id) {
-	return new Pitch(querySelect("pitch", id));
+	return new Pitch().setDatabaseData(querySelect("pitch", id));
     }
 
     /**
@@ -1444,7 +1451,7 @@ public class DatabaseController {
     public List<PitchBooking> querySelectPitchBooking() {
 	final List<PitchBooking> objectList = new ArrayList<PitchBooking>();
 	for (final HashMap<String, Object> object : querySelect("pitchbooking")) {
-	    objectList.add(new PitchBooking(object));
+	    objectList.add(new PitchBooking().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1457,7 +1464,7 @@ public class DatabaseController {
      * @return
      */
     public PitchBooking querySelectPitchBooking(final int id) {
-	return new PitchBooking(querySelect("pitchbooking", id));
+	return new PitchBooking().setDatabaseData(querySelect("pitchbooking", id));
     }
 
     /**
@@ -1468,7 +1475,7 @@ public class DatabaseController {
     public List<PitchBookingList> querySelectPitchBookingList() {
 	final List<PitchBookingList> objectList = new ArrayList<PitchBookingList>();
 	for (final HashMap<String, Object> object : querySelect("pitchbookinglist")) {
-	    objectList.add(new PitchBookingList(object));
+	    objectList.add(new PitchBookingList().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1481,7 +1488,8 @@ public class DatabaseController {
      * @return
      */
     public PitchBookingList querySelectPitchBookingList(final int id) {
-	return new PitchBookingList(querySelect("pitchbookinglist", id));
+	return new PitchBookingList().setDatabaseData(querySelect(
+		"pitchbookinglist", id));
     }
 
     /**
@@ -1492,7 +1500,7 @@ public class DatabaseController {
     public List<PitchList> querySelectPitchList() {
 	final List<PitchList> objectList = new ArrayList<PitchList>();
 	for (final HashMap<String, Object> object : querySelect("pitchlist")) {
-	    objectList.add(new PitchList(object));
+	    objectList.add(new PitchList().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1505,7 +1513,7 @@ public class DatabaseController {
      * @return
      */
     public PitchList querySelectPitchList(final int id) {
-	return new PitchList(querySelect("pitchlist", id));
+	return new PitchList().setDatabaseData(querySelect("pitchlist", id));
     }
 
     /**
@@ -1516,7 +1524,7 @@ public class DatabaseController {
     public List<Service> querySelectService() {
 	final List<Service> objectList = new ArrayList<Service>();
 	for (final HashMap<String, Object> object : querySelect("service")) {
-	    objectList.add(new Service(object));
+	    objectList.add(new Service().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1529,7 +1537,7 @@ public class DatabaseController {
      * @return
      */
     public Service querySelectService(final int id) {
-	return new Service(querySelect("service", id));
+	return new Service().setDatabaseData(querySelect("service", id));
     }
 
     /**
@@ -1540,7 +1548,7 @@ public class DatabaseController {
     public List<ServiceList> querySelectServiceList() {
 	final List<ServiceList> objectList = new ArrayList<ServiceList>();
 	for (final HashMap<String, Object> object : querySelect("servicelist")) {
-	    objectList.add(new ServiceList(object));
+	    objectList.add(new ServiceList().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1553,7 +1561,7 @@ public class DatabaseController {
      * @return
      */
     public ServiceList querySelectServiceList(final int id) {
-	return new ServiceList(querySelect("servicelist", id));
+	return new ServiceList().setDatabaseData(querySelect("servicelist", id));
     }
 
     /**
@@ -1564,7 +1572,7 @@ public class DatabaseController {
     public List<Site> querySelectSite() {
 	final List<Site> objectList = new ArrayList<Site>();
 	for (final HashMap<String, Object> object : querySelect("site")) {
-	    objectList.add(new Site(object));
+	    objectList.add(new Site().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1577,7 +1585,7 @@ public class DatabaseController {
      * @return
      */
     public Site querySelectSite(final int id) {
-	return new Site(querySelect("site", id));
+	return new Site().setDatabaseData(querySelect("site", id));
     }
 
     /**
@@ -1588,7 +1596,7 @@ public class DatabaseController {
     public List<SiteList> querySelectSiteList() {
 	final List<SiteList> objectList = new ArrayList<SiteList>();
 	for (final HashMap<String, Object> object : querySelect("sitelist")) {
-	    objectList.add(new SiteList(object));
+	    objectList.add(new SiteList().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1601,7 +1609,7 @@ public class DatabaseController {
      * @return
      */
     public SiteList querySelectSiteList(final int id) {
-	return new SiteList(querySelect("sitelist", id));
+	return new SiteList().setDatabaseData(querySelect("sitelist", id));
     }
 
     /**

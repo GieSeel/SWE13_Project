@@ -6,12 +6,11 @@ import de.dhbw.swe.campingplatzverwaltung.common.ChipCard;
 import de.dhbw.swe.campingplatzverwaltung.common.database_mgt.DatabaseController;
 
 public class ChipCardList {
-    public ChipCardList(final HashMap<String, Object> elements) {
+    public ChipCardList() {
 	super();
-	this.id = (int) elements.get("id");
-	this.number = (int) elements.get("number");
-	this.chipCard = DatabaseController.getInstance().querySelectChipCard(
-		(int) elements.get("chipCard_ID"));
+	this.id = 0;
+	this.number = 0;
+	this.chipCard = null;
     }
 
     public ChipCardList(final int number, final ChipCard chipCard) {
@@ -32,23 +31,16 @@ public class ChipCardList {
 	return chipCard;
     }
 
-    public List<Object> getData() {
-	final List<Object> data = new ArrayList<Object>();
-	data.add(this.number);
-	data.addAll(this.chipCard.getData());
-	return data;
-    }
+    public HashMap<String, Object> getDatabaseData() {
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
 
-    public HashMap<String, Object> getHashMap() {
-	final HashMap<String, Object> elements = new HashMap<String, Object>();
-
-	elements.put("id", this.id);
-	elements.put("number", this.number);
-	elements.put(
+	objects.put("id", this.id);
+	objects.put("number", this.number);
+	objects.put(
 		"chipCard_ID",
 		DatabaseController.getInstance().queryInsertUpdateChipCard(
 			this.chipCard));
-	return elements;
+	return objects;
     }
 
     public int getId() {
@@ -59,7 +51,52 @@ public class ChipCardList {
 	return number;
     }
 
-    private final ChipCard chipCard;
-    private final int id;
-    private final int number;
+    public HashMap<String, Object> getTableData(final String parentClass) {
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
+	final String className = parentClass + "chipcardlist_";
+
+	objects.put(className + "id", new Integer(this.id));
+	objects.put(className + "number", new Integer(this.number));
+
+	objects.putAll(this.chipCard.getTableData(className));
+
+	return objects;
+    }
+
+    public ChipCardList setDatabaseData(final HashMap<String, Object> objects) {
+	this.chipCard = DatabaseController.getInstance().querySelectChipCard(
+		(int) objects.get("chipCard_ID"));
+	setData(objects);
+	return this;
+    }
+
+    public ChipCardList setTableData(final HashMap<String, Object> objects) {
+	final String className = "chipcardlist_";
+	final int classNameLength = className.length();
+	final HashMap<String, Object> thisMap = new HashMap<String, Object>(), chipcardMap = new HashMap<String, Object>();
+
+	Object val;
+	final Set<String> keys = objects.keySet();
+	for (String key : keys) {
+	    val = objects.get(key);
+	    key = key.substring(classNameLength);
+	    if (key.startsWith("chipcard_")) {
+		chipcardMap.put(key, val);
+	    } else {
+		thisMap.put(key, val);
+	    }
+	}
+	this.chipCard = new ChipCard().setTableData(chipcardMap);
+	setData(thisMap);
+	return this;
+    }
+
+    private void setData(final HashMap<String, Object> objects) {
+	this.id = (int) objects.get("id");
+	this.number = (int) objects.get("number");
+    }
+
+    private ChipCard chipCard;
+    private int id;
+    private int number;
 }

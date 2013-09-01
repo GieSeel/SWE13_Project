@@ -6,20 +6,18 @@ import de.dhbw.swe.campingplatzverwaltung.common.database_mgt.DatabaseController
 
 public class BookingList {
 
+    public BookingList() {
+	super();
+	this.id = 0;
+	this.booking = null;
+	this.number = 0;
+    }
+
     public BookingList(final Booking booking, final int number) {
 	super();
 	this.id = 0;
 	this.booking = booking;
 	this.number = number;
-    }
-
-    public BookingList(final HashMap<String, Object> elements) {
-	super();
-	this.id = (int) elements.get("id");
-	this.booking = DatabaseController.getInstance().querySelectBooking(
-		(int) elements.get("booking_ID"));
-	this.number = (int) elements.get("number");
-
     }
 
     public BookingList(final int id, final Booking booking, final int number) {
@@ -33,22 +31,15 @@ public class BookingList {
 	return booking;
     }
 
-    public List<Object> getData() {
-	final List<Object> data = new ArrayList<Object>();
-	data.add(this.number);
-	data.addAll(this.booking.getData());
-	return data;
-    }
-
-    public HashMap<String, Object> getHashMap() {
-	final HashMap<String, Object> elements = new HashMap<String, Object>();
-	elements.put("id", this.id);
-	elements.put(
+    public HashMap<String, Object> getDatabaseData() {
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
+	objects.put("id", this.id);
+	objects.put(
 		"booking_ID",
 		DatabaseController.getInstance().queryInsertUpdateBooking(
 			this.booking));
-	elements.put("number", this.number);
-	return elements;
+	objects.put("number", this.number);
+	return objects;
     }
 
     public int getId() {
@@ -59,7 +50,52 @@ public class BookingList {
 	return number;
     }
 
-    private final Booking booking;
-    private final int id;
-    private final int number;
+    public HashMap<String, Object> getTableData(final String parentClass) {
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
+	final String className = parentClass + "bookinglist_";
+
+	objects.put(className + "id", new Integer(this.id));
+	objects.put(className + "number", new Integer(this.number));
+
+	objects.putAll(this.booking.getTableData(className));
+
+	return objects;
+    }
+
+    public BookingList setDatabaseData(final HashMap<String, Object> objects) {
+	this.booking = DatabaseController.getInstance().querySelectBooking(
+		(int) objects.get("booking_ID"));
+	setData(objects);
+	return this;
+    }
+
+    public BookingList setTableData(final HashMap<String, Object> objects) {
+	final String className = "bookinglist_";
+	final int classNameLength = className.length();
+	final HashMap<String, Object> thisMap = new HashMap<String, Object>(), bookingMap = new HashMap<String, Object>();
+
+	Object val;
+	final Set<String> keys = objects.keySet();
+	for (String key : keys) {
+	    val = objects.get(key);
+	    key = key.substring(classNameLength);
+	    if (key.startsWith("booking_")) {
+		bookingMap.put(key, val);
+	    } else {
+		thisMap.put(key, val);
+	    }
+	}
+	this.booking = new Booking().setTableData(bookingMap);
+	setData(thisMap);
+	return this;
+    }
+
+    private void setData(final HashMap<String, Object> objects) {
+	this.id = (int) objects.get("id");
+	this.number = (int) objects.get("number");
+    }
+
+    private Booking booking;
+    private int id;
+    private int number;
 }

@@ -6,13 +6,12 @@ import de.dhbw.swe.campingplatzverwaltung.common.database_mgt.DatabaseController
 import de.dhbw.swe.campingplatzverwaltung.place_mgt.Site;
 
 public class ExtraBooking {
-    public ExtraBooking(final HashMap<String, Object> elements) {
+    public ExtraBooking() {
 	super();
-	this.id = (int) elements.get("id");
-	this.labeling = (String) elements.get("labeling");
-	this.name = (String) elements.get("name");
-	this.site = DatabaseController.getInstance().querySelectSite(
-		(int) elements.get("site_ID"));
+	this.id = 0;
+	this.labeling = null;
+	this.name = null;
+	this.site = null;
     }
 
     public ExtraBooking(final int id, final String labeling, final String name,
@@ -32,22 +31,14 @@ public class ExtraBooking {
 	this.site = site;
     }
 
-    public List<Object> getData() {
-	final List<Object> data = new ArrayList<Object>();
-	data.add(this.labeling);
-	data.add(this.name);
-	data.addAll(this.site.getData());
-	return data;
-    }
-
-    public HashMap<String, Object> getHashMap() {
-	final HashMap<String, Object> elements = new HashMap<String, Object>();
-	elements.put("id", this.id);
-	elements.put("labeling", this.labeling);
-	elements.put("name", this.name);
-	elements.put("site_ID",
+    public HashMap<String, Object> getDatabaseData() {
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
+	objects.put("id", this.id);
+	objects.put("labeling", this.labeling);
+	objects.put("name", this.name);
+	objects.put("site_ID",
 		DatabaseController.getInstance().queryInsertUpdateSite(this.site));
-	return elements;
+	return objects;
     }
 
     public int getId() {
@@ -66,8 +57,56 @@ public class ExtraBooking {
 	return site;
     }
 
-    private final int id;
-    private final String labeling;
-    private final String name;
-    private final Site site;
+    public HashMap<String, Object> getTableData(final String parentClass) {
+	final HashMap<String, Object> objects = new HashMap<String, Object>();
+	final String className = parentClass + "extrabooking_";
+
+	objects.put(className + "id", new Integer(this.id));
+	objects.put(className + "labeling", new String(this.labeling));
+	objects.put(className + "name", new String(this.name));
+
+	objects.putAll(this.site.getTableData(className));
+
+	return objects;
+    }
+
+    public ExtraBooking setDatabaseData(final HashMap<String, Object> objects) {
+	final DatabaseController db = DatabaseController.getInstance();
+	this.site = db.querySelectSite((int) objects.get("site_ID"));
+	setData(objects);
+	return this;
+    }
+
+    public ExtraBooking setTableData(final HashMap<String, Object> objects) {
+	final String className = "extrabooking_";
+	final int classNameLength = className.length();
+	final HashMap<String, Object> thisMap = new HashMap<String, Object>(), siteMap = new HashMap<String, Object>();
+
+	Object val;
+	final Set<String> keys = objects.keySet();
+	for (String key : keys) {
+	    val = objects.get(key);
+	    key = key.substring(classNameLength);
+	    if (key.startsWith("site_")) {
+		siteMap.put(key, val);
+	    } else {
+		thisMap.put(key, val);
+	    }
+	}
+	this.site = new Site().setTableData(siteMap);
+	setData(thisMap);
+	return this;
+    }
+
+    private void setData(final HashMap<String, Object> objects) {
+	this.id = (int) objects.get("id");
+	this.labeling = (String) objects.get("labeling");
+	this.name = (String) objects.get("name");
+
+    }
+
+    private int id;
+    private String labeling;
+    private String name;
+    private Site site;
 }
