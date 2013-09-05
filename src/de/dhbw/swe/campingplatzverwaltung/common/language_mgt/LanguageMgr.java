@@ -4,6 +4,8 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
 
+import de.dhbw.swe.campingplatzverwaltung.common.logging.CampingLogger;
+
 /**
  * Class to manage the {@link Language}s.
  * 
@@ -101,8 +103,7 @@ public class LanguageMgr {
 	    }
 	}
 	writeFile(defaultFilePath, content);
-	System.out.println("INFO: Wrote default language file at: "
-		+ defaultFilePath);
+	logger.info("Wrote default language file at: " + defaultFilePath);
     }
 
     /**
@@ -116,7 +117,7 @@ public class LanguageMgr {
     private boolean defaultFileExists(final String defaultFilePath) {
 	final File defaultFile = new File(defaultFilePath);
 	if (defaultFile.exists()) {
-	    System.out.println("INFO: Use existing default language file ("
+	    logger.info("Use existing default language file ("
 		    + defaultFile.getName() + ") at: "
 		    + defaultFile.getAbsolutePath());
 	    return true;
@@ -150,7 +151,7 @@ public class LanguageMgr {
 		languages.put(language.getName(), language);
 	    }
 	}
-	System.out.println("INFO: Available languages: " + languages.keySet());
+	logger.info("Available languages: " + languages.keySet());
     }
 
     /**
@@ -166,7 +167,7 @@ public class LanguageMgr {
 	} else {
 	    selectLanguageRandomly();
 	}
-	System.out.println("Selected language: " + selectedLanguage.getName());
+	logger.info("Selected language: " + selectedLanguage.getName());
     }
 
     /**
@@ -185,7 +186,7 @@ public class LanguageMgr {
 	    out.write(content.toString());
 	    out.close();
 	} catch (final Exception e) {
-	    System.err.println("Error: " + e.getMessage());
+	    logger.error(e.getMessage());
 	}
     }
 
@@ -194,6 +195,9 @@ public class LanguageMgr {
     private File languageFileDir;
 
     private final HashMap<String, Language> languages;
+
+    /** The {@link CampingLogger}. */
+    private final CampingLogger logger = CampingLogger.getLogger(LanguageMgr.class);
 
     private Language selectedLanguage;
 }
