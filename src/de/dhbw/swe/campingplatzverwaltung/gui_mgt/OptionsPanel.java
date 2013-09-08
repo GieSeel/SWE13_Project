@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import javax.swing.*;
 
+import de.dhbw.swe.campingplatzverwaltung.common.language_components.CJLabel;
 import de.dhbw.swe.campingplatzverwaltung.common.language_mgt.*;
 
 public class OptionsPanel extends JPanel {
@@ -12,9 +13,7 @@ public class OptionsPanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
     public OptionsPanel() {
-	add(new JLabel(LanguageMgr.getInstance().get(
-		LanguageProperties.GUI_LANGUAGE)
-		+ ":"));
+	add(getLanguageLabel());
 	final ButtonGroup bg = new ButtonGroup();
 
 	final LanguageMgr languageMgr = LanguageMgr.getInstance();
@@ -29,5 +28,25 @@ public class OptionsPanel extends JPanel {
 		bg.setSelected(languageRb.getModel(), true);
 	    }
 	}
+    }
+
+    /**
+     * @return the {@link CJLabel} for the languages.
+     */
+    private CJLabel getLanguageLabel() {
+	return new CJLabel(LanguageMgr.getInstance().get(
+		LanguageProperties.GUI_LANGUAGE)
+		+ ":") {
+
+	    /** The default serial version UID. */
+	    private static final long serialVersionUID = 1L;
+
+	    @Override
+	    public void languageChanged() {
+		this.setText(LanguageMgr.getInstance().get(
+			LanguageProperties.GUI_LANGUAGE)
+			+ ":");
+	    }
+	};
     }
 }

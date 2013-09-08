@@ -3,6 +3,8 @@ package de.dhbw.swe.campingplatzverwaltung.common;
 import java.lang.reflect.*;
 import java.util.*;
 
+import de.dhbw.swe.campingplatzverwaltung.common.logging.CampingLogger;
+
 /**
  * Implementation of a C# delegate. A delegate bundles objects of the specified
  * interface, is of the type of the specified interface and can be used like a
@@ -41,6 +43,9 @@ public class Delegate<D> {
 	    }
 	}
     }
+
+    /** The {@link CampingLogger}. */
+    private static CampingLogger logger = CampingLogger.getLogger(Delegate.class);
 
     /**
      * Constructor.
