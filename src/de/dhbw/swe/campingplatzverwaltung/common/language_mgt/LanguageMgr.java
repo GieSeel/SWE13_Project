@@ -27,6 +27,9 @@ public class LanguageMgr {
      * The line separator.
      * */
     private static String LINE_SEPARATOR = "\r\n";
+    /** The {@link CampingLogger}. */
+    private static final CampingLogger logger = CampingLogger.getLogger(LanguageMgr.class);
+
     private static String PROGRAM_PROPERTY_DIR = System.getProperty("user.home")
 	    + "/Documents/Campinplatzverwaltung/";
 
@@ -195,9 +198,6 @@ public class LanguageMgr {
     private File languageFileDir;
 
     private final HashMap<String, Language> languages;
-
-    /** The {@link CampingLogger}. */
-    private final CampingLogger logger = CampingLogger.getLogger(LanguageMgr.class);
 
     private Language selectedLanguage;
 }

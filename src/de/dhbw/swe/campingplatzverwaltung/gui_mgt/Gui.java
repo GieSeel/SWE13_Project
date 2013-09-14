@@ -62,6 +62,23 @@ public class Gui extends JFrame {
 	return statusBar.clearStatus();
     }
 
+    public void initGui() {
+	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	setExtendedState(JFrame.MAXIMIZED_BOTH);
+	// this.setUndecorated(true); // FULL-fullscreen :)
+
+	tabs = new CampingplaceAdministrationTabbedPane();
+	loginScreen = new LoginPanel();
+	statusBar = new StatusBarPanel();
+	statusBar.setPreferredSize(new Dimension(this.getPreferredSize().width, 20));
+
+	setLayout(new BorderLayout());
+	add(tabs, BorderLayout.CENTER);
+	add(statusBar, BorderLayout.SOUTH);
+
+	setVisible(true);
+    }
+
     public boolean setStatusBarStatus(final String txt) {
 	return statusBar.setStatus(txt);
     }
@@ -93,23 +110,6 @@ public class Gui extends JFrame {
 	setDefaultCloseOperation(EXIT_ON_CLOSE);
 	setVisible(true);
 	setCloseAppOn(KeyEvent.VK_ESCAPE);
-    }
-
-    private void initGui() {
-	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	setExtendedState(JFrame.MAXIMIZED_BOTH);
-	// this.setUndecorated(true); // FULL-fullscreen :)
-
-	tabs = new CampingplaceAdministrationTabbedPane();
-	loginScreen = new LoginPanel();
-	statusBar = new StatusBarPanel();
-	statusBar.setPreferredSize(new Dimension(this.getPreferredSize().width, 20));
-
-	setLayout(new BorderLayout());
-	add(tabs, BorderLayout.CENTER);
-	add(statusBar, BorderLayout.SOUTH);
-
-	setVisible(true);
     }
 
     /**
