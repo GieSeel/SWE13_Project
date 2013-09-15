@@ -32,13 +32,15 @@ public class Campingplatzverwaltung {
      */
     public Campingplatzverwaltung() {
 	configDatabaseController();
+	gui = Gui.getInstance();
+	gui.initGui();
     }
 
     /**
      * Configuring the {@link DatabaseController}.
      */
     private void configDatabaseController() {
-	dbController = DatabaseController.getInstance();
+	// dbController = DatabaseController.getInstance();
 	// TODO Connect with online Database?
 	// dbController.connect("jdbc:mysql://gieseel.gi.funpicsql.de/mysql1157678",
 	// "mysql1157678", "blubber1bis3");

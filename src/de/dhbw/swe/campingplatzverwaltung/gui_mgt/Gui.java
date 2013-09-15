@@ -6,6 +6,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import de.dhbw.swe.campingplatzverwaltung.common.language_mgt.*;
+import de.dhbw.swe.campingplatzverwaltung.common.logging.CampingLogger;
 
 public class Gui extends JFrame {
     /** The scale factor especially for map components. */
@@ -16,6 +17,9 @@ public class Gui extends JFrame {
 
     /** The {@link LanguageMgr}. */
     private final static LanguageMgr lm = LanguageMgr.getInstance();
+
+    /** The {@link CampingLogger}. */
+    private static CampingLogger logger = CampingLogger.getLogger(Gui.class);
 
     /**   */
     private static final long serialVersionUID = 1L;
@@ -28,7 +32,7 @@ public class Gui extends JFrame {
     public static synchronized Gui getInstance() {
 	if (instance == null) {
 	    instance = new Gui();
-	    instance.initGui();
+	    instance.startupGui();
 	    // instance.initDisplay();
 	}
 	return instance;
@@ -59,24 +63,27 @@ public class Gui extends JFrame {
     }
 
     public boolean clearStatus() {
-	return statusBar.clearStatus();
+	return statusBar.cleanupStatus();
     }
 
     public void initGui() {
-	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	setExtendedState(JFrame.MAXIMIZED_BOTH);
 	// this.setUndecorated(true); // FULL-fullscreen :)
 
 	tabs = new CampingplaceAdministrationTabbedPane();
 	loginScreen = new LoginPanel();
-	statusBar = new StatusBarPanel();
-	statusBar.setPreferredSize(new Dimension(this.getPreferredSize().width, 20));
 
-	setLayout(new BorderLayout());
 	add(tabs, BorderLayout.CENTER);
-	add(statusBar, BorderLayout.SOUTH);
 
 	setVisible(true);
+	initialized = true;
+    }
+
+    /**
+     * 
+     * @return if the GUI was already initialized.
+     */
+    public boolean isInitialized() {
+	return initialized;
     }
 
     public boolean setStatusBarStatus(final String txt) {
@@ -142,6 +149,27 @@ public class Gui extends JFrame {
 	setBounds(0, 0, screenSize.width, screenSize.height);
 
     }
+
+    /**
+     * initialize the basic GUI.
+     */
+    private void startupGui() {
+	logger.info("Startup GUI ...");
+
+	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+	statusBar = new StatusBarPanel();
+	statusBar.setPreferredSize(new Dimension(this.getPreferredSize().width, 20));
+
+	setLayout(new BorderLayout());
+	add(statusBar, BorderLayout.SOUTH);
+
+	logger.info("Startup GUI successful");
+    }
+
+    /** The initialized indicator. */
+    private boolean initialized = false;
 
     private LoginPanel loginScreen;
 

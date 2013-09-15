@@ -5,7 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 
-public class StatusBarPanel extends JPanel {
+public class StatusBarPanel extends JPanel implements StatusBarInterface {
     /** The serial version UID. */
     private static final long serialVersionUID = 1L;
 
@@ -23,15 +23,12 @@ public class StatusBarPanel extends JPanel {
 
     }
 
-    public boolean clearStatus() {
+    public boolean cleanupStatus() {
 	statusLabel.setText("");
 	return true;
     }
 
-    /**
-     * 
-     * @return
-     */
+    @Override
     public boolean removeHoverInfo() {
 	if (hoverLabel.getText().equals("")) {
 	    return false;
@@ -40,22 +37,12 @@ public class StatusBarPanel extends JPanel {
 	return true;
     }
 
-    /**
-     * Set information for hovered element.
-     * 
-     * @param info
-     */
+    @Override
     public void setHoverInfo(final String info) {
 	hoverLabel.setText(info);
     }
 
-    /**
-     * Set message for current state/job which is in progress
-     * 
-     * @param txt
-     *            the message text
-     * @return if it was successful
-     */
+    @Override
     public boolean setStatus(final String txt) {
 	statusLabel.setText(txt);
 	return true;
