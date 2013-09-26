@@ -49,7 +49,7 @@ public class Campingplatzverwaltung {
      */
     public Campingplatzverwaltung() {
 	gui = Gui.getInstance();
-	configDatabaseController();
+	// configDatabaseController();
 	// TODO on delete comment change CampingplaceAdministrationTabbedPane
 	gui.startupGui();
     }

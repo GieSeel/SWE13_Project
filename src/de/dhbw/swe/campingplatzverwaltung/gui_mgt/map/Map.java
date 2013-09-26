@@ -7,13 +7,12 @@ import java.io.IOException;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
-import javax.swing.JScrollPane;
+import javax.swing.JPanel;
 
 import de.dhbw.swe.campingplatzverwaltung.common.ResourceLoader;
 import de.dhbw.swe.campingplatzverwaltung.gui_mgt.Gui;
-import de.dhbw.swe.campingplatzverwaltung.gui_mgt.map.*;
 
-public class MapPane extends JScrollPane implements MouseListener {
+public class Map extends JPanel implements MouseListener, MouseMotionListener {
 
     /** The percentage of the space of screen covered by the map. */
     private static final float MAP_SCREEN_COVERAGE = 0.80f;
@@ -21,17 +20,14 @@ public class MapPane extends JScrollPane implements MouseListener {
     /**   */
     private static final long serialVersionUID = 1L;
 
-    public MapPane(final String mapImagePath) {
+    public Map(final String mapImagePath) {
 	final Toolkit toolkit = Toolkit.getDefaultToolkit();
 	img = getMapImage(mapImagePath);
 	final Dimension screenSize = toolkit.getScreenSize();
 	Gui.setScaleFactor((screenSize.width * MAP_SCREEN_COVERAGE)
 		/ img.getWidth());
 	imgScaled = getScaledImage(img);
-	currentMap = -1;
-	addMouseListener(this);
 	alpha = 0.1f;
-	fill = Color.BLUE;
 
 	final Dimension mapSize = new Dimension(
 		(int) (img.getWidth() * Gui.getScaleFactor()),
@@ -39,10 +35,17 @@ public class MapPane extends JScrollPane implements MouseListener {
 	setPreferredSize(mapSize);
 
 	setDefaultAreaPolygons();
+
+	addMouseListener(this);
+	addMouseMotionListener(this);
     }
 
     @Override
     public void mouseClicked(final MouseEvent arg0) {
+    }
+
+    @Override
+    public void mouseDragged(final MouseEvent e) {
     }
 
     @Override
@@ -54,20 +57,33 @@ public class MapPane extends JScrollPane implements MouseListener {
     }
 
     @Override
+    public void mouseMoved(final MouseEvent e) {
+	highlightedArea = -1;
+	for (int i = 0; i < areas.size(); i++) {
+	    if (areas.get(i).contains(e.getX(), e.getY())) {
+		// this.firePropertyChange("CurrentMap", highlightedArea, i);
+		highlightedArea = i;
+		break;
+	    }
+	}
+	repaint();
+    }
+
+    @Override
     public void mousePressed(final MouseEvent arg0) {
     }
 
     @Override
     public void mouseReleased(final MouseEvent e) {
-	System.out.println(e.getX() + "  " + e.getY());
-	for (int i = 0; i < polys.size(); i++) {
-	    if (polys.get(i).contains(e.getX(), e.getY())) {
-		this.firePropertyChange("CurrentMap", currentMap, i);
-		currentMap = i;
-		repaint();
+	for (int i = 0; i < areas.size(); i++) {
+	    if (areas.get(i).contains(e.getX(), e.getY())) {
+		// this.firePropertyChange("CurrentMap", highlightedArea, i);
+		highlightedArea = i;
+		selectedArea = i;
 		break;
 	    }
 	}
+	repaint();
     }
 
     @Override
@@ -76,23 +92,18 @@ public class MapPane extends JScrollPane implements MouseListener {
 	g2.drawImage(imgScaled, 0, 0, null);
 
 	g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-	g2.setColor(fill);
-	if (currentMap > -1) {
-	    g2.fillPolygon(polys.get(currentMap));
+	g2.setColor(Color.GRAY);
+	if (highlightedArea > -1) {
+	    g2.fillPolygon(areas.get(highlightedArea));
+	}
+	g2.setColor(Color.BLUE);
+	if (selectedArea > -1) {
+	    g2.fillPolygon(areas.get(selectedArea));
 	}
     }
 
-    public void setFill(final Color color) {
-	fill = color;
-    }
-
-    public void setFill(final Color color, final float alpha) {
-	fill = color;
-	this.alpha = alpha;
-    }
-
     public void setPolygons(final Vector<Polygon> polygons) {
-	polys = polygons;
+	areas = polygons;
     }
 
     /**
@@ -121,7 +132,7 @@ public class MapPane extends JScrollPane implements MouseListener {
     }
 
     private void setDefaultAreaPolygons() {
-	polys = new Vector<>();
+	areas = new Vector<>();
 	final Vector<AreaCoordinate> areaCoordinates = new MapAreas().getAreaCoordinates();
 	int[] xPoints;
 	int[] yPoints;
@@ -130,7 +141,7 @@ public class MapPane extends JScrollPane implements MouseListener {
 	    yPoints = areaCord.getScaledyPoints();
 	    if (xPoints.length == yPoints.length) {
 		final Polygon area = new Polygon(xPoints, yPoints, xPoints.length);
-		polys.add(area);
+		areas.add(area);
 	    } else {
 		System.out.println("ERROR: Not same amout of coordinates for area "
 			+ areaCord.getAreaName() + ". " + xPoints.length
@@ -139,16 +150,17 @@ public class MapPane extends JScrollPane implements MouseListener {
 	}
     }
 
-    private float alpha;
+    private final float alpha;
 
-    private int currentMap;
+    private Vector<Polygon> areas;
 
-    private Color fill;
+    /** The highlighted area. */
+    private int highlightedArea = -1;
 
     private final BufferedImage img;
 
     private final Image imgScaled;
 
-    private Vector<Polygon> polys;
-
+    /** The selected area. */
+    private int selectedArea = -1;
 }
