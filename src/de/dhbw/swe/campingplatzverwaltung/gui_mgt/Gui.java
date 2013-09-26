@@ -32,7 +32,7 @@ public class Gui extends JFrame {
     public static synchronized Gui getInstance() {
 	if (instance == null) {
 	    instance = new Gui();
-	    instance.startupGui();
+	    instance.initGui();
 	    // instance.initDisplay();
 	}
 	return instance;
@@ -66,18 +66,6 @@ public class Gui extends JFrame {
 	return statusBar.cleanupStatus();
     }
 
-    public void initGui() {
-	// this.setUndecorated(true); // FULL-fullscreen :)
-
-	tabs = new CampingplaceAdministrationTabbedPane();
-	loginScreen = new LoginPanel();
-
-	add(tabs, BorderLayout.CENTER);
-
-	setVisible(true);
-	initialized = true;
-    }
-
     /**
      * 
      * @return if the GUI was already initialized.
@@ -88,6 +76,18 @@ public class Gui extends JFrame {
 
     public boolean setStatusBarStatus(final String txt) {
 	return statusBar.setStatus(txt);
+    }
+
+    public void startupGui() {
+	// this.setUndecorated(true); // FULL-fullscreen :)
+
+	tabs = new CampingplaceAdministrationTabbedPane();
+	loginScreen = new LoginPanel();
+
+	add(tabs, BorderLayout.CENTER);
+
+	setVisible(true);
+	initialized = true;
     }
 
     /**
@@ -120,6 +120,24 @@ public class Gui extends JFrame {
     }
 
     /**
+     * initialize the basic GUI.
+     */
+    private void initGui() {
+	logger.info("Initialize GUI ...");
+
+	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+	statusBar = new StatusBarPanel();
+	statusBar.setPreferredSize(new Dimension(this.getPreferredSize().width, 20));
+
+	setLayout(new BorderLayout());
+	add(statusBar, BorderLayout.SOUTH);
+
+	logger.info("Initialize GUI successful");
+    }
+
+    /**
      * Set close handling.
      */
     private void setCloseAppOn(final int keyEvent) {
@@ -148,24 +166,6 @@ public class Gui extends JFrame {
 	final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	setBounds(0, 0, screenSize.width, screenSize.height);
 
-    }
-
-    /**
-     * initialize the basic GUI.
-     */
-    private void startupGui() {
-	logger.info("Startup GUI ...");
-
-	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	setExtendedState(JFrame.MAXIMIZED_BOTH);
-
-	statusBar = new StatusBarPanel();
-	statusBar.setPreferredSize(new Dimension(this.getPreferredSize().width, 20));
-
-	setLayout(new BorderLayout());
-	add(statusBar, BorderLayout.SOUTH);
-
-	logger.info("Startup GUI successful");
     }
 
     /** The initialized indicator. */

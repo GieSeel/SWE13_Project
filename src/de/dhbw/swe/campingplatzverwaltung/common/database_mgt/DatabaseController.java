@@ -6,6 +6,7 @@ import java.util.Date;
 
 import de.dhbw.swe.campingplatzverwaltung.booking_mgt.*;
 import de.dhbw.swe.campingplatzverwaltung.common.*;
+import de.dhbw.swe.campingplatzverwaltung.common.logging.CampingLogger;
 import de.dhbw.swe.campingplatzverwaltung.person_mgt.*;
 import de.dhbw.swe.campingplatzverwaltung.place_mgt.*;
 import de.dhbw.swe.campingplatzverwaltung.service_mgt.*;
@@ -209,11 +210,6 @@ public class DatabaseController {
      */
     public boolean connect(final String url, final String user,
 	    final String password) {
-
-	// url = "jdbc:mysql://http://gieseel.funpic.de/mysql1157678";
-	// user = "mysql1157678";
-	// password = "blubber1bis3";
-
 	try {
 	    Class.forName("com.mysql.jdbc.Driver").newInstance();
 	} catch (InstantiationException | IllegalAccessException
@@ -227,7 +223,7 @@ public class DatabaseController {
 
 	    conncetion = DriverManager.getConnection(url, user, password);
 
-	    System.out.println("Connected with Database.");
+	    logger.info("Connected with Database.");
 
 	} catch (final SQLException e) {
 	    // TODO Auto-generated catch block
@@ -1784,11 +1780,15 @@ public class DatabaseController {
 	PreparedStatement statement;
 	final String query = "SELECT * FROM " + table + " "
 		+ (id == 0 ? ";" : " WHERE " + entries[0][0] + "='" + id + "';");
+	final List<HashMap<String, Object>> ret = new ArrayList<HashMap<String, Object>>();
+	if (conncetion == null) {
+	    logger.error("Not connected to database");
+	    return ret;
+	}
 	try {
 	    statement = conncetion.prepareStatement(query);
 
 	    final ResultSet result = statement.executeQuery();
-	    final List<HashMap<String, Object>> ret = new ArrayList<HashMap<String, Object>>();
 	    HashMap<String, Object> tmp_list;
 
 	    while (result.next()) {
@@ -1818,6 +1818,11 @@ public class DatabaseController {
 	return null;
     }
 
+    /** The {@link CampingLogger}. */
+    CampingLogger logger = CampingLogger.getLogger(DatabaseController.class);
+
+    /** The database {@link Connection}. */
     private Connection conncetion;
+
     private final HashMap<String, String[][]> sqlObjects;
 }
