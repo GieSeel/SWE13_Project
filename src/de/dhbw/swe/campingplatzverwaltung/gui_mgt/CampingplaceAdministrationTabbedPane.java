@@ -31,10 +31,10 @@ public class CampingplaceAdministrationTabbedPane extends JTabbedPane {
 	addTab(lm.get(lp.GUI_TAB_OPTIONS), options);
     }
 
-    private final FormularPanel formular;
+    private FormularPanel formular = null;
     private final LanguageMgr lm;
     private LanguageProperties lp;
     private final MapPanel map;
     private final OptionsPanel options;
-    private final SearchPanel search;
+    private SearchPanel search = null;
 }
