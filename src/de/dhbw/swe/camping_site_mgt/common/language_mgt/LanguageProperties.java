@@ -31,6 +31,8 @@ public interface LanguageProperties {
     String NO = "no";
     /** The question for closing the application. */
     String QUESTION_CLOSE_APPLICATION = "Do you like to close the application?";
+    /** The selected property. */
+    String SELECTED = "selected";
     /** The yes property. */
     String YES = "yes";
 }

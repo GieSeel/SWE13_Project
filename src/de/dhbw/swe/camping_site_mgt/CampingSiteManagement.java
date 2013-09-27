@@ -42,10 +42,9 @@ public class CampingSiteManagement {
      * 
      */
     public CampingSiteManagement() {
-	gui = Gui.getInstance();
+	gui = new Gui();
 	// configDatabaseController();
 	// TODO on delete comment change CampingplaceAdministrationTabbedPane
-	gui.startupGui();
     }
 
     /**
@@ -53,7 +52,6 @@ public class CampingSiteManagement {
      */
     private void configDatabaseController() {
 	dbController = DatabaseController.getInstance();
-	gui = Gui.getInstance();
 	dbController.connect("jdbc:mysql://" + HOST_NAME + "/" + DATABASE_NAME,
 		"willi", "bald");
 	// final Guest test = dbController.querySelectGuest(1);
@@ -66,7 +64,7 @@ public class CampingSiteManagement {
     private DatabaseController dbController;
     private EmployeeMgr employeeManager;
     /** The {@link Gui}. */
-    private Gui gui;
+    private final Gui gui;
     private PitchMgr pitchManager;
     private ServiceMgr serviceManager;
     private SiteMgr siteManager;

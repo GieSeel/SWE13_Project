@@ -38,8 +38,8 @@ public class StatusBarController implements StatusBarInterface, GuiSnippet {
     }
 
     @Override
-    public boolean removeHoverInfo() {
-	return statusBar.removeHoverInfo();
+    public boolean cleanupHoverInfo() {
+	return statusBar.cleanupHoverInfo();
     }
 
     @Override

@@ -11,7 +11,7 @@ public interface StatusBarInterface {
      * 
      * @return
      */
-    public boolean removeHoverInfo();
+    public boolean cleanupHoverInfo();
 
     /**
      * Set information for hovered element.

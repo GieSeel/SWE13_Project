@@ -10,11 +10,37 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.statusbar.StatusBarController;
 
 public class Gui extends JFrame {
+    private class GlobalKeyCloseListener implements AWTEventListener {
+	public GlobalKeyCloseListener(final int keyCode) {
+	    this.keyCode = keyCode;
+	    Toolkit.getDefaultToolkit().addAWTEventListener(this,
+		    AWTEvent.KEY_EVENT_MASK);
+	}
+
+	@Override
+	public void eventDispatched(final AWTEvent event) {
+	    if (event.getID() == KeyEvent.KEY_RELEASED) {
+		keyTyped((KeyEvent) event);
+	    }
+	}
+
+	private void keyTyped(final KeyEvent e) {
+	    if (e.getKeyCode() == keyCode) {
+		final int n = JOptionPane.showConfirmDialog(null,
+			lm.get(LanguageProperties.QUESTION_CLOSE_APPLICATION),
+			lm.get(LanguageProperties.GUI_CLOSE_DIALOG_TITLE),
+			JOptionPane.YES_NO_OPTION);
+		if (n == 0) {
+		    dispose();
+		}
+	    }
+	}
+
+	private final int keyCode;
+    }
+
     /** The scale factor especially for map components. */
     static float scaleFactor = 1;
-
-    /** The singleton instance. */
-    private static Gui instance;
 
     /** The {@link LanguageMgr}. */
     private final static LanguageMgr lm = LanguageMgr.getInstance();
@@ -24,20 +50,6 @@ public class Gui extends JFrame {
 
     /**   */
     private static final long serialVersionUID = 1L;
-
-    /**
-     * Returns the instance.
-     * 
-     * @return the singleton instance.
-     */
-    public static synchronized Gui getInstance() {
-	if (instance == null) {
-	    instance = new Gui();
-	    instance.initGui();
-	    // instance.initDisplay();
-	}
-	return instance;
-    }
 
     /**
      * @return the components scale factor.
@@ -57,48 +69,14 @@ public class Gui extends JFrame {
     }
 
     /**
-     * Private constructor. Singleton.
+     * Constructor.
      */
-    private Gui() {
+    public Gui() {
 	super(lm.get(LanguageProperties.GUI_MAINFRAME_TITLE));
-    }
-
-    /**
-     * 
-     * @return if the GUI was already initialized.
-     */
-    public boolean isInitialized() {
-	return initialized;
-    }
-
-    public void startupGui() {
-	// this.setUndecorated(true); // FULL-fullscreen :)
-
-	tabs = new CampingplaceAdministrationTabbedPane();
-	loginScreen = new LoginPanel();
-
-	add(tabs, BorderLayout.CENTER);
-
+	logger.info("Initialize GUI ...");
+	initDisplay();
+	logger.info("Initialize GUI successful");
 	setVisible(true);
-	initialized = true;
-    }
-
-    /**
-     * @return the initialized main {@link JPanel}
-     */
-    private JPanel getMainPanel() {
-	mainPanel = new JPanel();
-	mainPanel.setBackground(new Color(44, 15, 23));
-	mainPanel.requestFocus();
-	final JComponent statusBar = StatusBarController.getInstance().getGuiSnippet();
-	// statusBar.setPreferredSize(new
-	// Dimension(this.getPreferredSize().width, 20));
-	mainPanel.add(statusBar, BorderLayout.SOUTH);
-
-	tabs = new CampingplaceAdministrationTabbedPane();
-	mainPanel.add(tabs, BorderLayout.CENTER);
-
-	return mainPanel;
     }
 
     /**
@@ -106,18 +84,25 @@ public class Gui extends JFrame {
      */
     private void initDisplay() {
 	sizeFrame();
+
 	setLayout(new BorderLayout());
-	add(getMainPanel());
-	setDefaultCloseOperation(EXIT_ON_CLOSE);
-	setVisible(true);
+	setBackground(new Color(44, 15, 23));
+
+	final JComponent statusBar = StatusBarController.getInstance().getGuiSnippet();
+	add(statusBar, BorderLayout.SOUTH);
+
+	tabs = new CampingplaceAdministrationTabbedPane();
+	add(tabs, BorderLayout.CENTER);
+
+	setFocusable(true);
 	setCloseAppOn(KeyEvent.VK_ESCAPE);
     }
 
     /**
      * initialize the basic GUI.
      */
+    @Deprecated
     private void initGui() {
-	logger.info("Initialize GUI ...");
 
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -129,27 +114,16 @@ public class Gui extends JFrame {
 	final JComponent statusBar = StatusBarController.getInstance().getGuiSnippet();
 	add(statusBar, BorderLayout.SOUTH);
 
-	logger.info("Initialize GUI successful");
     }
 
     /**
-     * Set close handling.
+     * Set close handling on specific {@link KeyEvent}.
+     * 
+     * @param keyCode
+     *            the keys key code
      */
-    private void setCloseAppOn(final int keyEvent) {
-	mainPanel.addKeyListener(new KeyAdapter() {
-	    @Override
-	    public void keyPressed(final KeyEvent keyE) {
-		if (keyE.getKeyCode() == keyEvent) {
-		    final int n = JOptionPane.showConfirmDialog(mainPanel,
-			    lm.get(LanguageProperties.QUESTION_CLOSE_APPLICATION),
-			    lm.get(LanguageProperties.GUI_CLOSE_DIALOG_TITLE),
-			    JOptionPane.YES_NO_OPTION);
-		    if (n == 0) {
-			dispose();
-		    }
-		}
-	    }
-	});
+    private void setCloseAppOn(final int keyCode) {
+	new GlobalKeyCloseListener(keyCode);
     }
 
     /**
@@ -163,13 +137,7 @@ public class Gui extends JFrame {
 
     }
 
-    /** The initialized indicator. */
-    private boolean initialized = false;
-
     private LoginPanel loginScreen;
-
-    /** The main {@link JPanel}. */
-    private JPanel mainPanel;
 
     private CampingplaceAdministrationTabbedPane tabs;
 }

@@ -20,7 +20,6 @@ public class SearchPanel extends JPanel {
 
     public SearchPanel() {
 	dbController = DatabaseController.getInstance();
-	this.gui = Gui.getInstance();
 
 	final List<Guest> objects = dbController.querySelectGuest();
 	final List<String[]> coulmnObjects = getColumnObjects(
@@ -293,7 +292,6 @@ public class SearchPanel extends JPanel {
     }
 
     private final DatabaseController dbController;
-    private final Gui gui;
     private List<RowFilter<Object, Object>> rowFilterList;
     private final TableRowSorter<CampingTableModel> sorter;
 }

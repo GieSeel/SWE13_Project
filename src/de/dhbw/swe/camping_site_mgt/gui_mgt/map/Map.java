@@ -21,13 +21,22 @@ public class Map extends JPanel {
 	@Override
 	public void mouseReleased(final MouseEvent e) {
 	    for (final Area area : areas) {
+		statusBar.cleanupStatus();
+
 		if (area.getPoly().contains(e.getX(), e.getY())) {
+		    if (selectedArea == area) {
+			selectedArea = null;
+			break;
+		    }
 		    selectedArea = area;
+		    statusBar.setStatus(buildAreaSelectedInfo());
 		    break;
 		}
+
 	    }
 	    repaint();
 	}
+
     }
 
     private class MapMouseMotionListener extends MouseMotionAdapter {
@@ -35,13 +44,16 @@ public class Map extends JPanel {
 	public void mouseMoved(final MouseEvent e) {
 	    highlightedArea = null;
 	    for (final Area area : areas) {
+		statusBar.cleanupHoverInfo();
+		setCurserDefault();
+
 		if (area.getPoly().contains(e.getX(), e.getY())) {
 		    highlightedArea = area;
 		    statusBar.setHoverInfo(buildAreaHoverInfo());
 		    setCurserHand();
 		    break;
 		}
-		setCurserDefault();
+
 	    }
 	    repaint();
 	}
@@ -58,6 +70,7 @@ public class Map extends JPanel {
 
     /** The percentage of the space of screen covered by the map. */
     private static final float MAP_SCREEN_COVERAGE = 0.80f;
+
     /**   */
     private static final long serialVersionUID = 1L;
 
@@ -88,25 +101,39 @@ public class Map extends JPanel {
 
 	g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 	g2.setColor(Color.GRAY);
+
 	if (highlightedArea != null) {
 	    g2.fillPolygon(highlightedArea.getPoly());
 	}
+
 	g2.setColor(Color.BLUE);
+
 	if (selectedArea != null) {
 	    g2.fillPolygon(selectedArea.getPoly());
 	}
+
     }
 
     private String buildAreaHoverInfo() {
 	final StringBuilder hoverInfo = new StringBuilder();
 	hoverInfo.append(lm.get(lp.AREA));
 	hoverInfo.append(" " + highlightedArea.getName());
+
 	if (highlightedArea == selectedArea) {
 	    return hoverInfo.toString();
 	}
+
 	hoverInfo.append(" (" + lm.get(lp.CLICK_TO_SELECT) + " & ");
 	hoverInfo.append(lm.get(lp.ADDITIONAL_INFO) + ")");
 	return hoverInfo.toString();
+    }
+
+    private String buildAreaSelectedInfo() {
+	final StringBuilder info = new StringBuilder();
+	info.append(lm.get(lp.AREA));
+	info.append(" " + selectedArea.getName());
+	info.append(" " + lm.get(lp.SELECTED));
+	return info.toString();
     }
 
     /**
@@ -144,19 +171,24 @@ public class Map extends JPanel {
 	setCursor(cursor);
     }
 
+    /** The opacity factor. */
     private final float alpha;
 
+    /** The available areas. */
     private final Vector<Area> areas;
 
     /** The highlighted {@link Area}. */
     private Area highlightedArea = null;
 
+    /** The {@link BufferedImage} of the map. */
     private final BufferedImage img;
 
+    /** The scaled {@link Image} */
     private final Image imgScaled;
 
     /** The selected {@link Area}. */
     private Area selectedArea = null;
 
+    /** The access interface to the status bar. */
     private final StatusBarInterface statusBar = StatusBarController.getInstance();
 }

@@ -11,7 +11,7 @@ class StatusBar extends JPanel implements StatusBarInterface {
 
     public StatusBar() {
 	setBorder(new BevelBorder(BevelBorder.LOWERED));
-	setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+	setLayout(new BorderLayout());
 
 	statusLabel = new JLabel(" ");
 	statusLabel.setEnabled(false);
@@ -25,17 +25,17 @@ class StatusBar extends JPanel implements StatusBarInterface {
     }
 
     @Override
-    public boolean cleanupStatus() {
-	statusLabel.setText("");
-	return true;
-    }
-
-    @Override
-    public boolean removeHoverInfo() {
+    public boolean cleanupHoverInfo() {
 	if (hoverLabel.getText().equals("")) {
 	    return false;
 	}
 	hoverLabel.setText("");
+	return true;
+    }
+
+    @Override
+    public boolean cleanupStatus() {
+	statusLabel.setText("");
 	return true;
     }
 
