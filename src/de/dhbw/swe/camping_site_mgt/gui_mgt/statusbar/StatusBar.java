@@ -1,28 +1,30 @@
-package de.dhbw.swe.camping_site_mgt.gui_mgt;
+package de.dhbw.swe.camping_site_mgt.gui_mgt.statusbar;
 
 import java.awt.BorderLayout;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 
-public class StatusBarPanel extends JPanel implements StatusBarInterface {
+class StatusBar extends JPanel implements StatusBarInterface {
     /** The serial version UID. */
     private static final long serialVersionUID = 1L;
 
-    public StatusBarPanel() {
+    public StatusBar() {
 	setBorder(new BevelBorder(BevelBorder.LOWERED));
 	setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
-	statusLabel = new JLabel();
-	statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
-	add(statusLabel, BorderLayout.WEST);
+	statusLabel = new JLabel(" ");
+	statusLabel.setEnabled(false);
+	statusLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+	add(statusLabel, BorderLayout.EAST);
 
-	hoverLabel = new JLabel();
-	hoverLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+	hoverLabel = new JLabel(" ");
+	hoverLabel.setEnabled(false);
+	hoverLabel.setHorizontalAlignment(SwingConstants.LEFT);
 	add(hoverLabel, BorderLayout.CENTER);
-
     }
 
+    @Override
     public boolean cleanupStatus() {
 	statusLabel.setText("");
 	return true;

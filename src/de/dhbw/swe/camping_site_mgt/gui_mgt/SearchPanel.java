@@ -10,6 +10,7 @@ import javax.swing.event.*;
 import javax.swing.table.*;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.statusbar.StatusBarController;
 import de.dhbw.swe.camping_site_mgt.person_mgt.Guest;
 
 public class SearchPanel extends JPanel {
@@ -169,7 +170,8 @@ public class SearchPanel extends JPanel {
 
 		// Check if all fields are filled
 		if (data.containsValue("")) {
-		    gui.setStatusBarStatus("Alle Felder müssen gefüllt sein!!");
+		    StatusBarController.getInstance().setStatus(
+			    "Alle Felder müssen gefüllt sein!!");
 		    return;
 		} else {
 		    // bodyTable.insertData(data);

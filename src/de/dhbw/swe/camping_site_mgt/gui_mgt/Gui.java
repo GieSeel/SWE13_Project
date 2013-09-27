@@ -7,6 +7,7 @@ import javax.swing.*;
 
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.statusbar.StatusBarController;
 
 public class Gui extends JFrame {
     /** The scale factor especially for map components. */
@@ -62,20 +63,12 @@ public class Gui extends JFrame {
 	super(lm.get(LanguageProperties.GUI_MAINFRAME_TITLE));
     }
 
-    public boolean clearStatus() {
-	return statusBar.cleanupStatus();
-    }
-
     /**
      * 
      * @return if the GUI was already initialized.
      */
     public boolean isInitialized() {
 	return initialized;
-    }
-
-    public boolean setStatusBarStatus(final String txt) {
-	return statusBar.setStatus(txt);
     }
 
     public void startupGui() {
@@ -97,8 +90,9 @@ public class Gui extends JFrame {
 	mainPanel = new JPanel();
 	mainPanel.setBackground(new Color(44, 15, 23));
 	mainPanel.requestFocus();
-	statusBar = new StatusBarPanel();
-	statusBar.setPreferredSize(new Dimension(this.getPreferredSize().width, 20));
+	final JComponent statusBar = StatusBarController.getInstance().getGuiSnippet();
+	// statusBar.setPreferredSize(new
+	// Dimension(this.getPreferredSize().width, 20));
 	mainPanel.add(statusBar, BorderLayout.SOUTH);
 
 	tabs = new CampingplaceAdministrationTabbedPane();
@@ -128,10 +122,11 @@ public class Gui extends JFrame {
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-	statusBar = new StatusBarPanel();
-	statusBar.setPreferredSize(new Dimension(this.getPreferredSize().width, 20));
+	// statusBar.setPreferredSize(new
+	// Dimension(this.getPreferredSize().width, 20));
 
 	setLayout(new BorderLayout());
+	final JComponent statusBar = StatusBarController.getInstance().getGuiSnippet();
 	add(statusBar, BorderLayout.SOUTH);
 
 	logger.info("Initialize GUI successful");
@@ -176,6 +171,5 @@ public class Gui extends JFrame {
     /** The main {@link JPanel}. */
     private JPanel mainPanel;
 
-    private StatusBarPanel statusBar;
     private CampingplaceAdministrationTabbedPane tabs;
 }

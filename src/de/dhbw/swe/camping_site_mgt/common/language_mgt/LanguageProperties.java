@@ -7,6 +7,12 @@ package de.dhbw.swe.camping_site_mgt.common.language_mgt;
  * @version 1.0
  */
 public interface LanguageProperties {
+    /** The additional information property. */
+    String ADDITIONAL_INFO = "for additional information";
+    /** The area property. */
+    String AREA = "Area";
+    /** The click to select property. */
+    String CLICK_TO_SELECT = "click to select";
     /** Delivery point property. */
     String DELIVERY_POINT = "Delivery Point";
     /** The close dialog title. */

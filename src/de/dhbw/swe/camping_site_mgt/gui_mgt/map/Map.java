@@ -10,13 +10,54 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import de.dhbw.swe.camping_site_mgt.common.ResourceLoader;
+import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
+import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.Gui;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.statusbar.*;
 
-public class Map extends JPanel implements MouseListener, MouseMotionListener {
+public class Map extends JPanel {
+
+    private class MapMouseListener extends MouseAdapter {
+	@Override
+	public void mouseReleased(final MouseEvent e) {
+	    for (final Area area : areas) {
+		if (area.getPoly().contains(e.getX(), e.getY())) {
+		    selectedArea = area;
+		    break;
+		}
+	    }
+	    repaint();
+	}
+    }
+
+    private class MapMouseMotionListener extends MouseMotionAdapter {
+	@Override
+	public void mouseMoved(final MouseEvent e) {
+	    highlightedArea = null;
+	    for (final Area area : areas) {
+		if (area.getPoly().contains(e.getX(), e.getY())) {
+		    highlightedArea = area;
+		    statusBar.setHoverInfo(buildAreaHoverInfo());
+		    setCurserHand();
+		    break;
+		}
+		setCurserDefault();
+	    }
+	    repaint();
+	}
+    }
+
+    /** The {@link LanguageMgr}. */
+    private static LanguageMgr lm = LanguageMgr.getInstance();
+
+    /** The {@link CampingLogger}. */
+    private static CampingLogger logger = CampingLogger.getLogger(Map.class);
+
+    /** The {@link LanguageProperties}. */
+    private static LanguageProperties lp;
 
     /** The percentage of the space of screen covered by the map. */
     private static final float MAP_SCREEN_COVERAGE = 0.80f;
-
     /**   */
     private static final long serialVersionUID = 1L;
 
@@ -34,56 +75,10 @@ public class Map extends JPanel implements MouseListener, MouseMotionListener {
 		(int) (img.getHeight() * Gui.getScaleFactor()));
 	setPreferredSize(mapSize);
 
-	setDefaultAreaPolygons();
+	areas = new MapAreas().getAreas();
 
-	addMouseListener(this);
-	addMouseMotionListener(this);
-    }
-
-    @Override
-    public void mouseClicked(final MouseEvent arg0) {
-    }
-
-    @Override
-    public void mouseDragged(final MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(final MouseEvent arg0) {
-    }
-
-    @Override
-    public void mouseExited(final MouseEvent arg0) {
-    }
-
-    @Override
-    public void mouseMoved(final MouseEvent e) {
-	highlightedArea = -1;
-	for (int i = 0; i < areas.size(); i++) {
-	    if (areas.get(i).contains(e.getX(), e.getY())) {
-		// this.firePropertyChange("CurrentMap", highlightedArea, i);
-		highlightedArea = i;
-		break;
-	    }
-	}
-	repaint();
-    }
-
-    @Override
-    public void mousePressed(final MouseEvent arg0) {
-    }
-
-    @Override
-    public void mouseReleased(final MouseEvent e) {
-	for (int i = 0; i < areas.size(); i++) {
-	    if (areas.get(i).contains(e.getX(), e.getY())) {
-		// this.firePropertyChange("CurrentMap", highlightedArea, i);
-		highlightedArea = i;
-		selectedArea = i;
-		break;
-	    }
-	}
-	repaint();
+	addMouseListener(new MapMouseListener());
+	addMouseMotionListener(new MapMouseMotionListener());
     }
 
     @Override
@@ -93,17 +88,25 @@ public class Map extends JPanel implements MouseListener, MouseMotionListener {
 
 	g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 	g2.setColor(Color.GRAY);
-	if (highlightedArea > -1) {
-	    g2.fillPolygon(areas.get(highlightedArea));
+	if (highlightedArea != null) {
+	    g2.fillPolygon(highlightedArea.getPoly());
 	}
 	g2.setColor(Color.BLUE);
-	if (selectedArea > -1) {
-	    g2.fillPolygon(areas.get(selectedArea));
+	if (selectedArea != null) {
+	    g2.fillPolygon(selectedArea.getPoly());
 	}
     }
 
-    public void setPolygons(final Vector<Polygon> polygons) {
-	areas = polygons;
+    private String buildAreaHoverInfo() {
+	final StringBuilder hoverInfo = new StringBuilder();
+	hoverInfo.append(lm.get(lp.AREA));
+	hoverInfo.append(" " + highlightedArea.getName());
+	if (highlightedArea == selectedArea) {
+	    return hoverInfo.toString();
+	}
+	hoverInfo.append(" (" + lm.get(lp.CLICK_TO_SELECT) + " & ");
+	hoverInfo.append(lm.get(lp.ADDITIONAL_INFO) + ")");
+	return hoverInfo.toString();
     }
 
     /**
@@ -117,7 +120,7 @@ public class Map extends JPanel implements MouseListener, MouseMotionListener {
 	try {
 	    return ImageIO.read(ResourceLoader.load(mapImagePath));
 	} catch (final IOException e) {
-	    System.err.println("Can´t read file \"" + mapImagePath + "\"!");
+	    logger.error("Can´t read file \"" + mapImagePath + "\"!");
 	}
 	return null;
     }
@@ -131,36 +134,29 @@ public class Map extends JPanel implements MouseListener, MouseMotionListener {
 		BufferedImage.SCALE_FAST);
     }
 
-    private void setDefaultAreaPolygons() {
-	areas = new Vector<>();
-	final Vector<AreaCoordinate> areaCoordinates = new MapAreas().getAreaCoordinates();
-	int[] xPoints;
-	int[] yPoints;
-	for (final AreaCoordinate areaCord : areaCoordinates) {
-	    xPoints = areaCord.getScaledxPoints();
-	    yPoints = areaCord.getScaledyPoints();
-	    if (xPoints.length == yPoints.length) {
-		final Polygon area = new Polygon(xPoints, yPoints, xPoints.length);
-		areas.add(area);
-	    } else {
-		System.out.println("ERROR: Not same amout of coordinates for area "
-			+ areaCord.getAreaName() + ". " + xPoints.length
-			+ " X pints and " + yPoints.length + " Y points");
-	    }
-	}
+    private void setCurserDefault() {
+	final Cursor cursor = Cursor.getDefaultCursor();
+	setCursor(cursor);
+    }
+
+    private void setCurserHand() {
+	final Cursor cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+	setCursor(cursor);
     }
 
     private final float alpha;
 
-    private Vector<Polygon> areas;
+    private final Vector<Area> areas;
 
-    /** The highlighted area. */
-    private int highlightedArea = -1;
+    /** The highlighted {@link Area}. */
+    private Area highlightedArea = null;
 
     private final BufferedImage img;
 
     private final Image imgScaled;
 
-    /** The selected area. */
-    private int selectedArea = -1;
+    /** The selected {@link Area}. */
+    private Area selectedArea = null;
+
+    private final StatusBarInterface statusBar = StatusBarController.getInstance();
 }
