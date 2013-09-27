@@ -1,4 +1,4 @@
 Campinplatzverwaltung
 =====================
 
-Campingplatzverwaltung fÃ¼r SWE-DHBW-Projekt 2013
+Campingplatzverwaltung für SWE-DHBW-Projekt 2013
