@@ -20,11 +20,17 @@ public class Map extends JPanel {
     private class MapMouseListener extends MouseAdapter {
 	@Override
 	public void mouseReleased(final MouseEvent e) {
+	    wasDoubleClick = false;
+	    if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+		wasDoubleClick = true;
+		System.out.println("Doppelklick mit der linken Maustaste");
+	    }
+
 	    for (final Area area : areas) {
 		statusBar.cleanupStatus();
 
 		if (area.getPoly().contains(e.getX(), e.getY())) {
-		    if (selectedArea == area) {
+		    if (selectedArea == area && !wasDoubleClick) {
 			selectedArea = null;
 			break;
 		    }
@@ -37,6 +43,15 @@ public class Map extends JPanel {
 	    repaint();
 	}
 
+	private String buildAreaSelectedInfo() {
+	    final StringBuilder info = new StringBuilder();
+	    info.append(lm.get(lp.AREA));
+	    info.append(" " + selectedArea.getName());
+	    info.append(" " + lm.get(lp.SELECTED));
+	    return info.toString();
+	}
+
+	private boolean wasDoubleClick;
     }
 
     private class MapMouseMotionListener extends MouseMotionAdapter {
@@ -56,6 +71,21 @@ public class Map extends JPanel {
 
 	    }
 	    repaint();
+	}
+
+	private String buildAreaHoverInfo() {
+	    final StringBuilder hoverInfo = new StringBuilder();
+	    hoverInfo.append(lm.get(lp.AREA));
+	    hoverInfo.append(" " + highlightedArea.getName());
+
+	    if (highlightedArea == selectedArea) {
+		return hoverInfo.toString();
+	    }
+
+	    hoverInfo.append(" (" + lm.get(lp.CLICK_TO_SELECT) + " & ");
+	    hoverInfo.append(lm.get(lp.ADDITIONAL_INFO) + " | ");
+	    hoverInfo.append(lm.get(lp.HOW_TO_ZOOM));
+	    return hoverInfo.toString();
 	}
     }
 
@@ -112,28 +142,6 @@ public class Map extends JPanel {
 	    g2.fillPolygon(selectedArea.getPoly());
 	}
 
-    }
-
-    private String buildAreaHoverInfo() {
-	final StringBuilder hoverInfo = new StringBuilder();
-	hoverInfo.append(lm.get(lp.AREA));
-	hoverInfo.append(" " + highlightedArea.getName());
-
-	if (highlightedArea == selectedArea) {
-	    return hoverInfo.toString();
-	}
-
-	hoverInfo.append(" (" + lm.get(lp.CLICK_TO_SELECT) + " & ");
-	hoverInfo.append(lm.get(lp.ADDITIONAL_INFO) + ")");
-	return hoverInfo.toString();
-    }
-
-    private String buildAreaSelectedInfo() {
-	final StringBuilder info = new StringBuilder();
-	info.append(lm.get(lp.AREA));
-	info.append(" " + selectedArea.getName());
-	info.append(" " + lm.get(lp.SELECTED));
-	return info.toString();
     }
 
     /**
