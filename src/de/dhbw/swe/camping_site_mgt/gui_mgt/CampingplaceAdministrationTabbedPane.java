@@ -13,6 +13,8 @@ public class CampingplaceAdministrationTabbedPane extends JTabbedPane {
     public CampingplaceAdministrationTabbedPane() {
 	lm = LanguageMgr.getInstance();
 
+	setTabPlacement(JTabbedPane.BOTTOM);
+
 	map = new MapPanel();
 	this.addTab(lm.get(lp.MAP), map);
 	// this.setMnemonicAt(2, KeyEvent.VK_3);

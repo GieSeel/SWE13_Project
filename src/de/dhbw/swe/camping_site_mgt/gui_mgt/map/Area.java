@@ -69,5 +69,4 @@ public class Area {
     private final int[] xPoints;
 
     private final int[] yPoints;
-
 }

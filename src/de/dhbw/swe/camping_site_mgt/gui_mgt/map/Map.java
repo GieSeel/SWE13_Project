@@ -23,7 +23,6 @@ public class Map extends JPanel {
 	    wasDoubleClick = false;
 	    if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
 		wasDoubleClick = true;
-		System.out.println("Doppelklick mit der linken Maustaste");
 	    }
 
 	    for (final Area area : areas) {
@@ -41,6 +40,10 @@ public class Map extends JPanel {
 
 	    }
 	    repaint();
+
+	    if (wasDoubleClick) {
+		zoomIn();
+	    }
 	}
 
 	private String buildAreaSelectedInfo() {
@@ -110,7 +113,8 @@ public class Map extends JPanel {
 	final Dimension screenSize = toolkit.getScreenSize();
 	Gui.setScaleFactor((screenSize.width * MAP_SCREEN_COVERAGE)
 		/ img.getWidth());
-	imgScaled = getScaledImage(img);
+	imgScaledOverview = getScaledImage(img);
+
 	alpha = 0.1f;
 
 	final Dimension mapSize = new Dimension(
@@ -127,7 +131,7 @@ public class Map extends JPanel {
     @Override
     public void paint(final Graphics g) {
 	final Graphics2D g2 = (Graphics2D) g;
-	g2.drawImage(imgScaled, 0, 0, null);
+	g2.drawImage(imgScaledOverview, 0, 0, null);
 
 	g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 	g2.setColor(Color.GRAY);
@@ -179,6 +183,11 @@ public class Map extends JPanel {
 	setCursor(cursor);
     }
 
+    private void zoomIn() {
+	// TODO Auto-generated method stub
+
+    }
+
     /** The opacity factor. */
     private final float alpha;
 
@@ -191,8 +200,8 @@ public class Map extends JPanel {
     /** The {@link BufferedImage} of the map. */
     private final BufferedImage img;
 
-    /** The scaled {@link Image} */
-    private final Image imgScaled;
+    /** The scaled overview {@link Image} */
+    private final Image imgScaledOverview;
 
     /** The selected {@link Area}. */
     private Area selectedArea = null;
