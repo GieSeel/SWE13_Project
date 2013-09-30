@@ -45,6 +45,7 @@ public class Service {
 	this.id = 0;
 	this.creationDate = new Date(0);
 	this.doneDate = new Date(0);
+
 	try {
 	    this.creationDate = new SimpleDateFormat("dd.MM.yyyy").parse(creationDate);
 	    this.doneDate = new SimpleDateFormat("dd.MM.yyyy").parse(doneDate);

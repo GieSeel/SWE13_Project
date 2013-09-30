@@ -43,7 +43,7 @@ public class CampingSiteManagement {
      */
     public CampingSiteManagement() {
 	gui = new Gui();
-	 configDatabaseController();
+	// configDatabaseController();
 	// TODO on delete comment change CampingplaceAdministrationTabbedPane
     }
 
