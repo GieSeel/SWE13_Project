@@ -27,6 +27,10 @@ public class SearchPanel extends JPanel {
 
 	// ## DEL
 	final HashMap<String, Object> bspData = objects.get(0).getTableData("");
+
+	// HashMap<String, HashMap<String, Object>> data;
+	// HashMap<String, Object> columnNames;
+	// "columnNames" => HashMap:
 	// ##
 
 	// TODO string.equals ((ignorCase??))
@@ -34,6 +38,7 @@ public class SearchPanel extends JPanel {
 	final List<HashMap<String, Object>> bodyData = new Vector<HashMap<String, Object>>();
 	for (final Guest guest : objects) {
 	    bodyData.add(guest.getTableData(""));
+	    // Guest.class.getd
 	}
 
 	// TODO autovervollständigung (evtl. erst wenn nur noch ein eintrag
