@@ -37,4 +37,6 @@ public interface LanguageProperties {
     String SELECTED = "selected";
     /** The yes property. */
     String YES = "yes";
+	String COLUMN_STREET = "Street";
+	String COLUMN_HOUSENR = "House Number";
 }

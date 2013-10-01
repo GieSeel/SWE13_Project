@@ -1,21 +1,17 @@
 package de.dhbw.swe.camping_site_mgt.common;
 
-import java.util.*;
+import java.util.HashMap;
 
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
 
-public class Address {
+public class Address implements DataObject {
+
     public Address() {
-	super();
-	this.id = 0;
-	this.street = null;
-	this.houseNumber = null;
-	this.town = null;
+	this(null, null, null);
     }
 
     public Address(final int id, final String street, final String houseNumber,
 	    final Town town) {
-	super();
 	this.id = id;
 	this.street = street;
 	this.houseNumber = houseNumber;
@@ -23,89 +19,69 @@ public class Address {
     }
 
     public Address(final String street, final String houseNumber, final Town town) {
-	super();
-	this.id = 0;
-	this.street = street;
-	this.houseNumber = houseNumber;
-	this.town = town;
-    }
-
-    public HashMap<String, Object> getDatabaseData() {
-	final HashMap<String, Object> elements = new HashMap<String, Object>();
-	elements.put("id", this.id);
-	elements.put("street", this.street);
-	elements.put("houseNumber", this.houseNumber);
-	elements.put("town_ID",
-		DatabaseController.getInstance().queryInsertUpdateTown(this.town));
-	return elements;
+	this(0, street, houseNumber, town);
     }
 
     public String getHouseNumber() {
 	return houseNumber;
     }
 
+    @Override
     public int getId() {
 	return id;
+    }
+
+    @Override
+    public String getName() {
+	return "address";
     }
 
     public String getStreet() {
 	return street;
     }
 
-    public HashMap<String, Object> getTableData(final String parentClass) {
-	final HashMap<String, Object> objects = new HashMap<String, Object>();
-	final String className = parentClass + "address_";
-	objects.put(className + "id", new Integer(this.id));
-	objects.put(className + "street", new String(this.street));
-	objects.put(className + "houseNumber", new String(this.houseNumber));
-	objects.putAll(this.town.getTableData(className));
-	return objects;
-    }
-
     public Town getTown() {
 	return town;
     }
 
-    public Address setDatabaseData(final HashMap<String, Object> objects) {
-	final DatabaseController db = DatabaseController.getInstance();
-	this.town = db.querySelectTown((int) objects.get("town_ID"));
-	setData(objects);
-	return this;
+    @Override
+    public void setDatabaseData(final HashMap<String, Object> elements) {
+	for (final ColumnInfo column : DataStructure.getStructureFor(getName())) {
+	    if (column.getReleationToColumn() == null) {
+		ObjectFieldAccess.setValueOf(column.getColumnName(),
+			elements.get(column.getColumnName()), this);
+	    } else {
+		final Town object = new Town();
+		ObjectFieldAccess.querySelect(
+			(int) elements.get(column.getColumnName()), object);
+		ObjectFieldAccess.setValueOf(column.getColumnName(), object, this);
+	    }
+	}
+    }
+
+    @Override
+    public void setDisplayData(final HashMap<String, Object> elements) {
+	String key;
+	for (final ColumnInfo column : DataStructure.getStructureFor(getName())) {
+	    if (column.getReleationToColumn() == null) {
+		key = getName() + "_" + column.getColumnName();
+		ObjectFieldAccess.setValueOf(column.getColumnName(),
+			elements.get(key), this);
+	    } else {
+		final Town subObject = new Town();
+		subObject.setDisplayData(elements);
+		ObjectFieldAccess.setValueOf(column.getColumnName(), subObject,
+			this);
+	    }
+	}
     }
 
     public void setId(final int id) {
 	this.id = id;
     }
 
-    public Address setTableData(final HashMap<String, Object> objects) {
-	final String className = "address_";
-	final int classNameLength = className.length();
-	final HashMap<String, Object> thisMap = new HashMap<String, Object>(), townMap = new HashMap<String, Object>();
-
-	Object val;
-	final Set<String> keys = objects.keySet();
-	for (String key : keys) {
-	    val = objects.get(key);
-	    key = key.substring(classNameLength);
-	    if (key.startsWith("town_")) {
-		townMap.put(key, val);
-	    } else {
-		thisMap.put(key, val);
-	    }
-	}
-	this.town = new Town().setTableData(townMap);
-	setData(thisMap);
-	return this;
-    }
-
-    private void setData(final HashMap<String, Object> objects) {
-	this.id = (int) objects.get("id");
-	this.street = (String) objects.get("street");
-	this.houseNumber = (String) objects.get("houseNumber");
-    }
-
-    private String houseNumber;
+    private final String houseNumber;
     private int id;
-    private String street;
-    private Town town;
+    private final String street;
+    private final Town town;
 }
