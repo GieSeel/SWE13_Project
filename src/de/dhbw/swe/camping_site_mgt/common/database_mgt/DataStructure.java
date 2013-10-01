@@ -1,193 +1,272 @@
 package de.dhbw.swe.camping_site_mgt.common.database_mgt;
 
+import java.util.Date;
 import java.util.HashMap;
 
+import de.dhbw.swe.camping_site_mgt.booking_mgt.*;
+import de.dhbw.swe.camping_site_mgt.common.*;
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageMgr;
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageProperties;
+import de.dhbw.swe.camping_site_mgt.person_mgt.*;
+import de.dhbw.swe.camping_site_mgt.place_mgt.Pitch;
+import de.dhbw.swe.camping_site_mgt.place_mgt.Site;
+import de.dhbw.swe.camping_site_mgt.service_mgt.Service;
 
 /**
  * Static access for database structure.
+ * 
  * @author Benny
- *
+ * 
  */
 public class DataStructure {
- static private HashMap<String, ColumnInfo[]> sqlObjects = null;
- 
- static public ColumnInfo[] getStructureFor(String key) {
-	 if(sqlObjects == null) {
-		 initObjects();
-	 }
-	 if(!sqlObjects.containsKey(key)) {
-		 // TODO logger
-		 return null;
-	 } 
-	 return sqlObjects.get(key);
- }
- 
- static LanguageMgr lm = LanguageMgr.getInstance();
- static LanguageProperties lp;
- 
- static private void initObjects() {
-	 
-	 
+    static LanguageMgr lm = LanguageMgr.getInstance();
+
+    static LanguageProperties lp;
+
+    static private HashMap<String, ColumnInfo[]> sqlObjects = null;
+
+    static public ColumnInfo[] getStructureFor(final String key) {
+	if (sqlObjects == null) {
+	    initObjects();
+	}
+	if (!sqlObjects.containsKey(key)) {
+	    // TODO logger
+	    return null;
+	}
+	return sqlObjects.get(key);
+    }
+
+    static private void initObjects() {
+	sqlObjects = new HashMap<>();
 
 	// "address"
-	sqlObjects.put("address", new ColumnInfo[] { new ColumnInfo("id", Integer.class, null, null),
-		new ColumnInfo("street", String.class, lm.get(lp.COLUMN_STREET), null),
-		new ColumnInfo("houseNumber", String.class, lm.get(lp.COLUMN_HOUSENR), null),
-		new ColumnInfo("town_ID", Integer.class, null, "town")});
-//	sqlObjects.put("address", new String[][] { { "id", "int", null },
-//			{ "street", "string", "Street" },
-//			{ "houseNumber", "string", "House Number" },
-//			{ "town_ID", "int", null } });
+	sqlObjects.put(
+		"address",
+		new ColumnInfo[] {
+			new ColumnInfo("id", Integer.class),
+			new ColumnInfo("street", String.class,
+				lm.get(lp.COLUMN_STREET)),
+			new ColumnInfo("houseNumber", String.class,
+				lm.get(lp.COLUMN_HOUSENR)),
+			new ColumnInfo("town_ID", Integer.class, Town.class) });
 
-//	// "bill"
-//	sqlObjects.put("bill", new String[][] { { "id", "int", null },
-//		{ "number", "int", "Number" }, { "billItem_ID", "int", null },
-//		{ "multiplier", "int", "Multiplier" } });
-//
-//	// "billitem"
-//	sqlObjects.put("billitem", new String[][] { { "id", "int", null },
-//		{ "labeling", "string", "Labeling" },
-//		{ "priceBusySeason", "float", "Price Busy Season" },
-//		{ "priceLowSeason", "float", "Price Low Season" } });
-//
-//	// "booking"
-//	sqlObjects.put("booking", new String[][] { { "id", "int", null },
-//		{ "responsiblePerson_ID", "int", null },
-//		{ "fellowTravelersList_number", "int", null },
-//		{ "from", "date", "From" }, { "until", "date", "Until" },
-//		{ "equipmentList_number", "int", null },
-//		{ "pitchBookingList_number", "int", null },
-//		{ "extraBookingList_number", "int", null },
-//		{ "bill_number", "int", null },
-//		{ "chipCardList_number", "int", null } });
-//
-//	// "bookinglist"
-//	sqlObjects.put("bookinglist", new String[][] { { "id", "int", null },
-//		{ "number", "int", "Number" }, { "booking_ID", "int", null } });
-//
-//	// "chipcard"
-//	sqlObjects.put("chipcard", new String[][] { { "id", "int", null },
-//		{ "validFrom", "date", "Valide From" },
-//		{ "validTo", "date", "Valide To" } });
-//
-//	// "chipcardlist"
-//	sqlObjects.put("chipcardlist", new String[][] { { "id", "int", null },
-//		{ "number", "int", "Number" }, { "chipCard_ID", "int", null } });
-//
-//	// "country"
-//	sqlObjects.put("country", new String[][] { { "id", "int", null },
-//		{ "name", "string", "Name" }, { "acronym", "string", "Acronym" } });
-//
-//	// "employee"
-//	sqlObjects.put("employee",
-//		new String[][] { { "id", "int", null },
-//			{ "person_ID", "int", null },
-//			{ "employeeRole_ID", "int", null },
-//			{ "userName", "string", "User Name" },
-//			{ "password", "string", "Password" },
-//			{ "blocked", "int", "Is Blocked" },
-//			{ "chipCard_ID", "int", null } });
-//
-//	// "employeelist"
-//	sqlObjects.put("employeelist", new String[][] { { "id", "int", null },
-//		{ "number", "int", "Number" }, { "employee_ID", "int", null } });
-//
-//	// "employeerole"
-//	sqlObjects.put("employeerole", new String[][] { { "id", "int", null },
-//		{ "labeling", "string", "Labeling" },
-//		{ "arrangement", "string", "Arrangement" } });
-//
-//	// "equipment"
-//	sqlObjects.put("equipment", new String[][] { { "id", "int", null },
-//		{ "type", "string", "Type" }, { "size", "string", "Size" },
-//		{ "identification", "string", "Identification" } });
-//
-//	// "equipmentlist"
-//	sqlObjects.put("equipmentlist", new String[][] { { "id", "int", null },
-//		{ "number", "int", "Number" }, { "equipment_ID", "int", null } });
-//
-//	// "extrabooking"
-//	sqlObjects.put("extrabooking", new String[][] { { "id", "int", null },
-//		{ "name", "string", "Name" }, { "labeling", "string", "Labeling" },
-//		{ "site_ID", "int", null } });
-//
-//	// "extrabookinglist"
-//	sqlObjects.put("extrabookinglist", new String[][] { { "id", "int", null },
-//		{ "number", "int", "Number" }, { "site_ID", "int", null } });
-//
-//	// "guest"
-//	sqlObjects.put("guest", new String[][] { { "id", "int", null },
-//		{ "person_ID", "int", null },
-//		{ "visitorsTaxClass_ID", "int", null } });
-//
-//	// "guestlist"
-//	sqlObjects.put("guestlist", new String[][] { { "id", "int", null },
-//		{ "number", "int", "Number" }, { "guest_ID", "int", null } });
-//
-//	// "person"
-//	sqlObjects.put("person", new String[][] { { "id", "int", null },
-//		{ "identificationNumber", "string", "Identification Number" },
-//		{ "name", "string", "Name" },
-//		{ "firstName", "string", "First Name" },
-//		{ "address_ID", "int", null },
-//		{ "dateOfBirth", "date", "Date of Birth" } });
-//
-//	// "pitch"
-//	sqlObjects.put("pitch", new String[][] { { "id", "int", null },
-//		{ "district", "string", "District" }, { "type", "string", "Type" },
-//		{ "length", "int", "Length" }, { "width", "int", "Width" },
-//		{ "natureOfSoil", "string", "Nature of Soil" },
-//		{ "deliveryPoint_ID", "int", null },
-//		{ "characteristics", "string", "Characteristics" } });
-//
-//	// "pitchbooking"
-//	sqlObjects.put("pitchbooking", new String[][] { { "id", "int", null },
-//		{ "pitch_ID", "int", null },
-//		{ "electricity", "int", "Electricity" } });
-//
-//	// "pitchbookinglist"
-//	sqlObjects.put("pitchbookinglist", new String[][] { { "id", "int", null },
-//		{ "number", "int", "Number" }, { "pitchBooking_ID", "int", null } });
-//
-//	// "pitchlist"
-//	sqlObjects.put("pitchlist", new String[][] { { "id", "int", null },
-//		{ "number", "int", "Number" }, { "pitch_ID", "int", null } });
-//
-//	// "service"
-//	sqlObjects.put("service", new String[][] { { "id", "int", null },
-//		{ "pitch_ID", "int", null }, { "site_ID", "int", null },
-//		{ "employeeRole_ID", "int", null },
-//		{ "description", "string", "Description" },
-//		{ "creationDate", "date", "Creation Date" },
-//		{ "priority", "int", "Priority" },
-//		{ "doneDate", "date", "Done Date" } });
-//
-//	// "servicelist"
-//	sqlObjects.put("servicelist", new String[][] { { "id", "int", null },
-//		{ "number", "int", "Number" }, { "service_ID", "int", null } });
-//
-//	// "site"
-//	sqlObjects.put("site", new String[][] { { "id", "int", null },
-//		{ "labeling", "string", "Labeling" }, { "type", "string", "Type" },
-//		{ "openingHours", "string", "Opening Hours" },
-//		{ "description", "string", "Description" } });
-//
-//	// "sitelist"
-//	sqlObjects.put("sitelist", new String[][] { { "id", "int", null },
-//		{ "number", "int", "Number" }, { "site_ID", "int", null } });
-//
-//	// "town"
-//	sqlObjects.put("town", new String[][] { { "id", "int", null },
-//		{ "name", "string", "Name" },
-//		{ "postalCode", "string", "Postal Code" },
-//		{ "country_ID", "int", null } });
-//
-//	// "visitorstaxclass"
-//	sqlObjects.put("visitorstaxclass",
-//		new String[][] { { "id", "int", null },
-//			{ "labeling", "string", "Labeling" },
-//			{ "price", "float", "Price" } });
- }
+	// TODO alle languageproperties noch einfügen und verwenden..
+
+	// "bill"
+	sqlObjects.put("bill", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("number", Integer.class, "Number"),
+		new ColumnInfo("billItem_ID", Integer.class, BillItem.class),
+		new ColumnInfo("multiplier", Integer.class, "Multiplier") });
+
+	// "billitem"
+	sqlObjects.put("billitem",
+		new ColumnInfo[] {
+			new ColumnInfo("id", Integer.class),
+			new ColumnInfo("labeling", String.class, "Labeling"),
+			new ColumnInfo("priceBusySeason", Float.class,
+				"Price Busy Season"),
+			new ColumnInfo("priceLowSeason", Float.class,
+				"Price Low Season") });
+
+	// "booking"
+	sqlObjects.put("booking", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("responsiblePerson_ID", Integer.class, null,
+			"responsiblePerson", Guest.class),
+		new ColumnInfo("fellowTravelersList_number", Integer.class, null,
+			"fellowTravelers", GuestList.class),
+		new ColumnInfo("from", Date.class, "From"),
+		new ColumnInfo("until", Date.class, "Until"),
+		new ColumnInfo("equipmentList_number", Integer.class, null,
+			"equipment", EquipmentList.class),
+		new ColumnInfo("pitchBookingList_number", Integer.class, null,
+			"pitchBooking", PitchBookingList.class),
+		new ColumnInfo("extraBookingList_number", Integer.class, null,
+			"extraBooking", ExtraBookingList.class),
+		new ColumnInfo("bill_number", Integer.class, Bill.class),
+		new ColumnInfo("chipCardList_number", Integer.class, null,
+			"chipCard", ChipCardList.class) });
+	// TODO BOOKING NAMEN ANPASSEN!!
+
+	// "bookinglist"
+	sqlObjects.put("bookinglist", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("number", Integer.class, "Number"),
+		new ColumnInfo("booking_ID", Integer.class, Booking.class) });
+
+	// "chipcard"
+	sqlObjects.put("chipcard", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("validFrom", Date.class, "Valide From"),
+		new ColumnInfo("validTo", Date.class, "Valide To") });
+
+	// "chipcardlist"
+	sqlObjects.put("chipcardlist", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("number", Integer.class, "Number"),
+		new ColumnInfo("chipCard_ID", Integer.class, ChipCard.class) });
+
+	// "country"
+	sqlObjects.put("country", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("name", String.class, "Name"),
+		new ColumnInfo("acronym", String.class, "Acronym") });
+
+	// "employee"
+	sqlObjects.put("employee",
+
+	new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("person_ID", Integer.class, Person.class),
+		new ColumnInfo("employeeRole_ID", Integer.class, null, "role",
+			EmployeeRole.class),
+		new ColumnInfo("userName", String.class, "User Name"),
+		new ColumnInfo("password", String.class, "Password"),
+		new ColumnInfo("blocked", Integer.class, "Is Blocked"),
+		new ColumnInfo("chipCard_ID", Integer.class, ChipCard.class) });
+
+	// "employeelist"
+	sqlObjects.put("employeelist", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("number", Integer.class, "Number"),
+		new ColumnInfo("employee_ID", Integer.class, Employee.class) });
+
+	// "employeerole"
+	sqlObjects.put("employeerole", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("labeling", String.class, "Labeling"),
+		new ColumnInfo("arrangement", String.class, "Arrangement") });
+
+	// "equipment"
+	sqlObjects.put("equipment", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("type", String.class, "Type"),
+		new ColumnInfo("size", String.class, "Size"),
+		new ColumnInfo("identification", String.class, "Identification") });
+
+	// "equipmentlist"
+	sqlObjects.put("equipmentlist", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("number", Integer.class, "Number"),
+		new ColumnInfo("equipment_ID", Integer.class, Equipment.class) });
+
+	// "extrabooking"
+	sqlObjects.put("extrabooking", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("name", String.class, "Name"),
+		new ColumnInfo("labeling", String.class, "Labeling"),
+		new ColumnInfo("site_ID", Integer.class, Site.class) });
+
+	// "extrabookinglist"
+	sqlObjects.put("extrabookinglist", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("number", Integer.class, "Number"),
+		new ColumnInfo("site_ID", Integer.class, Site.class) });
+
+	// "guest"
+	sqlObjects.put("guest", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("person_ID", Integer.class, Person.class),
+		new ColumnInfo("visitorsTaxClass_ID", Integer.class,
+			VisitorsTaxClass.class) });
+
+	// "guestlist"
+	sqlObjects.put("guestlist", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("number", Integer.class, "Number"),
+		new ColumnInfo("guest_ID", Integer.class, Guest.class) });
+
+	// "person"
+	sqlObjects.put("person", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("identificationNumber", String.class,
+			"Identification Number"),
+		new ColumnInfo("name", String.class, "Name"),
+		new ColumnInfo("firstName", String.class, "First Name"),
+		new ColumnInfo("address_ID", Integer.class, Address.class),
+		new ColumnInfo("dateOfBirth", Date.class, "Date of Birth") });
+
+	// "pitch"
+	sqlObjects.put("pitch", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("district", String.class, "District"),
+		new ColumnInfo("type", String.class, "Type"),
+		new ColumnInfo("length", Integer.class, "Length"),
+		new ColumnInfo("width", Integer.class, "Width"),
+		new ColumnInfo("natureOfSoil", String.class, "Nature of Soil"),
+		new ColumnInfo("deliveryPoint_ID", Integer.class, null,
+			"deliveryPoint", Site.class),
+		new ColumnInfo("characteristics", String.class, "Characteristics"),
+		new ColumnInfo("xCoords", String.class),
+		new ColumnInfo("yCoords", String.class) });
+
+	// "pitchbooking"
+	sqlObjects.put("pitchbooking", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("pitch_ID", Integer.class, Pitch.class),
+		new ColumnInfo("electricity", Integer.class, "Electricity") });
+
+	// "pitchbookinglist"
+	sqlObjects.put("pitchbookinglist",
+		new ColumnInfo[] {
+			new ColumnInfo("id", Integer.class),
+			new ColumnInfo("number", Integer.class, "Number"),
+			new ColumnInfo("pitchBooking_ID", Integer.class,
+				PitchBooking.class) });
+
+	// "pitchlist"
+	sqlObjects.put("pitchlist", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("number", Integer.class, "Number"),
+		new ColumnInfo("pitch_ID", Integer.class, Pitch.class) });
+
+	// "service"
+	sqlObjects.put(
+		"service",
+		new ColumnInfo[] {
+			new ColumnInfo("id", Integer.class),
+			new ColumnInfo("pitch_ID", Integer.class, Pitch.class),
+			new ColumnInfo("site_ID", Integer.class, Site.class),
+			new ColumnInfo("employeeRole_ID", Integer.class,
+				EmployeeRole.class),
+			new ColumnInfo("description", String.class, "Description"),
+			new ColumnInfo("creationDate", Date.class, "Creation Date"),
+			new ColumnInfo("priority", Integer.class, "Priority"),
+			new ColumnInfo("doneDate", Date.class, "Done Date") });
+
+	// "servicelist"
+	sqlObjects.put("servicelist", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("number", Integer.class, "Number"),
+		new ColumnInfo("service_ID", Integer.class, Service.class) });
+
+	// "site"
+	sqlObjects.put("site", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("labeling", String.class, "Labeling"),
+		new ColumnInfo("type", String.class, "Type"),
+		new ColumnInfo("openingHours", String.class, "Opening Hours"),
+		new ColumnInfo("description", String.class, "Description") });
+
+	// "sitelist"
+	sqlObjects.put("sitelist", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("number", Integer.class, "Number"),
+		new ColumnInfo("site_ID", Integer.class, Site.class) });
+
+	// "town"
+	sqlObjects.put("town", new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("name", String.class, "Name"),
+		new ColumnInfo("postalCode", String.class, "Postal Code"),
+		new ColumnInfo("country_ID", Integer.class, Country.class) });
+
+	// "visitorstaxclass"
+	sqlObjects.put("visitorstaxclass",
+
+	new ColumnInfo[] { new ColumnInfo("id", Integer.class),
+		new ColumnInfo("labeling", String.class, "Labeling"),
+		new ColumnInfo("price", Float.class, "Price") });
+    }
 }

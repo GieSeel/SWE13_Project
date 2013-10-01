@@ -1,46 +1,93 @@
 package de.dhbw.swe.camping_site_mgt.common.database_mgt;
 
 public class ColumnInfo {
-private String columnName;
-private Class<? extends Object> type;
-private String displayName;
-private String releationToColumn;
 
-public ColumnInfo(String columnName, Class<? extends Object> type, String displayName,
-		String releationToColumn) {
-	super();
-	this.columnName = columnName;
-	this.type = type;
+    public ColumnInfo(final String dbName, final Class<? extends Object> dbType) {
+	this(dbName, dbType, null, dbName, null);
+    }
+
+    public ColumnInfo(final String dbName, final Class<? extends Object> dbType,
+	    final Class<? extends Object> releationToColumn) {
+	this(dbName, dbType, null, releationToColumn.getSimpleName().toLowerCase(),
+		releationToColumn);
+    }
+
+    public ColumnInfo(final String dbName, final Class<? extends Object> dbType,
+	    final String displayName) {
+	this(dbName, dbType, displayName, dbName, null);
+    }
+
+    public ColumnInfo(final String dbName, final Class<? extends Object> dbType,
+	    final String displayName, final String fieldName,
+	    final Class<? extends Object> releationToColumn) {
+	this.dbName = dbName;
+	this.fieldName = fieldName;
+	this.dbType = dbType;
 	this.displayName = displayName;
 	this.releationToColumn = releationToColumn;
-}
+    }
 
-/**
- * @return the columnName.
- */
-public String getColumnName() {
-	return columnName;
-}
+    /**
+     * Returns the dbName.
+     * 
+     * @return the dbName
+     */
+    public String getDbName() {
+	return dbName;
+    }
 
-/**
- * @return the type.
- */
-public Class<? extends Object> getType() {
-	return type;
-}
+    /**
+     * Returns the dbType.
+     * 
+     * @return the dbType
+     */
+    public Class<? extends Object> getDbType() {
+	return dbType;
+    }
 
-/**
- * @return the displayName.
- */
-public String getDisplayName() {
+    /**
+     * Returns the displayName.
+     * 
+     * @return the displayName
+     */
+    public String getDisplayName() {
 	return displayName;
-}
+    }
 
-/**
- * @return the releationToColumn.
- */
-public String getReleationToColumn() {
+    /**
+     * Returns the fieldName.
+     * 
+     * @return the fieldName
+     */
+    public String getFieldName() {
+	return fieldName;
+    }
+
+    /**
+     * Returns the releationToColumn.
+     * 
+     * @return the releationToColumn
+     */
+    public Class<? extends Object> getReleationToColumn() {
 	return releationToColumn;
-}
+    }
 
+    /**
+     * Returns the releationToColumn name.
+     * 
+     * @return the releationToColumn
+     */
+    public String getReleationToColumnName() {
+	return releationToColumn.getSimpleName().toLowerCase();
+    }
+
+    private final String dbName;
+
+    private final Class<? extends Object> dbType;
+
+    private final String displayName;
+
+    private final String fieldName;
+
+    private final Class<? extends Object> releationToColumn;
 }
