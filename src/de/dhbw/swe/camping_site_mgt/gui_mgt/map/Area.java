@@ -1,6 +1,6 @@
 package de.dhbw.swe.camping_site_mgt.gui_mgt.map;
 
-import java.awt.Polygon;
+import java.awt.*;
 
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.Gui;
@@ -14,6 +14,10 @@ public class Area {
 	this.yPoints = yPoints;
 	this.areaName = areaName;
 	initPoly();
+    }
+
+    public Rectangle getAreaFrame() {
+	return polygon.getBounds();
     }
 
     public String getName() {

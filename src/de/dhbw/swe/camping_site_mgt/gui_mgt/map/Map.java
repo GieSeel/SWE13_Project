@@ -87,10 +87,13 @@ public class Map extends JPanel {
 
 	    hoverInfo.append(" (" + lm.get(lp.CLICK_TO_SELECT) + " & ");
 	    hoverInfo.append(lm.get(lp.ADDITIONAL_INFO) + " | ");
-	    hoverInfo.append(lm.get(lp.HOW_TO_ZOOM));
+	    hoverInfo.append(lm.get(lp.HOW_TO_ZOOM) + ")");
 	    return hoverInfo.toString();
 	}
     }
+
+    /** The opacity factor. */
+    private static float ALPHA = 0.3f;
 
     /** The {@link LanguageMgr}. */
     private static LanguageMgr lm = LanguageMgr.getInstance();
@@ -114,8 +117,7 @@ public class Map extends JPanel {
 	Gui.setScaleFactor((screenSize.width * MAP_SCREEN_COVERAGE)
 		/ img.getWidth());
 	imgScaledOverview = getScaledImage(img);
-
-	alpha = 0.1f;
+	imgScaled = getScaledImage(img);
 
 	final Dimension mapSize = new Dimension(
 		(int) (img.getWidth() * Gui.getScaleFactor()),
@@ -131,21 +133,28 @@ public class Map extends JPanel {
     @Override
     public void paint(final Graphics g) {
 	final Graphics2D g2 = (Graphics2D) g;
-	g2.drawImage(imgScaledOverview, 0, 0, null);
+	if (!zoomedIn) {
+	    g2.drawImage(imgScaledOverview, 0, 0, null);
 
-	g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-	g2.setColor(Color.GRAY);
+	    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+		    ALPHA));
+	    g2.setColor(Color.GRAY);
 
-	if (highlightedArea != null) {
-	    g2.fillPolygon(highlightedArea.getPoly());
+	    if (highlightedArea != null) {
+		g2.fillPolygon(highlightedArea.getPoly());
+	    }
+
+	    g2.setColor(Color.BLUE);
+
+	    if (selectedArea != null) {
+		g2.fillPolygon(selectedArea.getPoly());
+	    }
+	} else {
+	    g2.drawImage(imgScaled, 0, 0, null);
+
+	    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+		    ALPHA));
 	}
-
-	g2.setColor(Color.BLUE);
-
-	if (selectedArea != null) {
-	    g2.fillPolygon(selectedArea.getPoly());
-	}
-
     }
 
     /**
@@ -184,12 +193,12 @@ public class Map extends JPanel {
     }
 
     private void zoomIn() {
-	// TODO Auto-generated method stub
-
+	zoomedIn = true;
+	final Rectangle frame = selectedArea.getAreaFrame();
+	final float sf = Gui.getScaleFactor();
+	imgScaled = img.getSubimage((int) (frame.x / sf), (int) (frame.y / sf),
+		(int) (frame.width / sf), (int) (frame.height / sf));
     }
-
-    /** The opacity factor. */
-    private final float alpha;
 
     /** The available areas. */
     private final Vector<Area> areas;
@@ -200,6 +209,9 @@ public class Map extends JPanel {
     /** The {@link BufferedImage} of the map. */
     private final BufferedImage img;
 
+    /** The scaled {@link Image}. */
+    private Image imgScaled;
+
     /** The scaled overview {@link Image} */
     private final Image imgScaledOverview;
 
@@ -208,4 +220,6 @@ public class Map extends JPanel {
 
     /** The access interface to the status bar. */
     private final StatusBarInterface statusBar = StatusBarController.getInstance();
+
+    private boolean zoomedIn = false;
 }
