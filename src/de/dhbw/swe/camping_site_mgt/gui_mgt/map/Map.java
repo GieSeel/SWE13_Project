@@ -61,6 +61,7 @@ public class Map extends JPanel {
 	@Override
 	public void mouseMoved(final MouseEvent e) {
 	    highlightedArea = null;
+
 	    for (final Area area : areas) {
 		statusBar.cleanupHoverInfo();
 		setCurserDefault();

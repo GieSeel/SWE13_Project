@@ -30,9 +30,11 @@ public class Area {
 
     public int[] getScaledxPoints() {
 	final int[] scaledXPoints = new int[getxPoints().length];
+
 	for (int n = 0; n < getxPoints().length; n++) {
 	    scaledXPoints[n] = (int) (getxPoints()[n] * Gui.getScaleFactor());
 	}
+
 	return scaledXPoints;
     }
 

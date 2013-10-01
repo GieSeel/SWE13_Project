@@ -25,6 +25,9 @@ public class MapAreas {
 	return areas;
     }
 
+    /**
+     * Initialize the single areas.
+     */
     private void initAreaA() {
 	areas.add(new Area("A", new int[] { 89, 90, 100, 101, 102, 102, 103, 104,
 		104, 105, 111, 112, 117, 118, 120, 122, 124, 124, 125, 126, 126,

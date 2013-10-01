@@ -31,6 +31,7 @@ class StatusBar extends JPanel implements StatusBarInterface {
 	if (hoverLabel.getText().equals("")) {
 	    return false;
 	}
+
 	hoverLabel.setText("");
 	return true;
     }
