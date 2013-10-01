@@ -19,7 +19,7 @@ class StatusBar extends JPanel implements StatusBarInterface {
 	statusLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 	add(statusLabel, BorderLayout.EAST);
 
-	hoverLabel = new JLabel("");
+	hoverLabel = new JLabel(" ");
 	hoverLabel.setEnabled(false);
 	hoverLabel.setMinimumSize(new Dimension(80, 20));
 	hoverLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -28,17 +28,17 @@ class StatusBar extends JPanel implements StatusBarInterface {
 
     @Override
     public boolean cleanupHoverInfo() {
-	if (hoverLabel.getText().equals("")) {
+	if (hoverLabel.getText().equals(" ")) {
 	    return false;
 	}
 
-	hoverLabel.setText("");
+	hoverLabel.setText(" ");
 	return true;
     }
 
     @Override
     public boolean cleanupStatus() {
-	statusLabel.setText("");
+	statusLabel.setText(" ");
 	return true;
     }
 
