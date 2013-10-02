@@ -1,6 +1,6 @@
 package de.dhbw.swe.camping_site_mgt.gui_mgt;
 
-import java.util.HashMap;
+import java.util.*;
 
 import javax.swing.JComponent;
 
@@ -38,7 +38,13 @@ public class AdministrationTabsController implements Displayable {
     @Override
     public JComponent getGuiSnippet() {
 	view = new CampingplaceAdministrationTabbedPane();
+
+	final List<String> keyList = new Vector<>();
 	for (final String key : tabs.keySet()) {
+	    keyList.add(key);
+	}
+	Collections.reverse(keyList);
+	for (final String key : keyList) {
 	    view.addTab(key, tabs.get(key));
 	}
 	return view;

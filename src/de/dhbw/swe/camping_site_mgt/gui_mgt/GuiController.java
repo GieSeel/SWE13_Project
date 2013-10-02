@@ -31,7 +31,8 @@ public class GuiController {
 	view = new Gui();
 	adminTabsCtrl = new AdministrationTabsController();
 
-	final MapController mapController = new MapController();
+	final MapController mapController;
+	mapController = new MapController("map/Valalta_BigMap_v7.png");
 	final MapInformationController mapInfoController = new MapInformationController();
 	mapPanelCtrl = new MapPanelController(mapController, mapInfoController);
 

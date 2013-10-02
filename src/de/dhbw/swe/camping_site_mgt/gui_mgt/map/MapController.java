@@ -5,8 +5,8 @@ import javax.swing.JComponent;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.Displayable;
 
 public class MapController implements Displayable {
-    public MapController() {
-	view = new Map("map/Valalta_BigMap_v7.png");
+    public MapController(final String mapPath) {
+	view = new Map(mapPath);
     }
 
     @Override

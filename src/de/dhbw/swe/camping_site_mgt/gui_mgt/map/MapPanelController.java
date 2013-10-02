@@ -22,7 +22,7 @@ public class MapPanelController implements Displayable {
     private void initView() {
 	view = new MapPanel();
 	view.addMap(mapCtrl.getGuiSnippet());
-	view.addMap(mapInfoCtrl.getGuiSnippet());
+	view.addInformation(mapInfoCtrl.getGuiSnippet());
     }
 
     /** The {@link MapController}. */

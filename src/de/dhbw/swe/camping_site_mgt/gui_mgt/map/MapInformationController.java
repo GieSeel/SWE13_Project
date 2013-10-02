@@ -7,7 +7,7 @@ import de.dhbw.swe.camping_site_mgt.gui_mgt.Displayable;
 public class MapInformationController implements Displayable,
 	MapInformationControllerInterface {
     public MapInformationController() {
-	view = new JPanel(true);
+	view = new JLabel("#####");
     }
 
     @Override
