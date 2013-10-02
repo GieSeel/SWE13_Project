@@ -4,7 +4,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-public class MapPanel extends JPanel {
+public class MapPanel extends JPanel implements MapPanelInterface {
 
     /** The serial Version UID. */
     private static final long serialVersionUID = 1L;
@@ -13,11 +13,16 @@ public class MapPanel extends JPanel {
 	final LayoutManager mapPanelLayout = new BorderLayout();
 	setLayout(mapPanelLayout);
 
-	mapPane = new Map("map/Valalta_BigMap_v7.png");
-
-	add(mapPane, BorderLayout.WEST);
-	add(new JLabel("ADDITIONAL INFORMATION"), BorderLayout.EAST);
     }
 
-    private final Map mapPane;
+    @Override
+    public void addInformation(final JComponent info) {
+	add(info, BorderLayout.EAST);
+    }
+
+    @Override
+    public void addMap(final JComponent map) {
+	add(map, BorderLayout.WEST);
+    }
+
 }

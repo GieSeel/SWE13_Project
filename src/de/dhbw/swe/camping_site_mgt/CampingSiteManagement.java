@@ -1,13 +1,11 @@
 package de.dhbw.swe.camping_site_mgt;
 
 import de.dhbw.swe.camping_site_mgt.booking_mgt.BookingMgr;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseMgr;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.Gui;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.GuiController;
 import de.dhbw.swe.camping_site_mgt.person_mgt.EmployeeMgr;
-import de.dhbw.swe.camping_site_mgt.place_mgt.PitchMgr;
-import de.dhbw.swe.camping_site_mgt.place_mgt.SiteMgr;
+import de.dhbw.swe.camping_site_mgt.place_mgt.*;
 import de.dhbw.swe.camping_site_mgt.service_mgt.ServiceMgr;
 
 public class CampingSiteManagement {
@@ -36,6 +34,7 @@ public class CampingSiteManagement {
 		}
 	    }
 	}
+
 	new CampingSiteManagement();
     }
 
@@ -44,7 +43,7 @@ public class CampingSiteManagement {
      * 
      */
     public CampingSiteManagement() {
-	gui = new Gui();
+	guiCtrl = new GuiController();
 	// configDatabaseController();
 	configDatabaseMgr();
 	// TODO on delete comment change CampingplaceAdministrationTabbedPane
@@ -77,8 +76,8 @@ public class CampingSiteManagement {
     private DatabaseController dbController;
     private DatabaseMgr dbMgr;
     private EmployeeMgr employeeManager;
-    /** The {@link Gui}. */
-    private final Gui gui;
+    /** The {@link GuiController}. */
+    private final GuiController guiCtrl;
     private PitchMgr pitchManager;
     private ServiceMgr serviceManager;
     private SiteMgr siteManager;

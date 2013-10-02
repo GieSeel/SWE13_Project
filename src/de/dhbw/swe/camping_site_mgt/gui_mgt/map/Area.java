@@ -3,7 +3,7 @@ package de.dhbw.swe.camping_site_mgt.gui_mgt.map;
 import java.awt.*;
 
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.Gui;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.GuiController;
 
 public class Area {
     /** The {@link CampingLogger}. */
@@ -32,7 +32,7 @@ public class Area {
 	final int[] scaledXPoints = new int[getxPoints().length];
 
 	for (int n = 0; n < getxPoints().length; n++) {
-	    scaledXPoints[n] = (int) (getxPoints()[n] * Gui.getScaleFactor());
+	    scaledXPoints[n] = (int) (getxPoints()[n] * GuiController.getScaleFactor());
 	}
 
 	return scaledXPoints;
@@ -41,7 +41,7 @@ public class Area {
     public int[] getScaledyPoints() {
 	final int[] scaledYPoints = new int[getyPoints().length];
 	for (int n = 0; n < getyPoints().length; n++) {
-	    scaledYPoints[n] = (int) (getyPoints()[n] * Gui.getScaleFactor());
+	    scaledYPoints[n] = (int) (getyPoints()[n] * GuiController.getScaleFactor());
 	}
 	return scaledYPoints;
     }

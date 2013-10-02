@@ -39,9 +39,6 @@ public class Gui extends JFrame {
 	private final int keyCode;
     }
 
-    /** The scale factor especially for map components. */
-    static float scaleFactor = 1;
-
     /** The {@link LanguageMgr}. */
     private final static LanguageMgr lm = LanguageMgr.getInstance();
 
@@ -52,23 +49,6 @@ public class Gui extends JFrame {
     private static final long serialVersionUID = 1L;
 
     /**
-     * @return the components scale factor.
-     */
-    public static float getScaleFactor() {
-	return scaleFactor;
-    }
-
-    /**
-     * Sets the scale factor.
-     * 
-     * @param scaleFactor
-     *            the factor
-     */
-    public static void setScaleFactor(final float scaleFactor) {
-	Gui.scaleFactor = scaleFactor;
-    }
-
-    /**
      * Constructor.
      */
     public Gui() {
@@ -76,6 +56,13 @@ public class Gui extends JFrame {
 	logger.info("Initialize GUI ...");
 	initDisplay();
 	logger.info("Initialize GUI successful");
+    }
+
+    public void addAdministration(final CampingplaceAdministrationTabbedPane thePane) {
+	add(thePane, BorderLayout.CENTER);
+    }
+
+    public void setVisible() {
 	setVisible(true);
     }
 
@@ -91,29 +78,8 @@ public class Gui extends JFrame {
 	final JComponent statusBar = StatusBarController.getInstance().getGuiSnippet();
 	add(statusBar, BorderLayout.SOUTH);
 
-	tabs = new CampingplaceAdministrationTabbedPane();
-	add(tabs, BorderLayout.CENTER);
-
 	setFocusable(true);
 	setCloseAppOn(KeyEvent.VK_ESCAPE);
-    }
-
-    /**
-     * initialize the basic GUI.
-     */
-    @Deprecated
-    private void initGui() {
-
-	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	setExtendedState(JFrame.MAXIMIZED_BOTH);
-
-	// statusBar.setPreferredSize(new
-	// Dimension(this.getPreferredSize().width, 20));
-
-	setLayout(new BorderLayout());
-	final JComponent statusBar = StatusBarController.getInstance().getGuiSnippet();
-	add(statusBar, BorderLayout.SOUTH);
-
     }
 
     /**
@@ -136,8 +102,4 @@ public class Gui extends JFrame {
 	setBounds(0, 0, screenSize.width, screenSize.height);
 
     }
-
-    private LoginPanel loginScreen;
-
-    private CampingplaceAdministrationTabbedPane tabs;
 }

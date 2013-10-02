@@ -1,31 +1,19 @@
 package de.dhbw.swe.camping_site_mgt.place_mgt;
 
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
 
-public class Pitch {
+public class Pitch implements PitchInterface {
 
     public Pitch() {
-	super();
-	this.id = 0;
-	this.characteristics = null;
-	this.deliveryPoint = null;
-	this.district = null;
-	this.length = 0;
-	this.natureOfSoil = null;
-	this.type = null;
-	this.xCoords = null;
-	this.yCoords = null;
-	this.width = 0;
+	this(0, null, null, null, 0, null, null, 0, null, null);
     }
 
     public Pitch(final int id, final String characteristics,
 	    final Site deliveryPoint, final String district, final int length,
 	    final String natureOfSoil, final String type, final int width,
 	    final String xCoords, final String yCoords) {
-	super();
 	this.id = id;
 	this.characteristics = characteristics;
 	this.deliveryPoint = deliveryPoint;
@@ -42,23 +30,16 @@ public class Pitch {
 	    final String district, final int length, final String natureOfSoil,
 	    final String type, final int width, final String xCoords,
 	    final String yCoords) {
-	super();
-	this.id = 0;
-	this.characteristics = characteristics;
-	this.deliveryPoint = deliveryPoint;
-	this.district = district;
-	this.length = length;
-	this.natureOfSoil = natureOfSoil;
-	this.type = type;
-	this.width = width;
-	this.xCoords = xCoords;
-	this.yCoords = yCoords;
+	this(0, characteristics, deliveryPoint, district, length, natureOfSoil,
+		type, width, xCoords, yCoords);
     }
 
+    @Override
     public String getCharacteristics() {
 	return characteristics;
     }
 
+    @Override
     public HashMap<String, Object> getDatabaseData() {
 	final HashMap<String, Object> objects = new HashMap<String, Object>();
 	objects.put("id", this.id);
@@ -77,26 +58,32 @@ public class Pitch {
 	return objects;
     }
 
+    @Override
     public Site getDeliveryPoint() {
 	return deliveryPoint;
     }
 
+    @Override
     public String getDistrict() {
 	return district;
     }
 
+    @Override
     public int getId() {
 	return id;
     }
 
+    @Override
     public int getLength() {
 	return length;
     }
 
+    @Override
     public String getNatureOfSoil() {
 	return natureOfSoil;
     }
 
+    @Override
     public HashMap<String, Object> getTableData(final String parentClass) {
 	final HashMap<String, Object> objects = new HashMap<String, Object>();
 	final String className = parentClass + "pitch_";
@@ -116,10 +103,12 @@ public class Pitch {
 	return objects;
     }
 
+    @Override
     public String getType() {
 	return type;
     }
 
+    @Override
     public int getWidth() {
 	return width;
     }

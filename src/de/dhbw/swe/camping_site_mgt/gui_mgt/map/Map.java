@@ -12,11 +12,11 @@ import javax.swing.JPanel;
 import de.dhbw.swe.camping_site_mgt.common.ResourceLoader;
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.Gui;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.GuiController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.statusbar.*;
+import de.dhbw.swe.camping_site_mgt.place_mgt.*;
 
 public class Map extends JPanel {
-
     private class AreaKeyListener implements AWTEventListener {
 	public AreaKeyListener() {
 	    Toolkit.getDefaultToolkit().addAWTEventListener(this,
@@ -194,14 +194,14 @@ public class Map extends JPanel {
 	final Toolkit toolkit = Toolkit.getDefaultToolkit();
 	img = getMapImage(mapImagePath);
 	final Dimension screenSize = toolkit.getScreenSize();
-	Gui.setScaleFactor((screenSize.width * MAP_SCREEN_COVERAGE)
+	GuiController.setScaleFactor((screenSize.width * MAP_SCREEN_COVERAGE)
 		/ img.getWidth());
 	imgScaledOverview = getScaledImage(img);
 	imgScaled = getScaledImage(img);
 
 	final Dimension mapSize = new Dimension(
-		(int) (img.getWidth() * Gui.getScaleFactor()),
-		(int) (img.getHeight() * Gui.getScaleFactor()));
+		(int) (img.getWidth() * GuiController.getScaleFactor()),
+		(int) (img.getHeight() * GuiController.getScaleFactor()));
 	setPreferredSize(mapSize);
 
 	areas = new MapAreas().getAreas();
@@ -209,6 +209,13 @@ public class Map extends JPanel {
 	addMouseListener(new MapMouseListener());
 	addMouseMotionListener(new MapMouseMotionListener());
 	new AreaKeyListener();
+    }
+
+    /**
+     * @return the selected {@link Pitch}.
+     */
+    public PitchInterface getSelectedPlace() {
+	return selectedPitch;
     }
 
     @Override
@@ -264,8 +271,8 @@ public class Map extends JPanel {
 
     private Image getScaledImage(final BufferedImage image) {
 	final Dimension mapSize = new Dimension(
-		(int) (image.getWidth() * Gui.getScaleFactor()),
-		(int) (image.getHeight() * Gui.getScaleFactor()));
+		(int) (image.getWidth() * GuiController.getScaleFactor()),
+		(int) (image.getHeight() * GuiController.getScaleFactor()));
 
 	return image.getScaledInstance(mapSize.width, mapSize.height,
 		BufferedImage.SCALE_FAST);
@@ -280,8 +287,8 @@ public class Map extends JPanel {
      */
     private Rectangle getSubFrame(final Rectangle area) {
 	final Dimension mapSize = new Dimension(
-		(int) (img.getWidth() * Gui.getScaleFactor()),
-		(int) (img.getHeight() * Gui.getScaleFactor()));
+		(int) (img.getWidth() * GuiController.getScaleFactor()),
+		(int) (img.getHeight() * GuiController.getScaleFactor()));
 	final Point center = new Point(area.x + area.width / 2, area.y
 		+ area.height / 2);
 	final Point base = new Point(center.x - mapSize.width / 2, center.y
@@ -320,7 +327,7 @@ public class Map extends JPanel {
     private void zoomIn() {
 	zoomedIn = true;
 	setCurserDefault();
-	final float sf = Gui.getScaleFactor();
+	final float sf = GuiController.getScaleFactor();
 	final Rectangle areaFrame = selectedArea.getAreaFrame();
 	final int x = (int) (areaFrame.x / sf);
 	final int y = (int) (areaFrame.y / sf);
@@ -353,6 +360,9 @@ public class Map extends JPanel {
 
     /** The selected {@link Area}. */
     private Area selectedArea = null;
+
+    /** The selected {@link Pitch}. */
+    private Pitch selectedPitch;
 
     /** The access interface to the status bar. */
     private final StatusBarInterface statusBar = StatusBarController.getInstance();

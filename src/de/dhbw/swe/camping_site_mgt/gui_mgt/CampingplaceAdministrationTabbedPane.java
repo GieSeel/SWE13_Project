@@ -15,8 +15,8 @@ public class CampingplaceAdministrationTabbedPane extends JTabbedPane {
 
 	setTabPlacement(JTabbedPane.BOTTOM);
 
-	map = new MapPanel();
-	this.addTab(lm.get(lp.MAP), map);
+	// map = new MapPanel();
+	// this.addTab(lm.get(lp.MAP), map);
 	// this.setMnemonicAt(2, KeyEvent.VK_3);
 
 	// search = new SearchPanel();
@@ -27,14 +27,14 @@ public class CampingplaceAdministrationTabbedPane extends JTabbedPane {
 	// this.addTab("Formular_Tab", formular);
 	// this.setMnemonicAt(1, KeyEvent.VK_2);
 
-	options = new OptionsPanel();
-	addTab(lm.get(lp.GUI_TAB_OPTIONS), options);
+	// options = new OptionsPanel();
+	// addTab(lm.get(lp.GUI_TAB_OPTIONS), options);
     }
 
     private final FormularPanel formular = null;
     private final LanguageMgr lm;
     private LanguageProperties lp;
-    private final MapPanel map;
-    private final OptionsPanel options;
+    private final MapPanel map = null;
+    private final OptionsPanel options = null;
     private final SearchPanel search = null;
 }

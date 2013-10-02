@@ -2,9 +2,9 @@ package de.dhbw.swe.camping_site_mgt.gui_mgt.statusbar;
 
 import javax.swing.JComponent;
 
-import de.dhbw.swe.camping_site_mgt.gui_mgt.GuiSnippet;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.Displayable;
 
-public class StatusBarController implements StatusBarInterface, GuiSnippet {
+public class StatusBarController implements StatusBarInterface, Displayable {
     /** The singleton instance. */
     private static StatusBarController instance;
 
