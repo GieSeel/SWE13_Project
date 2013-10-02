@@ -1,6 +1,7 @@
 package de.dhbw.swe.camping_site_mgt.common;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Insert description for Country
@@ -63,6 +64,16 @@ public class Country {
     public Country setDatabaseData(final HashMap<String, Object> objects) {
 	setData(objects);
 	return this;
+    }
+
+    /**
+     * Sets the id.
+     * 
+     * @param id
+     *            the id to set
+     */
+    public void setId(final int id) {
+	this.id = id;
     }
 
     public Country setTableData(final HashMap<String, Object> objects) {

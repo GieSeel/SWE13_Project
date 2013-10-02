@@ -2,8 +2,7 @@ package de.dhbw.swe.camping_site_mgt.gui_mgt;
 
 import javax.swing.JTabbedPane;
 
-import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageMgr;
-import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageProperties;
+import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map.MapPanel;
 
 public class CampingplaceAdministrationTabbedPane extends JTabbedPane {
@@ -24,15 +23,15 @@ public class CampingplaceAdministrationTabbedPane extends JTabbedPane {
 	// this.addTab("Search_Tab", search);
 	// this.setMnemonicAt(0, KeyEvent.VK_1);
 
-	formular = new FormularPanel();
-	this.addTab("Formular_Tab", formular);
+	// formular = new FormularPanel();
+	// this.addTab("Formular_Tab", formular);
 	// this.setMnemonicAt(1, KeyEvent.VK_2);
 
 	options = new OptionsPanel();
 	addTab(lm.get(lp.GUI_TAB_OPTIONS), options);
     }
 
-    private FormularPanel formular = null;
+    private final FormularPanel formular = null;
     private final LanguageMgr lm;
     private LanguageProperties lp;
     private final MapPanel map;

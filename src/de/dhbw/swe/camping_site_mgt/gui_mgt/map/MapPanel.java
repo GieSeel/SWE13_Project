@@ -6,6 +6,7 @@ import javax.swing.*;
 
 public class MapPanel extends JPanel {
 
+    /** The serial Version UID. */
     private static final long serialVersionUID = 1L;
 
     public MapPanel() {

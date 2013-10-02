@@ -13,6 +13,8 @@ public interface LanguageProperties {
     String AREA = "Area";
     /** The click to select property. */
     String CLICK_TO_SELECT = "click to select";
+    String COLUMN_HOUSENR = "House Number";
+    String COLUMN_STREET = "Street";
     /** Delivery point property. */
     String DELIVERY_POINT = "Delivery Point";
     /** The close dialog title. */
@@ -24,7 +26,9 @@ public interface LanguageProperties {
     /** The options property. */
     String GUI_TAB_OPTIONS = "Options";
     /** The how to zoom in property. */
-    String HOW_TO_ZOOM = "double click to zoom in";
+    String HOW_TO_ZOOM_IN = "double click to zoom in";
+    /** The how to zoom out property. */
+    String HOW_TO_ZOOM_OUT = "double click to zoom in";
     /** The comment marker. */
     String JUST_A_COMMENT = "//";
     /** The map (word) property */
@@ -37,6 +41,4 @@ public interface LanguageProperties {
     String SELECTED = "selected";
     /** The yes property. */
     String YES = "yes";
-	String COLUMN_STREET = "Street";
-	String COLUMN_HOUSENR = "House Number";
 }

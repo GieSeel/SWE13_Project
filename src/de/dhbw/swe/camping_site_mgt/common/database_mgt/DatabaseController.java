@@ -26,187 +26,28 @@ import de.dhbw.swe.camping_site_mgt.service_mgt.ServiceList;
  */
 public class DatabaseController {
 
-    static DatabaseController databaseController;
+    /** The singleton instance. */
+    private static DatabaseController instance;
 
     /** The {@link CampingLogger}. */
     private static CampingLogger logger = CampingLogger.getLogger(DatabaseController.class);
 
-    static public DatabaseController getInstance() {
-	if (databaseController == null) {
-	    databaseController = new DatabaseController();
+    /**
+     * Returns the instance.
+     * 
+     * @return the singleton instance.
+     */
+    public static synchronized DatabaseController getInstance() {
+	if (instance == null) {
+	    instance = new DatabaseController();
 	}
-	return databaseController;
+	return instance;
     }
 
     /**
-     * Constructor.
-     * 
+     * Private constructor. Singleton.
      */
     private DatabaseController() {
-	// sqlObjects = new HashMap<String, String[][]>();
-	//
-	// // "address"
-	// sqlObjects.put("address", new String[][] { { "id", "int", null },
-	// { "street", "string", "Street" },
-	// { "houseNumber", "string", "House Number" },
-	// { "town_ID", "int", null } });
-	//
-	// // "bill"
-	// sqlObjects.put("bill", new String[][] { { "id", "int", null },
-	// { "number", "int", "Number" }, { "billItem_ID", "int", null },
-	// { "multiplier", "int", "Multiplier" } });
-	//
-	// // "billitem"
-	// sqlObjects.put("billitem", new String[][] { { "id", "int", null },
-	// { "labeling", "string", "Labeling" },
-	// { "priceBusySeason", "float", "Price Busy Season" },
-	// { "priceLowSeason", "float", "Price Low Season" } });
-	//
-	// // "booking"
-	// sqlObjects.put("booking", new String[][] { { "id", "int", null },
-	// { "responsiblePerson_ID", "int", null },
-	// { "fellowTravelersList_number", "int", null },
-	// { "from", "date", "From" }, { "until", "date", "Until" },
-	// { "equipmentList_number", "int", null },
-	// { "pitchBookingList_number", "int", null },
-	// { "extraBookingList_number", "int", null },
-	// { "bill_number", "int", null },
-	// { "chipCardList_number", "int", null } });
-	//
-	// // "bookinglist"
-	// sqlObjects.put("bookinglist", new String[][] { { "id", "int", null },
-	// { "number", "int", "Number" }, { "booking_ID", "int", null } });
-	//
-	// // "chipcard"
-	// sqlObjects.put("chipcard", new String[][] { { "id", "int", null },
-	// { "validFrom", "date", "Valide From" },
-	// { "validTo", "date", "Valide To" } });
-	//
-	// // "chipcardlist"
-	// sqlObjects.put("chipcardlist", new String[][] { { "id", "int", null
-	// },
-	// { "number", "int", "Number" }, { "chipCard_ID", "int", null } });
-	//
-	// // "country"
-	// sqlObjects.put("country", new String[][] { { "id", "int", null },
-	// { "name", "string", "Name" }, { "acronym", "string", "Acronym" } });
-	//
-	// // "employee"
-	// sqlObjects.put("employee",
-	// new String[][] { { "id", "int", null },
-	// { "person_ID", "int", null },
-	// { "employeeRole_ID", "int", null },
-	// { "userName", "string", "User Name" },
-	// { "password", "string", "Password" },
-	// { "blocked", "int", "Is Blocked" },
-	// { "chipCard_ID", "int", null } });
-	//
-	// // "employeelist"
-	// sqlObjects.put("employeelist", new String[][] { { "id", "int", null
-	// },
-	// { "number", "int", "Number" }, { "employee_ID", "int", null } });
-	//
-	// // "employeerole"
-	// sqlObjects.put("employeerole", new String[][] { { "id", "int", null
-	// },
-	// { "labeling", "string", "Labeling" },
-	// { "arrangement", "string", "Arrangement" } });
-	//
-	// // "equipment"
-	// sqlObjects.put("equipment", new String[][] { { "id", "int", null },
-	// { "type", "string", "Type" }, { "size", "string", "Size" },
-	// { "identification", "string", "Identification" } });
-	//
-	// // "equipmentlist"
-	// sqlObjects.put("equipmentlist", new String[][] { { "id", "int", null
-	// },
-	// { "number", "int", "Number" }, { "equipment_ID", "int", null } });
-	//
-	// // "extrabooking"
-	// sqlObjects.put("extrabooking", new String[][] { { "id", "int", null
-	// },
-	// { "name", "string", "Name" }, { "labeling", "string", "Labeling" },
-	// { "site_ID", "int", null } });
-	//
-	// // "extrabookinglist"
-	// sqlObjects.put("extrabookinglist", new String[][] { { "id", "int",
-	// null },
-	// { "number", "int", "Number" }, { "site_ID", "int", null } });
-	//
-	// // "guest"
-	// sqlObjects.put("guest", new String[][] { { "id", "int", null },
-	// { "person_ID", "int", null },
-	// { "visitorsTaxClass_ID", "int", null } });
-	//
-	// // "guestlist"
-	// sqlObjects.put("guestlist", new String[][] { { "id", "int", null },
-	// { "number", "int", "Number" }, { "guest_ID", "int", null } });
-	//
-	// // "person"
-	// sqlObjects.put("person", new String[][] { { "id", "int", null },
-	// { "identificationNumber", "string", "Identification Number" },
-	// { "name", "string", "Name" },
-	// { "firstName", "string", "First Name" },
-	// { "address_ID", "int", null },
-	// { "dateOfBirth", "date", "Date of Birth" } });
-	//
-	// // "pitch"
-	// sqlObjects.put("pitch", new String[][] { { "id", "int", null },
-	// { "district", "string", "District" }, { "type", "string", "Type" },
-	// { "length", "int", "Length" }, { "width", "int", "Width" },
-	// { "natureOfSoil", "string", "Nature of Soil" },
-	// { "deliveryPoint_ID", "int", null },
-	// { "characteristics", "string", "Characteristics" } });
-	//
-	// // "pitchbooking"
-	// sqlObjects.put("pitchbooking", new String[][] { { "id", "int", null
-	// },
-	// { "pitch_ID", "int", null },
-	// { "electricity", "int", "Electricity" } });
-	//
-	// // "pitchbookinglist"
-	// sqlObjects.put("pitchbookinglist", new String[][] { { "id", "int",
-	// null },
-	// { "number", "int", "Number" }, { "pitchBooking_ID", "int", null } });
-	//
-	// // "pitchlist"
-	// sqlObjects.put("pitchlist", new String[][] { { "id", "int", null },
-	// { "number", "int", "Number" }, { "pitch_ID", "int", null } });
-	//
-	// // "service"
-	// sqlObjects.put("service", new String[][] { { "id", "int", null },
-	// { "pitch_ID", "int", null }, { "site_ID", "int", null },
-	// { "employeeRole_ID", "int", null },
-	// { "description", "string", "Description" },
-	// { "creationDate", "date", "Creation Date" },
-	// { "priority", "int", "Priority" },
-	// { "doneDate", "date", "Done Date" } });
-	//
-	// // "servicelist"
-	// sqlObjects.put("servicelist", new String[][] { { "id", "int", null },
-	// { "number", "int", "Number" }, { "service_ID", "int", null } });
-	//
-	// // "site"
-	// sqlObjects.put("site", new String[][] { { "id", "int", null },
-	// { "labeling", "string", "Labeling" }, { "type", "string", "Type" },
-	// { "openingHours", "string", "Opening Hours" },
-	// { "description", "string", "Description" } });
-	//
-	// // "sitelist"
-	// sqlObjects.put("sitelist", new String[][] { { "id", "int", null },
-	// { "number", "int", "Number" }, { "site_ID", "int", null } });
-	//
-	// // "town"
-	// sqlObjects.put("town", new String[][] { { "id", "int", null },
-	// { "name", "string", "Name" },
-	// { "postalCode", "string", "Postal Code" },
-	// { "country_ID", "int", null } });
-	//
-	// // "visitorstaxclass"
-	// sqlObjects.put("visitorstaxclass",
-	// new String[][] { { "id", "int", null },
-	// { "labeling", "string", "Labeling" },
-	// { "price", "float", "Price" } });
     }
 
     /**
@@ -263,48 +104,36 @@ public class DatabaseController {
     }
 
     /**
-     * Returns just one part of the sqlObjects map.
+     * Checks if the {@link Address} object allready exists in the database and
+     * saves it if nessecary.
      * 
-     * @param className
-     *            is the class
-     * @return
-     */
-    public String[][] getSqlObjectClass(final String className) {
-	return sqlObjects.get(className);
-    }
-
-    /**
-     * Returns the sqlObjects object.
-     * 
-     * @return
-     */
-    public HashMap<String, String[][]> getSqlObjects() {
-	return sqlObjects;
-    }
-
-    /**
-     * Prepares the {@link Address} object and saves it in the database.
-     * 
-     * @param obj
+     * @param object
      *            is the object
      * @return
      */
-    public int queryInsertUpdateAddress(final Address obj) {
-	final HashMap<String, Object> hashObj = obj.getDatabaseData();
-	if (obj.getId() == 0) {
+    public int queryInsertUpdateAddress(final DataObject object) {
+//	final HashMap<String, Object> hashObj = DataObjectMethods.getDatabaseDataOf(obj);
+	
+	// If id=0 the object is new
+	if (object.getId() == 0) {
 	    // Check if object already exists
+	    for(final DataObject dataObject : querySelectObjects(object.getName())) {
+		obj.
+	    }
+	    
+	    
+	    
 	    for (final Address tmpObj : querySelectAddress()) {
-		if (obj.getHouseNumber().equals(tmpObj.getHouseNumber())
-			&& obj.getStreet().equals(tmpObj.getStreet())
+		if (object.getHouseNumber().equals(tmpObj.getHouseNumber())
+			&& object.getStreet().equals(tmpObj.getStreet())
 			&& (int) hashObj.get("town_ID") == tmpObj.getTown().getId()) {
 		    // If object exists return the ID of the object
 		    return tmpObj.getId();
 		}
 	    }
 	}
-
 	// Insert or update the object
-	return queryInsertUpdate(obj.getClass().getSimpleName(), hashObj);
+	return queryInsertUpdate(object.getName(), hashObj);
     }
 
     /**
@@ -426,8 +255,7 @@ public class DatabaseController {
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final ChipCard tmpObj : querySelectChipCard()) {
-		if (obj.getNumber() == tmpObj.getNumber()
-			&& obj.getValidFrom().equals(tmpObj.getValidFrom())
+		if (obj.getValidFrom().equals(tmpObj.getValidFrom())
 			&& obj.getValidTo().equals(tmpObj.getValidTo())) {
 		    // If object exists return the ID of the object
 		    return tmpObj.getId();
@@ -995,27 +823,32 @@ public class DatabaseController {
     }
 
     /**
-     * Returns a list of {@link Address} objects.
+     * Returns a list of all {@link Address} objects from the database.
      * 
      * @return
      */
     public List<Address> querySelectAddress() {
 	final List<Address> objectList = new ArrayList<Address>();
-	for (final HashMap<String, Object> object : querySelect("address")) {
-	    objectList.add(new Address().setDatabaseData(object));
+	for (final HashMap<String, Object> elements : querySelect(Address.NAME)) {
+	    final Address object = new Address();
+	    object.setDatabaseData(elements);
+	    objectList.add(object);
 	}
 	return objectList;
     }
 
     /**
-     * Returns one {@link Address} object.
+     * Fills the given {@link Address} object with the database data.
      * 
      * @param id
      *            of the entry
+     * @param object
+     *            is the given object
      * @return
      */
     public void querySelectAddress(final int id, final Object object) {
-	((Address) object).setDatabaseData(querySelect("address", id));
+	final Address obj = ((Address) object);
+	obj.setDatabaseData(querySelect(obj.getName(), id));
     }
 
     /**
@@ -1680,8 +1513,13 @@ public class DatabaseController {
      */
     private int queryInsertUpdate(final String table,
 	    final HashMap<String, Object> data) {
+
+	for (final ColumnInfo column : DataStructure.getStructureFor(table)) {
+
+	}
+
 	final String[][] entries = sqlObjects.get(table.toLowerCase());
-	int id = (Integer) data.get(entries[0][0]);
+	int id = (Integer) data.get("id");
 	final boolean insert = (id == 0 ? true : false);
 	PreparedStatement statement;
 	String query;
@@ -1788,10 +1626,9 @@ public class DatabaseController {
      */
     private List<HashMap<String, Object>> querySelectAll(final String table,
 	    final int id) {
-	final String[][] entries = sqlObjects.get(table.toLowerCase());
 	PreparedStatement statement;
 	final String query = "SELECT * FROM " + table + " "
-		+ (id == 0 ? ";" : " WHERE " + entries[0][0] + "='" + id + "';");
+		+ (id == 0 ? ";" : " WHERE id='" + id + "';");
 	final List<HashMap<String, Object>> ret = new ArrayList<HashMap<String, Object>>();
 	if (conncetion == null) {
 	    logger.error("Not connected to database");
@@ -1805,17 +1642,19 @@ public class DatabaseController {
 
 	    while (result.next()) {
 		tmp_list = new HashMap<String, Object>();
-		for (final String[] entry : entries) {
-		    if (entry[1].equals("string")) {
-			tmp_list.put(entry[0],
-				new String(result.getString(entry[0])));
-		    } else if (entry[1].equals("int")) {
-			tmp_list.put(entry[0], new Integer(result.getInt(entry[0])));
-		    } else if (entry[1].equals("float")) {
-			tmp_list.put(entry[0], new Float(result.getFloat(entry[0])));
-		    } else if (entry[1].equals("date")) {
-			tmp_list.put(entry[0],
-				new Date(result.getTimestamp(entry[0]).getTime()));
+		for (final ColumnInfo column : DataStructure.getStructureFor(table)) {
+		    if (column.getDbType().equals(String.class)) {
+			tmp_list.put(column.getFieldName(),
+				result.getString(column.getDbName()));
+		    } else if (column.getDbType().equals(Integer.class)) {
+			tmp_list.put(column.getFieldName(),
+				result.getInt(column.getDbName()));
+		    } else if (column.getDbType().equals(Float.class)) {
+			tmp_list.put(column.getFieldName(),
+				result.getFloat(column.getDbName()));
+		    } else if (column.getDbType().equals(Date.class)) {
+			tmp_list.put(column.getFieldName(), new Date(
+				result.getTimestamp(column.getDbName()).getTime()));
 		    } else {
 			// TODO throw Unerwarteter Typ!
 		    }
@@ -1833,5 +1672,5 @@ public class DatabaseController {
     /** The database {@link Connection}. */
     private Connection conncetion;
 
-    private final HashMap<String, String[][]> sqlObjects;
+    // private final HashMap<String, String[][]> sqlObjects;
 }

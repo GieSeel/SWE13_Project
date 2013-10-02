@@ -1,6 +1,7 @@
 package de.dhbw.swe.camping_site_mgt.place_mgt;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Set;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
 
@@ -15,12 +16,15 @@ public class Pitch {
 	this.length = 0;
 	this.natureOfSoil = null;
 	this.type = null;
+	this.xCoords = null;
+	this.yCoords = null;
 	this.width = 0;
     }
 
     public Pitch(final int id, final String characteristics,
 	    final Site deliveryPoint, final String district, final int length,
-	    final String natureOfSoil, final String type, final int width) {
+	    final String natureOfSoil, final String type, final int width,
+	    final String xCoords, final String yCoords) {
 	super();
 	this.id = id;
 	this.characteristics = characteristics;
@@ -30,11 +34,14 @@ public class Pitch {
 	this.natureOfSoil = natureOfSoil;
 	this.type = type;
 	this.width = width;
+	this.xCoords = xCoords;
+	this.yCoords = yCoords;
     }
 
     public Pitch(final String characteristics, final Site deliveryPoint,
 	    final String district, final int length, final String natureOfSoil,
-	    final String type, final int width) {
+	    final String type, final int width, final String xCoords,
+	    final String yCoords) {
 	super();
 	this.id = 0;
 	this.characteristics = characteristics;
@@ -44,6 +51,8 @@ public class Pitch {
 	this.natureOfSoil = natureOfSoil;
 	this.type = type;
 	this.width = width;
+	this.xCoords = xCoords;
+	this.yCoords = yCoords;
     }
 
     public String getCharacteristics() {
@@ -63,7 +72,8 @@ public class Pitch {
 	objects.put("natureOfSoil", this.natureOfSoil);
 	objects.put("type", this.type);
 	objects.put("width", this.width);
-
+	objects.put("xCoords", this.xCoords);
+	objects.put("yCoords", this.yCoords);
 	return objects;
     }
 
@@ -98,6 +108,8 @@ public class Pitch {
 	objects.put(className + "natureOfSoil", new String(this.natureOfSoil));
 	objects.put(className + "type", new String(this.type));
 	objects.put(className + "width", new Integer(this.width));
+	objects.put(className + "xCoords", new String(this.xCoords));
+	objects.put(className + "yCoords", new String(this.yCoords));
 
 	objects.putAll(this.deliveryPoint.getTableData(className));
 
@@ -148,6 +160,8 @@ public class Pitch {
 	this.natureOfSoil = (String) objects.get("natureOfSoil");
 	this.type = (String) objects.get("type");
 	this.width = (int) objects.get("width");
+	this.xCoords = (String) objects.get("xCoords");
+	this.yCoords = (String) objects.get("yCoords");
     }
 
     private String characteristics;
@@ -160,4 +174,6 @@ public class Pitch {
     // private final Pitch_Type type;
     private String type;
     private int width;
+    private String xCoords;
+    private String yCoords;
 }

@@ -16,16 +16,18 @@ import java.util.HashMap;
  */
 public interface DataObject {
 
+    boolean allreadyExists(HashMap<String, Object> elements);
+
     int getId();
 
     String getName();
 
-    /**
-     * Fills the object with the given database data.
-     * 
-     * @param elements
-     */
-    void setDatabaseData(final HashMap<String, Object> elements);
+    // /**
+    // * Fills the object with the given database data.
+    // *
+    // * @param elements
+    // */
+    // void setDatabaseData(final HashMap<String, Object> elements);
 
     /**
      * Fills the object with the data from the display table.

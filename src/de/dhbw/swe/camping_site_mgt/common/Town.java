@@ -1,6 +1,7 @@
 package de.dhbw.swe.camping_site_mgt.common;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Set;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
 
@@ -73,6 +74,16 @@ public class Town {
 	this.country = db.querySelectCountry((int) objects.get("country_ID"));
 	setData(objects);
 	return this;
+    }
+
+    /**
+     * Sets the id.
+     * 
+     * @param id
+     *            the id to set
+     */
+    public void setId(final int id) {
+	this.id = id;
     }
 
     public Town setTableData(final HashMap<String, Object> objects) {
