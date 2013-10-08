@@ -3,6 +3,7 @@ package de.dhbw.swe.camping_site_mgt.place_mgt;
 import java.awt.Polygon;
 import java.util.HashMap;
 
+import de.dhbw.swe.camping_site_mgt.common.Usage;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
 
 public class Pitch implements PitchInterface {
@@ -42,34 +43,80 @@ public class Pitch implements PitchInterface {
     }
 
     public Pitch(final int id, final String characteristics,
-	    final Site deliveryPoint, final String district, final int length,
+	    final Site deliveryPoint, final String area, final int length,
 	    final String natureOfSoil, final Pitch_Type type, final int width,
 	    final Polygon shape) {
 	this.id = id;
 	this.characteristics = characteristics;
 	this.deliveryPoint = deliveryPoint;
-	this.area = district;
+	this.area = area;
 	this.length = length;
 	this.natureOfSoil = natureOfSoil;
 	this.type = type;
 	this.width = width;
 	this.shape = shape;
+	this.usage = new Usage();
     }
 
     public Pitch(final int id, final String characteristics,
-	    final Site deliveryPoint, final String district, final int length,
+	    final Site deliveryPoint, final String area, final int length,
 	    final String natureOfSoil, final Pitch_Type type, final int width,
 	    final String xCoords, final String yCoords) {
-	this(id, characteristics, deliveryPoint, district, length, natureOfSoil,
-		type, width, buildShape(xCoords, yCoords));
+	this(id, characteristics, deliveryPoint, area, length, natureOfSoil, type,
+		width, buildShape(xCoords, yCoords));
     }
 
     public Pitch(final String characteristics, final Site deliveryPoint,
-	    final String district, final int length, final String natureOfSoil,
+	    final String area, final int length, final String natureOfSoil,
 	    final Pitch_Type type, final int width, final String xCoords,
 	    final String yCoords) {
-	this(0, characteristics, deliveryPoint, district, length, natureOfSoil,
-		type, width, xCoords, yCoords);
+	this(0, characteristics, deliveryPoint, area, length, natureOfSoil, type,
+		width, xCoords, yCoords);
+    }
+
+    /**
+     * Adds entry to usage list.
+     * 
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     */
+    public void addUsage(final String parentTableName, final int parentID) {
+	usage.addUsage(parentTableName, parentID);
+    }
+
+    /**
+     * Deletes entry from usage list.
+     * 
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     */
+    public void delUsage(final String parentTableName, final int parentID) {
+	usage.delUsage(parentTableName, parentID);
+    }
+
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+	final Pitch object = (Pitch) obj;
+	if (this.area.equals(object.getArea())
+		&& this.characteristics.equals(object.getCharacteristics())
+		&& this.deliveryPoint.equals(object.getDeliveryPoint())
+		&& this.length == object.getLength()
+		&& this.natureOfSoil.equals(object.getNatureOfSoil())
+		&& this.shape.equals(object.getShape())
+		&& this.type.equals(object.getType())
+		&& this.width == object.getWidth()) {
+	    return true;
+	}
+	return false;
     }
 
     @Override
@@ -102,14 +149,59 @@ public class Pitch implements PitchInterface {
 	return natureOfSoil;
     }
 
+    /**
+     * Returns the shape.
+     * 
+     * @return the shape
+     */
+    public Polygon getShape() {
+	return shape;
+    }
+
     @Override
     public Pitch_Type getType() {
 	return type;
     }
 
+    /**
+     * Returns the usage.
+     * 
+     * @return the usage
+     */
+    public Usage getUsage() {
+	return usage;
+    }
+
     @Override
     public int getWidth() {
 	return width;
+    }
+
+    /**
+     * Returns the xCoords.
+     * 
+     * @return the xCoords
+     */
+    public String getxCoords() {
+	return xCoords;
+    }
+
+    /**
+     * Returns the yCoords.
+     * 
+     * @return the yCoords
+     */
+    public String getyCoords() {
+	return yCoords;
+    }
+
+    /**
+     * Checks if the object is still in use.
+     * 
+     * @return true if it's still in use
+     */
+    public boolean isInUse() {
+	return usage.isInUse();
     }
 
     public Pitch setDatabaseData(final HashMap<String, Object> objects) {
@@ -119,10 +211,30 @@ public class Pitch implements PitchInterface {
 	return this;
     }
 
+    /**
+     * Sets the id.
+     * 
+     * @param id
+     *            the id to set
+     */
+    public void setId(final int id) {
+	this.id = id;
+    }
+
+    /**
+     * Sets the usage.
+     * 
+     * @param usage
+     *            the usage to set
+     */
+    public void setUsage(final Usage usage) {
+	this.usage = usage;
+    }
+
     private void setData(final HashMap<String, Object> objects) {
 	this.id = (int) objects.get("id");
 	this.characteristics = (String) objects.get("characteristics");
-	this.area = (String) objects.get("district");
+	this.area = (String) objects.get("area");
 	this.length = (int) objects.get("length");
 	this.natureOfSoil = (String) objects.get("natureOfSoil");
 	this.type = (Pitch_Type) objects.get("type");
@@ -141,5 +253,8 @@ public class Pitch implements PitchInterface {
     private String natureOfSoil;
     private Polygon shape;
     private Pitch_Type type;
+    private Usage usage;
     private int width;
+    private String xCoords;
+    private String yCoords;
 }

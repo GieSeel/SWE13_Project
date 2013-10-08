@@ -23,7 +23,6 @@ import java.util.HashMap;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseMgr;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
-import de.dhbw.swe.camping_site_mgt.person_mgt.EmployeeMgr;
 
 /**
  * The manager class for the {@link ChipCard} objects.
@@ -51,70 +50,101 @@ public class ChipCardMgr {
      * Private constructor. Singleton.
      */
     private ChipCardMgr() {
-	chipCard = new HashMap<>();
-	tableName = "visitorsTaxClass";
+	chipCards = new HashMap<>();
+	tableName = "chipCard";
 	logger = CampingLogger.getLogger(this.getClass());
 	db = DatabaseMgr.getInstance();
 	load(); // Load all data from database
     }
 
     /**
-     * Gets the object from the object list.
+     * Gets the object.
      * 
      * @param id
      *            the {@link ChipCard} object id
-     * @return the {@link ChipCard}
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     * @return the {@link ChipCard} object
      */
-    public ChipCard get(final int id) {
-	if (chipCard.containsKey(id)) {
-	    return chipCard.get(id);
+    public ChipCard objectGet(final int id, final String parentTableName,
+	    final int parentID) {
+	final ChipCard object = get(id);
+	if (parentTableName != null) {
+	    object.addUsage(parentTableName, parentID);
 	}
-	return null;
+	return object;
     }
 
     /**
-     * Inserts object into database.
+     * Inserts the object in database.
      * 
      * @param object
      *            the {@link ChipCard} object
      */
-    public void insert(final ChipCard object) {
-	// If object already exists just save this id
-	insert(isObjectExisting(object), object);
-    }
-
-    /**
-     * Removes object from object list.
-     * 
-     * @param id
-     *            the {@link ChipCard} object id
-     */
-    @Unfinished
-    public void remove(final int id) {
+    public void objectInsert(final ChipCard object) {
 	// Sub objects
 
-	// chipCard.remove(id);
-	// TODO remove from database. Check if object is still in use (from
-	// parents)!!
+	// If object already exists just save that id
+	int id = isObjectExisting(object);
+	if (id == 0) {
+	    id = db.insertEntryInto(tableName, object2entry(object));
+	}
+
+	// Add or replace object in object list
+	add(id, object);
     }
 
     /**
-     * Updates object in database.
      * 
-     * @param id
-     *            the {@link ChipCard} object id
+     * Deletes the object.
+     * 
      * @param object
      *            the {@link ChipCard} object
+     * @return true if it was successful
      */
-    public void update(final ChipCard oldObject, final ChipCard object) {
-	final int id = isObjectExisting(oldObject);
-	if (id == 0) { // || isObjectInUse(oldObject)) { // ChipCard immer
-		       // update
-	    // If object doesn't exists or if it's still in use insert a new one
-	    insert(object);
+    @Unfinished
+    public boolean objectRemove(final ChipCard object) {
+	// Sub objects
+	final int id = object.getId();
+
+	if (isObjectInUse(object)) {
+	    logger.error("Object is already in use!");
+	    return false;
+	}
+	db.removeEntryFrom(tableName, object2entry(object));
+	return remove(id);
+    }
+
+    /**
+     * Updates the object.
+     * 
+     * @param object
+     *            the old {@link ChipCard} object
+     * @param newObject
+     *            the new {@link ChipCard} object
+     */
+    public void objectUpdate(final ChipCard object, final ChipCard newObject) {
+	// Sub objects
+	int id = object.getId();
+
+	id = isObjectExisting(object);
+	if (id == 0 || isObjectInUse(object)) {
+	    // If object is in use or it doesn't exists a new one is needed
+	    objectInsert(newObject);
+	    return;
+	}
+	// If newObject already exists the old object will be removed and
+	// the existing object will be used!
+	final int newID = isObjectExisting(newObject);
+	if (newID != 0) {
+	    objectRemove(object);
+	    add(newID, newObject);
 	} else {
-	    add(id, object);
-	    db.updateEntryIn(tableName, object2entry(object));
+	    // Update object in object list and database
+	    add(id, newObject);
+	    db.updateEntryIn(tableName, object2entry(newObject));
 	}
     }
 
@@ -126,11 +156,11 @@ public class ChipCardMgr {
      * 
      */
     private void add(final HashMap<Integer, ChipCard> objects) {
-	chipCard.putAll(objects);
+	chipCards.putAll(objects);
     }
 
     /**
-     * Adds object to object list.
+     * Adds or updates the object to object list.
      * 
      * @param id
      *            the {@link ChipCard} object id
@@ -139,7 +169,7 @@ public class ChipCardMgr {
      */
     private void add(final int id, final ChipCard object) {
 	object.setId(id);
-	chipCard.put(id, object);
+	chipCards.put(id, object);
     }
 
     /**
@@ -152,7 +182,6 @@ public class ChipCardMgr {
     private HashMap<Integer, ChipCard> entry2object(
 	    final HashMap<String, Object> entry) {
 	final HashMap<Integer, ChipCard> object = new HashMap<>();
-
 	int id;
 	Date validFrom;
 	Date validTo;
@@ -166,20 +195,18 @@ public class ChipCardMgr {
     }
 
     /**
-     * Inserts object into database.
+     * Gets an object from the object list.
      * 
      * @param id
-     *            the id of the {@link ChipCard} object
-     * @param object
-     *            the {@link ChipCard} object
+     *            the {@link ChipCard} object id
+     * @return the {@link ChipCard} object
      */
-    private void insert(int id, final ChipCard object) {
-	// TODO evtl. unnötige -> alles in "insert(Town object)"
-	if (id == 0) {
-	    id = db.insertEntryInto(tableName, object2entry(object));
+    private ChipCard get(final int id) {
+	if (chipCards.containsKey(id)) {
+	    final ChipCard object = chipCards.get(id);
+	    return object;
 	}
-	// Add or replace object in object list
-	add(id, object);
+	return null;
     }
 
     /**
@@ -187,10 +214,10 @@ public class ChipCardMgr {
      * 
      * @param object
      *            the {@link ChipCard} object
-     * @return id of the object (0 if it doesn't exists)
+     * @return the id of the {@link ChipCard} object
      */
     private int isObjectExisting(final ChipCard object) {
-	if (chipCard.containsValue(object)) {
+	if (chipCards.containsValue(object)) {
 	    return object.getId();
 	}
 	return 0;
@@ -203,11 +230,8 @@ public class ChipCardMgr {
      *            the {@link ChipCard} object
      * @return true if object is still in use
      */
-    @Unfinished
     private boolean isObjectInUse(final ChipCard object) {
-	// TODO -- -1 weil es momentan noch benutzt wird
-	// Ask all parent manager classes if they use the object
-	return EmployeeMgr.getInstance().isSubObjectInUse(object);
+	return object.isInUse();
     }
 
     /**
@@ -236,7 +260,23 @@ public class ChipCardMgr {
 	return entry;
     }
 
-    private final HashMap<Integer, ChipCard> chipCard;
+    /**
+     * Removes the object from the object list.
+     * 
+     * @param id
+     *            the {@link ChipCard} object id
+     * @return true if it was successful
+     */
+    @Unfinished
+    private boolean remove(final int id) {
+	if (chipCards.containsKey(id)) {
+	    chipCards.remove(id);
+	    return true;
+	}
+	return false;
+    }
+
+    private final HashMap<Integer, ChipCard> chipCards;
     private final DatabaseMgr db;
     private final CampingLogger logger;
     private final String tableName;

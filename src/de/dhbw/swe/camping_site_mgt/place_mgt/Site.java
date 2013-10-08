@@ -1,5 +1,7 @@
 package de.dhbw.swe.camping_site_mgt.place_mgt;
 
+import de.dhbw.swe.camping_site_mgt.common.Usage;
+
 public class Site {
 
     /**
@@ -26,6 +28,7 @@ public class Site {
 	this.labeling = labeling;
 	this.openingHours = openingHours;
 	this.type = type;
+	this.usage = new Usage();
     }
 
     /**
@@ -39,6 +42,30 @@ public class Site {
     public Site(final String description, final String labeling,
 	    final String openingHours, final String type) {
 	this(0, description, labeling, openingHours, type);
+    }
+
+    /**
+     * Adds entry to usage list.
+     * 
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     */
+    public void addUsage(final String parentTableName, final int parentID) {
+	usage.addUsage(parentTableName, parentID);
+    }
+
+    /**
+     * Deletes entry from usage list.
+     * 
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     */
+    public void delUsage(final String parentTableName, final int parentID) {
+	usage.delUsage(parentTableName, parentID);
     }
 
     /**
@@ -104,6 +131,24 @@ public class Site {
     }
 
     /**
+     * Returns the usage.
+     * 
+     * @return the usage
+     */
+    public Usage getUsage() {
+	return usage;
+    }
+
+    /**
+     * Checks if the object is still in use.
+     * 
+     * @return true if it's still in use
+     */
+    public boolean isInUse() {
+	return usage.isInUse();
+    }
+
+    /**
      * Sets the id.
      * 
      * @param id
@@ -113,9 +158,20 @@ public class Site {
 	this.id = id;
     }
 
+    /**
+     * Sets the usage.
+     * 
+     * @param usage
+     *            the usage to set
+     */
+    public void setUsage(final Usage usage) {
+	this.usage = usage;
+    }
+
     private final String description;
     private int id;
     private final String labeling;
     private final String openingHours;
     private final String type;
+    private Usage usage;
 }

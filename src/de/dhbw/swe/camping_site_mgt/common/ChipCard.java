@@ -33,6 +33,46 @@ public class ChipCard {
 	this.id = id;
 	this.validFrom = validFrom;
 	this.validTo = validTo;
+	this.usage = new Usage();
+    }
+
+    /**
+     * Adds entry to usage list.
+     * 
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     */
+    public void addUsage(final String parentTableName, final int parentID) {
+	usage.addUsage(parentTableName, parentID);
+    }
+
+    /**
+     * Deletes entry from usage list.
+     * 
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     */
+    public void delUsage(final String parentTableName, final int parentID) {
+	usage.delUsage(parentTableName, parentID);
+    }
+
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+	final ChipCard object = (ChipCard) obj;
+	if (this.validFrom.equals(object.getValidFrom())
+		&& this.validTo.equals(object.getValidTo())) {
+	    return true;
+	}
+	return false;
     }
 
     /**
@@ -42,6 +82,15 @@ public class ChipCard {
      */
     public int getId() {
 	return id;
+    }
+
+    /**
+     * Returns the usage.
+     * 
+     * @return the usage
+     */
+    public Usage getUsage() {
+	return usage;
     }
 
     /**
@@ -63,6 +112,15 @@ public class ChipCard {
     }
 
     /**
+     * Checks if the object is still in use.
+     * 
+     * @return true if it's still in use
+     */
+    public boolean isInUse() {
+	return usage.isInUse();
+    }
+
+    /**
      * Sets the id.
      * 
      * @param id
@@ -73,6 +131,7 @@ public class ChipCard {
     }
 
     private int id;
+    private final Usage usage;
     private final Date validFrom;
     private final Date validTo;
 }

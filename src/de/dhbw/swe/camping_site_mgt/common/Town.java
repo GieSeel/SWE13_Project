@@ -143,6 +143,5 @@ public class Town {
     private int id;
     private final String name;
     private final String postalCode;
-
     private Usage usage;
 }

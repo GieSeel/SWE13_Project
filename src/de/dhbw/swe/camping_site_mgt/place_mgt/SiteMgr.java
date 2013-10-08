@@ -5,7 +5,6 @@ import java.util.HashMap;
 import de.dhbw.swe.camping_site_mgt.common.Unfinished;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseMgr;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
-import de.dhbw.swe.camping_site_mgt.person_mgt.PersonMgr;
 
 /**
  * The manager class for the {@link Site} objects.
@@ -41,59 +40,93 @@ public class SiteMgr {
     }
 
     /**
-     * Gets the object from the object list.
+     * Gets the object.
      * 
      * @param id
      *            the {@link Site} object id
-     * @return the {@link Site}
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     * @return the {@link Site} object
      */
-    public Site get(final int id) {
-	if (sites.containsKey(id)) {
-	    return sites.get(id);
+    public Site objectGet(final int id, final String parentTableName,
+	    final int parentID) {
+	final Site object = get(id);
+	if (parentTableName != null) {
+	    object.addUsage(parentTableName, parentID);
 	}
-	return null;
+	return object;
     }
 
     /**
-     * Inserts object into database.
+     * Inserts the object in database.
      * 
      * @param object
      *            the {@link Site} object
      */
-    public void insert(final Site object) {
-	// If object already exists just save this id
-	insert(isObjectExisting(object), object);
+    public void objectInsert(final Site object) {
+	// Sub objects
+
+	// If object already exists just save that id
+	int id = isObjectExisting(object);
+	if (id == 0) {
+	    id = db.insertEntryInto(tableName, object2entry(object));
+	}
+
+	// Add or replace object in object list
+	add(id, object);
     }
 
     /**
-     * Removes object from object list.
      * 
-     * @param id
-     *            the {@link Site} object id
+     * Deletes the object.
+     * 
+     * @param object
+     *            the {@link Site} object
+     * @return true if it was successful
      */
     @Unfinished
-    public void remove(final int id) {
-	// sites.remove(id);
-	// TODO remove from database. Check if object is still in use (from
-	// parents)!!
+    public boolean objectRemove(final Site object) {
+	// Sub objects
+	final int id = object.getId();
+
+	if (isObjectInUse(object)) {
+	    logger.error("Object is already in use!");
+	    return false;
+	}
+	db.removeEntryFrom(tableName, object2entry(object));
+	return remove(id);
     }
 
     /**
-     * Updates object in database.
+     * Updates the object.
      * 
-     * @param id
-     *            the {@link Site} object id
      * @param object
-     *            the {@link Site} object
+     *            the old {@link Site} object
+     * @param newObject
+     *            the new {@link Site} object
      */
-    public void update(final Site oldObject, final Site object) {
-	final int id = isObjectExisting(oldObject);
-	if (id == 0 || isObjectInUse(oldObject)) {
-	    // If object doesn't exists or if it's still in use insert a new one
-	    insert(object);
+    public void objectUpdate(final Site object, final Site newObject) {
+	// Sub objects
+	int id = object.getId();
+
+	id = isObjectExisting(object);
+	if (id == 0 || isObjectInUse(object)) {
+	    // If object is in use or it doesn't exists a new one is needed
+	    objectInsert(newObject);
+	    return;
+	}
+	// If newObject already exists the old object will be removed and
+	// the existing object will be used!
+	final int newID = isObjectExisting(newObject);
+	if (newID != 0) {
+	    objectRemove(object);
+	    add(newID, newObject);
 	} else {
-	    add(id, object);
-	    db.updateEntryIn(tableName, object2entry(object));
+	    // Update object in object list and database
+	    add(id, newObject);
+	    db.updateEntryIn(tableName, object2entry(newObject));
 	}
     }
 
@@ -109,7 +142,7 @@ public class SiteMgr {
     }
 
     /**
-     * Adds object to object list.
+     * Adds or updates the object to object list.
      * 
      * @param id
      *            the {@link Site} object id
@@ -147,20 +180,18 @@ public class SiteMgr {
     }
 
     /**
-     * Inserts object into database.
+     * Gets an object from the object list.
      * 
      * @param id
-     *            the id of the {@link Site} object
-     * @param object
-     *            the {@link Site} object
+     *            the {@link Site} object id
+     * @return the {@link Site} object
      */
-    private void insert(int id, final Site object) {
-	// TODO evtl. unnötige -> alles in "insert(Site object)"
-	if (id == 0) {
-	    id = db.insertEntryInto(tableName, object2entry(object));
+    private Site get(final int id) {
+	if (sites.containsKey(id)) {
+	    final Site object = sites.get(id);
+	    return object;
 	}
-	// Add or replace object in object list
-	add(id, object);
+	return null;
     }
 
     /**
@@ -168,7 +199,7 @@ public class SiteMgr {
      * 
      * @param object
      *            the {@link Site} object
-     * @return id of the object (0 if it doesn't exists)
+     * @return the id of the {@link Site} object
      */
     private int isObjectExisting(final Site object) {
 	if (sites.containsValue(object)) {
@@ -185,9 +216,7 @@ public class SiteMgr {
      * @return true if object is still in use
      */
     private boolean isObjectInUse(final Site object) {
-	// TODO -- -1 weil es momentan noch benutzt wird
-	// Ask all parent manager classes if they use the object
-	return PersonMgr.getInstance().isSubObjectInUse(object);
+	return object.isInUse();
     }
 
     /**
@@ -216,6 +245,22 @@ public class SiteMgr {
 	entry.put("openingHours", object.getOpeningHours());
 	entry.put("type", object.getType());
 	return entry;
+    }
+
+    /**
+     * Removes the object from the object list.
+     * 
+     * @param id
+     *            the {@link Site} object id
+     * @return true if it was successful
+     */
+    @Unfinished
+    private boolean remove(final int id) {
+	if (sites.containsKey(id)) {
+	    sites.remove(id);
+	    return true;
+	}
+	return false;
     }
 
     private final DatabaseMgr db;
