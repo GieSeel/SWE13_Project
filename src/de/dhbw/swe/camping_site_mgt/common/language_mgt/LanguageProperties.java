@@ -73,6 +73,9 @@ public interface LanguageProperties {
     String QUESTION_CLOSE_APPLICATION = "Do you like to close the application?";
     /** The selected property. */
     String SELECTED = "selected";
+    String TYPE_PITCH_CAMPER = "camper pitch";
+    String TYPE_PITCH_PARKING = "place to park";
+    String TYPE_PITCH_TENT = "tent pitch";
     /** The yes property. */
     String YES = "yes";
 }

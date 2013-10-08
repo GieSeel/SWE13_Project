@@ -453,6 +453,9 @@ public class Map extends JPanel {
     /** The scaled overview {@link Image} */
     private final Image imgScaledOverview;
 
+    /** The available {@link PitchInterface}. */
+    private final HashMap<String, PitchInterface> pitches;
+
     /** The selected {@link Area}. */
     private Area selectedArea = null;
 
