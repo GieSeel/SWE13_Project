@@ -24,6 +24,7 @@ import de.dhbw.swe.camping_site_mgt.service_mgt.ServiceList;
  * @author GieSeel
  * @version 1.0
  */
+@Deprecated
 public class DatabaseController {
 
     /** The singleton instance. */
@@ -112,28 +113,31 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateAddress(final DataObject object) {
-//	final HashMap<String, Object> hashObj = DataObjectMethods.getDatabaseDataOf(obj);
-	
+	// final HashMap<String, Object> hashObj =
+	// DataObjectMethods.getDatabaseDataOf(obj);
+
 	// If id=0 the object is new
-	if (object.getId() == 0) {
-	    // Check if object already exists
-	    for(final DataObject dataObject : querySelectObjects(object.getName())) {
-		obj.
-	    }
-	    
-	    
-	    
-	    for (final Address tmpObj : querySelectAddress()) {
-		if (object.getHouseNumber().equals(tmpObj.getHouseNumber())
-			&& object.getStreet().equals(tmpObj.getStreet())
-			&& (int) hashObj.get("town_ID") == tmpObj.getTown().getId()) {
-		    // If object exists return the ID of the object
-		    return tmpObj.getId();
-		}
-	    }
-	}
-	// Insert or update the object
-	return queryInsertUpdate(object.getName(), hashObj);
+	// if (object.getId() == 0) {
+	// // Check if object already exists
+	// for(final DataObject dataObject :
+	// querySelectObjects(object.getName())) {
+	// obj.
+	// }
+	//
+	//
+	//
+	// for (final Address tmpObj : querySelectAddress()) {
+	// if (object.getHouseNumber().equals(tmpObj.getHouseNumber())
+	// && object.getStreet().equals(tmpObj.getStreet())
+	// && (int) hashObj.get("town_ID") == tmpObj.getTown().getId()) {
+	// // If object exists return the ID of the object
+	// return tmpObj.getId();
+	// }
+	// }
+	// }
+	// // Insert or update the object
+	// return queryInsertUpdate(object.getName(), hashObj);
+	return 0;
     }
 
     /**
@@ -299,7 +303,8 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateCountry(final Country obj) {
-	final HashMap<String, Object> hashObj = obj.getDatabaseData();
+	final HashMap<String, Object> hashObj = null;
+	// final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final Country tmpObj : querySelectCountry()) {
@@ -546,7 +551,8 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdatePerson(final Person obj) {
-	final HashMap<String, Object> hashObj = obj.getDatabaseData();
+	final HashMap<String, Object> hashObj = null;
+	// final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final Person tmpObj : querySelectPerson()) {
@@ -555,7 +561,9 @@ public class DatabaseController {
 			&& obj.getIdentificationNumber().equals(
 				tmpObj.getIdentificationNumber())
 			&& obj.getName().equals(tmpObj.getName())
-			&& (int) hashObj.get("address_ID") == tmpObj.getAddress().getId()) {
+		// && (int) hashObj.get("address_ID") ==
+		// tmpObj.getAddress().getId()
+		) {
 		    // If object exists return the ID of the object
 		    return tmpObj.getId();
 		}
@@ -579,7 +587,7 @@ public class DatabaseController {
 	    // Check if object already exists
 	    for (final Pitch tmpObj : querySelectPitch()) {
 		if (obj.getCharacteristics().equals(tmpObj.getCharacteristics())
-			&& obj.getDistrict().equals(tmpObj.getDistrict())
+			// && obj.getDistrict().equals(tmpObj.getDistrict())
 			&& obj.getLength() == tmpObj.getLength()
 			&& obj.getNatureOfSoil().equals(tmpObj.getNatureOfSoil())
 			&& obj.getType().equals(tmpObj.getType())
@@ -780,13 +788,16 @@ public class DatabaseController {
      * @return
      */
     public int queryInsertUpdateTown(final Town obj) {
-	final HashMap<String, Object> hashObj = obj.getDatabaseData();
+	final HashMap<String, Object> hashObj = null;
+	// final HashMap<String, Object> hashObj = obj.getDatabaseData();
 	if (obj.getId() == 0) {
 	    // Check if object already exists
 	    for (final Town tmpObj : querySelectTown()) {
 		if (obj.getName().equals(tmpObj.getName())
 			&& obj.getPostalCode().equals(tmpObj.getPostalCode())
-			&& (int) hashObj.get("country_ID") == tmpObj.getCountry().getId()) {
+		// && (int) hashObj.get("country_ID") ==
+		// tmpObj.getCountry().getId()
+		) {
 		    // If object exists return the ID of the object
 		    return tmpObj.getId();
 		}
@@ -822,34 +833,35 @@ public class DatabaseController {
 	return queryInsertUpdate(obj.getClass().getSimpleName(), hashObj);
     }
 
-    /**
-     * Returns a list of all {@link Address} objects from the database.
-     * 
-     * @return
-     */
-    public List<Address> querySelectAddress() {
-	final List<Address> objectList = new ArrayList<Address>();
-	for (final HashMap<String, Object> elements : querySelect(Address.NAME)) {
-	    final Address object = new Address();
-	    object.setDatabaseData(elements);
-	    objectList.add(object);
-	}
-	return objectList;
-    }
+    // /**
+    // * Returns a list of all {@link Address} objects from the database.
+    // *
+    // * @return
+    // */
+    // public List<Address> querySelectAddress() {
+    // final List<Address> objectList = new ArrayList<Address>();
+    // for (final HashMap<String, Object> elements : querySelect(Address.NAME))
+    // {
+    // final Address object = new Address();
+    // object.setDatabaseData(elements);
+    // objectList.add(object);
+    // }
+    // return objectList;
+    // }
 
-    /**
-     * Fills the given {@link Address} object with the database data.
-     * 
-     * @param id
-     *            of the entry
-     * @param object
-     *            is the given object
-     * @return
-     */
-    public void querySelectAddress(final int id, final Object object) {
-	final Address obj = ((Address) object);
-	obj.setDatabaseData(querySelect(obj.getName(), id));
-    }
+    // /**
+    // * Fills the given {@link Address} object with the database data.
+    // *
+    // * @param id
+    // * of the entry
+    // * @param object
+    // * is the given object
+    // * @return
+    // */
+    // public void querySelectAddress(final int id, final Object object) {
+    // final Address obj = ((Address) object);
+    // obj.setDatabaseData(querySelect(obj.getName(), id));
+    // }
 
     /**
      * Returns a list of {@link Bill} objects.
@@ -1003,7 +1015,7 @@ public class DatabaseController {
     public List<Country> querySelectCountry() {
 	final List<Country> objectList = new ArrayList<Country>();
 	for (final HashMap<String, Object> object : querySelect("country")) {
-	    objectList.add(new Country().setDatabaseData(object));
+	    // objectList.add(new Country().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1016,7 +1028,8 @@ public class DatabaseController {
      * @return
      */
     public Country querySelectCountry(final int id) {
-	return new Country().setDatabaseData(querySelect("country", id));
+	// return new Country().setDatabaseData(querySelect("country", id));
+	return null;
     }
 
     /**
@@ -1244,7 +1257,7 @@ public class DatabaseController {
     public List<Person> querySelectPerson() {
 	final List<Person> objectList = new ArrayList<Person>();
 	for (final HashMap<String, Object> object : querySelect("person")) {
-	    objectList.add(new Person().setDatabaseData(object));
+	    // objectList.add(new Person().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1257,7 +1270,8 @@ public class DatabaseController {
      * @return
      */
     public Person querySelectPerson(final int id) {
-	return new Person().setDatabaseData(querySelect("person", id));
+	// return new Person().setDatabaseData(querySelect("person", id));
+	return null;
     }
 
     /**
@@ -1461,7 +1475,7 @@ public class DatabaseController {
     public List<Town> querySelectTown() {
 	final List<Town> objectList = new ArrayList<Town>();
 	for (final HashMap<String, Object> object : querySelect("town")) {
-	    objectList.add(new Town().setDatabaseData(object));
+	    // objectList.add(new Town().setDatabaseData(object));
 	}
 	return objectList;
     }
@@ -1474,7 +1488,7 @@ public class DatabaseController {
      * @return
      */
     public void querySelectTown(final int id, final Object object) {
-	((Town) object).setDatabaseData(querySelect("town", id));
+	// ((Town) object).setDatabaseData(querySelect("town", id));
     }
 
     /**
@@ -1518,7 +1532,8 @@ public class DatabaseController {
 
 	}
 
-	final String[][] entries = sqlObjects.get(table.toLowerCase());
+	final String[][] entries = null;
+	// final String[][] entries = sqlObjects.get(table.toLowerCase());
 	int id = (Integer) data.get("id");
 	final boolean insert = (id == 0 ? true : false);
 	PreparedStatement statement;

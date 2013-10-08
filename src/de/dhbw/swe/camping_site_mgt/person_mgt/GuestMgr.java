@@ -2,8 +2,6 @@ package de.dhbw.swe.camping_site_mgt.person_mgt;
 
 import java.util.Date;
 
-import de.dhbw.swe.camping_site_mgt.common.Address;
-
 public class GuestMgr {
     /**
      * Creates an {@link Guest}.
@@ -36,7 +34,7 @@ public class GuestMgr {
      */
     public boolean create(final int identificationNumber, final String name,
 	    final String firstName, final Date dateOfBirth,
-	    final Address principalResidence,
+	    // final Address principalResidence,
 	    final VisitorsTaxClass visitorsTaxClass) {
 	return false;
     }
@@ -97,7 +95,7 @@ public class GuestMgr {
      */
     public boolean edit(final int identificationNumber, final String name,
 	    final String firstName, final Date dateOfBirth,
-	    final Address principalResidence,
+	    // final Address principalResidence,
 	    final VisitorsTaxClass visitorsTaxClass) {
 	return false;
     }
@@ -147,7 +145,8 @@ public class GuestMgr {
      * @return
      */
     public GuestList search(final String name, final String firstName,
-	    final Date dateOfBirth, final Address principalResidence,
+	    final Date dateOfBirth,
+	    // final Address principalResidence,
 	    final VisitorsTaxClass visitorsTaxClass) {
 	return null;
     }

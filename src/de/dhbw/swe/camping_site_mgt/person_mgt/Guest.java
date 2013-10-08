@@ -1,6 +1,7 @@
 package de.dhbw.swe.camping_site_mgt.person_mgt;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Set;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
 
@@ -57,7 +58,7 @@ public class Guest {
 	final HashMap<String, Object> objects = new HashMap<String, Object>();
 	final String className = parentClass + "guest_";
 	objects.put(className + "id", new Integer(this.id));
-	objects.putAll(this.person.getTableData(className));
+	// objects.putAll(this.person.getTableData(className));
 	objects.putAll(this.visitorsTaxClass.getTableData(className));
 	return objects;
     }
@@ -92,7 +93,7 @@ public class Guest {
 		thisMap.put(key, val);
 	    }
 	}
-	this.person = new Person().setTableData(personMap);
+	// this.person = new Person().setTableData(personMap);
 	this.visitorsTaxClass = new VisitorsTaxClass().setTableData(visitorstaxclassMap);
 	setData(thisMap);
 	return this;

@@ -21,6 +21,8 @@ package de.dhbw.swe.camping_site_mgt.common;
 import java.util.HashMap;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseMgr;
+import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
+import de.dhbw.swe.camping_site_mgt.person_mgt.PersonMgr;
 
 /**
  * The manager class for the {@link Country} objects.
@@ -48,101 +50,188 @@ public class CountryMgr {
      * Private constructor. Singleton.
      */
     private CountryMgr() {
-	countrys = new HashMap<>();
-	loadFromDatabase();
+	countries = new HashMap<>();
+	tableName = "country";
+	logger = CampingLogger.getLogger(this.getClass());
+	db = DatabaseMgr.getInstance();
+	load(); // Load all data from database
     }
 
     /**
-     * Adds the object to the object list.
-     * 
-     * @param Country
-     *            the {@link Country} object
-     */
-    public void add(final Country Country) {
-	countrys.put(Country.getId(), Country);
-    }
-
-    /**
-     * Checks if the object already exists. <br />
-     * If not, then it will be saved in the object list and the database.
-     * 
-     * @param country
-     *            the {@link Country} object
-     */
-    public void checkIfObjectAlreadyExists(final Country country) {
-	final String name = country.getName();
-	final String acronym = country.getAcronym();
-
-	for (final Country tmpCountry : countrys.values()) {
-	    if (name.equals(tmpCountry.getName())
-		    && acronym.equals(tmpCountry.getAcronym())) {
-		country.setId(tmpCountry.getId());
-		return;
-	    }
-	}
-	// If Object is not existing then add to object list and database
-	saveObjectInDatabase(country);
-	add(country);
-    }
-
-    /**
-     * Gets the object with the given id.
+     * Gets the object from the object list.
      * 
      * @param id
-     *            the object id
+     *            the {@link Country} object id
      * @return the {@link Country}
      */
     public Country get(final int id) {
-	if (countrys.containsKey(id)) {
-	    return countrys.get(id);
+	if (countries.containsKey(id)) {
+	    return countries.get(id);
 	}
 	return null;
     }
 
     /**
-     * Removes the object from the object list.
+     * Inserts object into database.
      * 
-     * @param Country
+     * @param object
      *            the {@link Country} object
-     * @return
      */
-    public boolean remove(final Country Country) {
-	final int id = Country.getId();
-	if (countrys.containsKey(id)) {
-	    countrys.remove(id);
-	    return true;
+    public void insert(final Country object) {
+	// If object already exists just save this id
+	insert(isObjectExisting(object), object);
+    }
+
+    /**
+     * Removes object from object list.
+     * 
+     * @param id
+     *            the {@link Country} object id
+     */
+    @Unfinished
+    public void remove(final int id) {
+	// countries.remove(id);
+	// TODO remove from database. Check if object is still in use (from
+	// parents)!!
+    }
+
+    /**
+     * Updates object in database.
+     * 
+     * @param id
+     *            the {@link Country} object id
+     * @param object
+     *            the {@link Country} object
+     */
+    public void update(final Country oldObject, final Country object) {
+	final int id = isObjectExisting(oldObject);
+	if (id == 0 || isObjectInUse(oldObject)) {
+	    // If object doesn't exists or if it's still in use insert a new one
+	    insert(object);
+	} else {
+	    add(id, object);
+	    db.updateEntryIn(tableName, object2entry(object));
 	}
-	return false;
+    }
+
+    /**
+     * Adds objects to object list.
+     * 
+     * @param objects
+     *            the list with the {@link Country} objects
+     * 
+     */
+    private void add(final HashMap<Integer, Country> objects) {
+	countries.putAll(objects);
+    }
+
+    /**
+     * Adds object to object list.
+     * 
+     * @param id
+     *            the {@link Country} object id
+     * @param object
+     *            the {@link Country} object
+     */
+    private void add(final int id, final Country object) {
+	object.setId(id);
+	countries.put(id, object);
+    }
+
+    /**
+     * Parses a database entry to an object.
+     * 
+     * @param entry
+     *            the entry
+     * @return the prepared {@link Country} object
+     */
+    private HashMap<Integer, Country> entry2object(
+	    final HashMap<String, Object> entry) {
+	final HashMap<Integer, Country> object = new HashMap<>();
+	int id;
+	String name;
+	String acronym;
+
+	id = (int) entry.get("id");
+	acronym = (String) entry.get("acronym");
+	name = (String) entry.get("name");
+
+	object.put(id, new Country(id, acronym, name));
+	return object;
+    }
+
+    /**
+     * Inserts object into database.
+     * 
+     * @param id
+     *            the id of the {@link Country} object
+     * @param object
+     *            the {@link Country} object
+     */
+    private void insert(int id, final Country object) {
+	// TODO evtl. unnötige -> alles in "insert(Town object)"
+	if (id == 0) {
+	    id = db.insertEntryInto(tableName, object2entry(object));
+	}
+	// Add or replace object in object list
+	add(id, object);
+    }
+
+    /**
+     * Checks if the object already exists.
+     * 
+     * @param object
+     *            the {@link Country} object
+     * @return id of the object (0 if it doesn't exists)
+     */
+    private int isObjectExisting(final Country object) {
+	if (countries.containsValue(object)) {
+	    return object.getId();
+	}
+	return 0;
+    }
+
+    /**
+     * Checks if the object is still in use.
+     * 
+     * @param object
+     *            the {@link Country} object
+     * @return true if object is still in use
+     */
+    private boolean isObjectInUse(final Country object) {
+	// TODO -- -1 weil es momentan noch benutzt wird
+	// Ask all parent manager classes if they use the object
+	return PersonMgr.getInstance().isSubObjectInUse(object);
     }
 
     /**
      * Loads the objects from the database.
      */
-    private void loadFromDatabase() {
-	final DatabaseMgr db = DatabaseMgr.getInstance();
-
-	for (final HashMap<String, Object> dbCountry : db.getAllEntriesOf("country")) {
-	    add(new Country((int) dbCountry.get("id"),
-		    (String) dbCountry.get("acronym"),
-		    (String) dbCountry.get("name")));
+    private void load() {
+	for (final HashMap<String, Object> entry : db.getAllEntriesOf(tableName)) {
+	    add(entry2object(entry));
 	}
     }
 
     /**
-     * Saves the object in database.
+     * Parses an object to a database entry.
      * 
-     * @param country
+     * @param id
+     *            the {@link Country} object id
+     * @param object
      *            the {@link Country} object
+     * @return the prepared entry
      */
-    private void saveObjectInDatabase(final Country country) {
-	final HashMap<String, Object> dbCountry = new HashMap<>();
-	dbCountry.put("id", country.getId());
-	dbCountry.put("name", country.getName());
-	dbCountry.put("acronym", country.getAcronym());
-
-	final int id = DatabaseMgr.getInstance().saveEntryTo("country", dbCountry);
-	country.setId(id);
+    private HashMap<String, Object> object2entry(final Country object) {
+	final HashMap<String, Object> entry = new HashMap<>();
+	entry.put("id", object.getId());
+	entry.put("acronym", object.getAcronym());
+	entry.put("name", object.getName());
+	return entry;
     }
 
-    private final HashMap<Integer, Country> countrys;
+    private final HashMap<Integer, Country> countries;
+    private final DatabaseMgr db;
+    private final CampingLogger logger;
+    private final String tableName;
 }

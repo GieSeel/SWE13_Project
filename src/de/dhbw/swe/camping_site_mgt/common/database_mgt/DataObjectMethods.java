@@ -1,10 +1,10 @@
-package de.dhbw.swe.camping_site_mgt.common;
+package de.dhbw.swe.camping_site_mgt.common.database_mgt;
 
 import java.util.HashMap;
 
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
+@Deprecated
 public class DataObjectMethods {
     private static CampingLogger logger;
 
@@ -65,14 +65,16 @@ public class DataObjectMethods {
 	// If id=0 the object is new
 	if (dataObject.getId() == 0) {
 	    // Check if object already exists
-	    for (final DataObject dataListObject : db.querySelectObjects(dataObject.getName())) {
-		if (dataObject.allreadyExists(dataListObject)) {
-		    // All ids will have been updated
-		    return true;
-		}
-	    }
+	    // for (final DataObject dataListObject :
+	    // db.querySelectObjects(dataObject.getName())) {
+	    // if (dataObject.allreadyExists(dataListObject)) {
+	    // // All ids will have been updated
+	    // return true;
+	    // }
+	    // }
 	}
 	// Insert or update the actual object into database
-	return db.insertOrUpdateObject(getDatabaseDataOf(dataObject));
+	// return db.insertOrUpdateObject(getDatabaseDataOf(dataObject));
+	return false;
     }
 }

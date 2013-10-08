@@ -1,4 +1,4 @@
-package de.dhbw.swe.camping_site_mgt.common;
+package de.dhbw.swe.camping_site_mgt.common.database_mgt;
 
 import java.util.HashMap;
 

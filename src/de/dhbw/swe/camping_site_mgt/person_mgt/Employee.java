@@ -1,6 +1,7 @@
 package de.dhbw.swe.camping_site_mgt.person_mgt;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Set;
 
 import de.dhbw.swe.camping_site_mgt.common.ChipCard;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
@@ -85,7 +86,7 @@ public class Employee {
 	objects.put("password", new String(this.password));
 	objects.put("userName", new String(this.userName));
 
-	objects.putAll(this.person.getTableData(className));
+	// objects.putAll(this.person.getTableData(className));
 	objects.putAll(this.role.getTableData(className));
 	objects.putAll(this.chipCard.getTableData(className));
 
@@ -130,7 +131,7 @@ public class Employee {
 	    }
 	}
 	this.role = new EmployeeRole().setTableData(employeeroleMap);
-	this.person = new Person().setTableData(personMap);
+	// this.person = new Person().setTableData(personMap);
 	this.chipCard = new ChipCard().setTableData(personMap);
 	setData(thisMap);
 	return this;

@@ -184,13 +184,16 @@ public class DataStructure {
 			"Identification Number"),
 		new ColumnInfo("name", String.class, "Name"),
 		new ColumnInfo("firstName", String.class, "First Name"),
-		new ColumnInfo("address_ID", Integer.class, Address.class),
+		new ColumnInfo("street", String.class, "Street"),
+		new ColumnInfo("houseNumber", String.class, "House Number"),
+		new ColumnInfo("town_ID", Integer.class, Town.class),
+		new ColumnInfo("country_ID", Integer.class, Country.class),
 		new ColumnInfo("dateOfBirth", Date.class, "Date of Birth") });
 
 	// "pitch"
 	sqlObjects.put("pitch", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("district", String.class, "District"),
+		new ColumnInfo("area", String.class, "Area"),
 		new ColumnInfo("type", String.class, "Type"),
 		new ColumnInfo("length", Integer.class, "Length"),
 		new ColumnInfo("width", Integer.class, "Width"),
@@ -259,8 +262,7 @@ public class DataStructure {
 	sqlObjects.put("town", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
 		new ColumnInfo("name", String.class, "Name"),
-		new ColumnInfo("postalCode", String.class, "Postal Code"),
-		new ColumnInfo("country_ID", Integer.class, Country.class) });
+		new ColumnInfo("postalCode", String.class, "Postal Code") });
 
 	// "visitorstaxclass"
 	sqlObjects.put("visitorstaxclass",

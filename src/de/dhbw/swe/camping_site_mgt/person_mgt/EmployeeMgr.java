@@ -2,7 +2,7 @@ package de.dhbw.swe.camping_site_mgt.person_mgt;
 
 import java.util.Date;
 
-import de.dhbw.swe.camping_site_mgt.common.*;
+import de.dhbw.swe.camping_site_mgt.common.ChipCard;
 
 public class EmployeeMgr {
     /**
@@ -51,8 +51,9 @@ public class EmployeeMgr {
      */
     public boolean create(final int identificationNumber, final String name,
 	    final String firstName, final Date dateOfBirth,
-	    final Address principalResidence, final String userName,
-	    final String password, final ChipCard chipCard, final EmployeeRole role) {
+	    // final Address principalResidence,
+	    final String userName, final String password, final ChipCard chipCard,
+	    final EmployeeRole role) {
 	return false;
     }
 
@@ -124,8 +125,9 @@ public class EmployeeMgr {
      */
     public boolean edit(final int identificationNumber, final String name,
 	    final String firstName, final Date dateOfBirth,
-	    final Address principalResidence, final String userName,
-	    final String password, final ChipCard chipCard, final EmployeeRole role) {
+	    // final Address principalResidence,
+	    final String userName, final String password, final ChipCard chipCard,
+	    final EmployeeRole role) {
 	return false;
     }
 
@@ -180,7 +182,8 @@ public class EmployeeMgr {
      * @return
      */
     public EmployeeList search(final String name, final String firstName,
-	    final Date dateOfBirth, final Address principalResidence,
+	    final Date dateOfBirth,
+	    // final Address principalResidence,
 	    final String userName, final String password, final ChipCard chipCard,
 	    final EmployeeRole role) {
 	return null;

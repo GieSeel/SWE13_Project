@@ -22,7 +22,6 @@ import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
-import de.dhbw.swe.camping_site_mgt.common.AddressMgr;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
@@ -34,7 +33,7 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 public class DatabaseMgr {
     /** The singleton instance. */
     private static DatabaseMgr instance;
-    private static CampingLogger logger;
+    private static CampingLogger logger = CampingLogger.getLogger(DatabaseMgr.class);
 
     /**
      * Returns the instance.
@@ -67,7 +66,7 @@ public class DatabaseMgr {
      */
     public boolean connect(final String url, final String user,
 	    final String password) {
-	logger = CampingLogger.getLogger(this.getClass());
+	logger.info("Connecting with database...");
 	try {
 	    Class.forName("com.mysql.jdbc.Driver").newInstance();
 	} catch (InstantiationException | IllegalAccessException
@@ -81,7 +80,20 @@ public class DatabaseMgr {
 	    conncetion = DriverManager.getConnection(url, user, password);
 	    logger.info("Connected with Database.");
 	    // TODO del -- Tests v
-	    final AddressMgr test = AddressMgr.getInstance();
+	    //
+	    // final PersonMgr test = PersonMgr.getInstance();
+	    // final Country country = new Country("DE", "Deutschland");
+	    // final Town town = new Town("Pforzheim", "75177");
+	    // final Person person = new Person(country, new Date(
+	    // System.currentTimeMillis()), "Florian", "3", "0123456789D",
+	    // "Seel", "Ebersteinstr.", town);
+	    // test.insert(person);
+	    // final Town town2 = new Town("Haigerloch", "72401");
+	    // test.update(person,
+	    // new Person(country, new Date(System.currentTimeMillis()),
+	    // "Florian", "22/2", "0123456789D", "Seel", "Buchenweg",
+	    // town2));
+
 	    // TODO del -- Tests ^
 	} catch (final SQLException e) {
 	    logger.error("Error in SQL..." + e.getMessage());
@@ -164,14 +176,13 @@ public class DatabaseMgr {
      *            the prepared object
      * @return
      */
-    public int saveEntryTo(final String table,
+    public int insertEntryInto(final String table,
 	    final HashMap<String, Object> dbObject) {
 	final ColumnInfo[] columnInfos = DataStructure.getStructureFor(table);
 	PreparedStatement statement;
 	String query;
 	// Prepare INSERT query
 	query = "INSERT INTO " + table + "(";
-
 	String tmpVal = "";
 	for (int i = 1; i < columnInfos.length; i++) {
 	    if (!tmpVal.isEmpty()) {
@@ -216,6 +227,60 @@ public class DatabaseMgr {
 	    logger.error("SQL-Exception..." + e1.getMessage());
 	}
 	return 0;
+    }
+
+    /**
+     * Saves an entry into database.
+     * 
+     * @param string
+     *            table where the entry will be saved
+     * @param dbObject
+     *            the prepared object
+     * @return
+     */
+    public void updateEntryIn(final String table,
+	    final HashMap<String, Object> dbObject) {
+	final ColumnInfo[] columnInfos = DataStructure.getStructureFor(table);
+	PreparedStatement statement;
+	String query;
+	// Prepare UPDATE query
+	query = "UPDATE " + table + " SET ";
+	for (int i = 1; i < columnInfos.length; i++) {
+	    if (i > 1) {
+		query += ", ";
+	    }
+	    query += columnInfos[i].getDbName() + "=?";
+	}
+	query += " WHERE id=?;";
+
+	try {
+	    statement = conncetion.prepareStatement(query);
+
+	    int i = 1;
+	    for (; i < columnInfos.length; i++) {
+		if (columnInfos[i].getDbType().equals(String.class)) {
+		    statement.setString(i,
+			    (String) dbObject.get(columnInfos[i].getFieldName()));
+		} else if (columnInfos[i].getDbType().equals(Integer.class)) {
+		    statement.setInt(i,
+			    (Integer) dbObject.get(columnInfos[i].getFieldName()));
+		} else if (columnInfos[i].getDbType().equals(Float.class)) {
+		    statement.setFloat(i,
+			    (Float) dbObject.get(columnInfos[i].getFieldName()));
+		} else if (columnInfos[i].getDbType().equals(Date.class)) {
+		    statement.setTimestamp(
+			    i,
+			    new Timestamp(
+				    ((Date) dbObject.get(columnInfos[i].getFieldName())).getTime()));
+		} else {
+		    logger.error("Unexpected typ in database INSERT!");
+		}
+	    }
+	    statement.setInt(i, (int) dbObject.get("id"));
+	    statement.executeUpdate();
+	} catch (final SQLException e1) {
+	    logger.error("SQL-Exception..." + e1.getMessage());
+	}
     }
 
     private Connection conncetion;

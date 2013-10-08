@@ -233,28 +233,30 @@ public class SearchPanel extends JPanel {
 	if (className == "booking") {
 	    // TODO speziell!!!
 	} else {
-	    final String[][] elements = dbController.getSqlObjectClass(className);
-	    final List<String[]> columnObjects = new Vector<String[]>();
-	    // columnNames[0] = internal column name | columnNames[1] = value
-	    for (final String[] element : elements) {
-		if (element[2] == null) {
-		    if (!element[0].equals("id")) {
-			columnObjects.addAll(getColumnObjects(
-				element[0].split("_")[0], parentClass + className
-					+ "_"));
-		    }
-		} else {
-		    final String[] val = {
-			    parentClass + className + "_" + element[0], element[2],
-			    element[1] };// TODO
-		    // mit
-		    // validation,
-		    // element[3]
-		    // };
-		    columnObjects.add(val);
-		}
-	    }
-	    return columnObjects;
+	    // final String[][] elements =
+	    // dbController.getSqlObjectClass(className);
+	    // final List<String[]> columnObjects = new Vector<String[]>();
+	    // // columnNames[0] = internal column name | columnNames[1] = value
+	    // for (final String[] element : elements) {
+	    // if (element[2] == null) {
+	    // if (!element[0].equals("id")) {
+	    // columnObjects.addAll(getColumnObjects(
+	    // element[0].split("_")[0], parentClass + className
+	    // + "_"));
+	    // }
+	    // } else {
+	    // final String[] val = {
+	    // parentClass + className + "_" + element[0], element[2],
+	    // element[1] };// TODO
+	    // // mit
+	    // // validation,
+	    // // element[3]
+	    // // };
+	    // columnObjects.add(val);
+	    // }
+	    // }
+	    // return columnObjects;
+	    return null;
 	}
 	return null;
     }
