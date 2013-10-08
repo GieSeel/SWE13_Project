@@ -1,7 +1,5 @@
 package de.dhbw.swe.camping_site_mgt.place_mgt;
 
-import java.util.HashMap;
-
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map.Area;
 
 /**
@@ -20,8 +18,6 @@ public interface PitchInterface {
      * @return the characteristics of a {@link Pitch}.
      */
     String getCharacteristics();
-
-    HashMap<String, Object> getDatabaseData();
 
     /**
      * @return the delivery point {@link Site}.
@@ -42,8 +38,6 @@ public interface PitchInterface {
      * @return the description for the {@link Pitch} nature of soil.
      */
     String getNatureOfSoil();
-
-    HashMap<String, Object> getTableData(final String parentClass);
 
     /**
      * @return the {@link Pitch_Type} of the {@link Pitch}.
