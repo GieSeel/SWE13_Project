@@ -1,10 +1,41 @@
 package de.dhbw.swe.camping_site_mgt.place_mgt;
 
+import java.awt.Polygon;
 import java.util.*;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
 
 public class Pitch implements PitchInterface {
+
+    /**
+     * Builds the {@link Pitch} shape.
+     * 
+     * @param xCoords
+     *            the x coordinates in pattern: <code>[x1, x2, x3]</code>
+     * @param yCoords
+     *            the y coordinates in pattern: <code>[y1, y2, y3]</code>
+     * @return the shape {@link Polygon}
+     */
+    private static Polygon buildShape(final String xCoords, final String yCoords) {
+	String trimedXCords = xCoords.replaceAll(" ", "");
+	String trimedYCords = yCoords.replaceAll(" ", "");
+	trimedXCords = trimedXCords.substring(1, trimedXCords.length() - 1);
+	trimedYCords = trimedYCords.substring(1, trimedYCords.length() - 1);
+
+	final String[] xPointStr = trimedXCords.split(",");
+	final int[] xPoints = new int[xPointStr.length];
+	for (int i = 0; i < xPointStr.length; i++) {
+	    xPoints[i] = Integer.parseInt(xPointStr[i]);
+	}
+
+	final String[] yPointStr = trimedYCords.split(",");
+	final int[] yPoints = new int[yPointStr.length];
+	for (int i = 0; i < yPointStr.length; i++) {
+	    yPoints[i] = Integer.parseInt(yPointStr[i]);
+	}
+
+	return new Polygon(xPoints, yPoints, xPoints.length);
+    }
 
     public Pitch() {
 	this(0, null, null, null, 0, null, null, 0, null, null);
@@ -13,7 +44,7 @@ public class Pitch implements PitchInterface {
     public Pitch(final int id, final String characteristics,
 	    final Site deliveryPoint, final String district, final int length,
 	    final String natureOfSoil, final String type, final int width,
-	    final String xCoords, final String yCoords) {
+	    final Polygon shape) {
 	this.id = id;
 	this.characteristics = characteristics;
 	this.deliveryPoint = deliveryPoint;
@@ -22,8 +53,15 @@ public class Pitch implements PitchInterface {
 	this.natureOfSoil = natureOfSoil;
 	this.type = type;
 	this.width = width;
-	this.xCoords = xCoords;
-	this.yCoords = yCoords;
+	this.shape = shape;
+    }
+
+    public Pitch(final int id, final String characteristics,
+	    final Site deliveryPoint, final String district, final int length,
+	    final String natureOfSoil, final String type, final int width,
+	    final String xCoords, final String yCoords) {
+	this(id, characteristics, deliveryPoint, district, length, natureOfSoil,
+		type, width, buildShape(xCoords, yCoords));
     }
 
     public Pitch(final String characteristics, final Site deliveryPoint,
@@ -32,6 +70,11 @@ public class Pitch implements PitchInterface {
 	    final String yCoords) {
 	this(0, characteristics, deliveryPoint, district, length, natureOfSoil,
 		type, width, xCoords, yCoords);
+    }
+
+    @Override
+    public String getArea() {
+	return area;
     }
 
     @Override
@@ -53,19 +96,14 @@ public class Pitch implements PitchInterface {
 	objects.put("natureOfSoil", this.natureOfSoil);
 	objects.put("type", this.type);
 	objects.put("width", this.width);
-	objects.put("xCoords", this.xCoords);
-	objects.put("yCoords", this.yCoords);
+	objects.put("xCoords", Arrays.toString(shape.xpoints));
+	objects.put("yCoords", Arrays.toString(shape.ypoints));
 	return objects;
     }
 
     @Override
     public Site getDeliveryPoint() {
 	return deliveryPoint;
-    }
-
-    @Override
-    public String getArea() {
-	return area;
     }
 
     @Override
@@ -95,8 +133,8 @@ public class Pitch implements PitchInterface {
 	objects.put(className + "natureOfSoil", new String(this.natureOfSoil));
 	objects.put(className + "type", new String(this.type));
 	objects.put(className + "width", new Integer(this.width));
-	objects.put(className + "xCoords", new String(this.xCoords));
-	objects.put(className + "yCoords", new String(this.yCoords));
+	objects.put(className + "xCoords", Arrays.toString(shape.xpoints));
+	objects.put(className + "yCoords", Arrays.toString(shape.ypoints));
 
 	objects.putAll(this.deliveryPoint.getTableData(className));
 
@@ -149,20 +187,20 @@ public class Pitch implements PitchInterface {
 	this.natureOfSoil = (String) objects.get("natureOfSoil");
 	this.type = (String) objects.get("type");
 	this.width = (int) objects.get("width");
-	this.xCoords = (String) objects.get("xCoords");
-	this.yCoords = (String) objects.get("yCoords");
+	final String xCoords = (String) objects.get("xCoords");
+	final String yCoords = (String) objects.get("yCoords");
+	this.shape = buildShape(xCoords, yCoords);
     }
 
+    private String area;
     private String characteristics;
     private Site deliveryPoint;
-    private String area;
     private int id;
     private int length;
     // private final Pitch_NatureOfSoil natureOfSoil;
     private String natureOfSoil;
+    private Polygon shape;
     // private final Pitch_Type type;
     private String type;
     private int width;
-    private String xCoords;
-    private String yCoords;
 }
