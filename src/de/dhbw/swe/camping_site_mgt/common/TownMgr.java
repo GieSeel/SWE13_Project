@@ -105,16 +105,15 @@ public class TownMgr {
      */
     @Unfinished
     public boolean objectRemove(final Town object) {
-	return false;
-	// // Sub objects
-	// final int id = object.getId();
-	//
-	// if (isObjectInUse(object)) {
-	// logger.error("Object is already in use!");
-	// return false;
-	// }
-	// db.removeEntryFrom(tableName, id);
-	// return remove(id);
+	// Sub objects
+	final int id = object.getId();
+
+	if (isObjectInUse(object)) {
+	    logger.error("Object is already in use!");
+	    return false;
+	}
+	db.removeEntryFrom(tableName, object2entry(object));
+	return remove(id);
     }
 
     /**
@@ -135,12 +134,17 @@ public class TownMgr {
 	    objectInsert(newObject);
 	    return;
 	}
-	// TODO if newObject already exists the old object should be removed and
-	// the existing object should be used!
-
-	// Update object in object list and database
-	add(id, newObject);
-	db.updateEntryIn(tableName, object2entry(newObject));
+	// If newObject already exists the old object will be removed and
+	// the existing object will be used!
+	final int newID = isObjectExisting(newObject);
+	if (newID != 0) {
+	    objectRemove(object);
+	    add(newID, newObject);
+	} else {
+	    // Update object in object list and database
+	    add(id, newObject);
+	    db.updateEntryIn(tableName, object2entry(newObject));
+	}
     }
 
     /**

@@ -234,9 +234,30 @@ public class DatabaseMgr {
     }
 
     /**
+     * Removes an entry from database.
+     * 
+     * @param table
+     *            the table where the entry will be removed
+     * @param dbObject
+     *            the prepared object
+     */
+    public void removeEntryFrom(final String table,
+	    final HashMap<String, Object> dbObject) {
+	final String query = "DELETE FROM " + table + " WHERE id = ?";
+	try {
+	    final PreparedStatement statement = conncetion.prepareStatement(query);
+	    statement.setInt(1, (int) dbObject.get("id"));
+	    statement.executeUpdate();
+	} catch (final SQLException e) {
+	    logger.error("SQL-Exception..." + e.getMessage());
+	}
+
+    }
+
+    /**
      * Saves an entry into database.
      * 
-     * @param string
+     * @param table
      *            table where the entry will be saved
      * @param dbObject
      *            the prepared object
