@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -212,6 +212,13 @@ public class Map extends JPanel {
     }
 
     /**
+     * @return the selected {@link Area}.
+     */
+    public Area getSelectedArea() {
+	return selectedArea;
+    }
+
+    /**
      * @return the selected {@link Pitch}.
      */
     public PitchInterface getSelectedPlace() {
@@ -221,27 +228,10 @@ public class Map extends JPanel {
     @Override
     public void paint(final Graphics g) {
 	final Graphics2D g2 = (Graphics2D) g;
-	if (!zoomedIn) {
-	    g2.drawImage(imgScaledOverview, 0, 0, null);
-
-	    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-		    ALPHA));
-	    g2.setColor(Color.GRAY);
-
-	    if (highlightedArea != null) {
-		g2.fillPolygon(highlightedArea.getPoly());
-	    }
-
-	    g2.setColor(Color.BLACK);
-
-	    if (selectedArea != null) {
-		g2.fillPolygon(selectedArea.getPoly());
-	    }
+	if (zoomedIn) {
+	    paintZoomedIn(g2);
 	} else {
-	    g2.drawImage(imgScaled, 0, 0, null);
-
-	    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-		    ALPHA));
+	    paintOverview(g2);
 	}
     }
 
@@ -314,6 +304,105 @@ public class Map extends JPanel {
 	return new Rectangle(base, mapSize);
     }
 
+    private void paintDisablePart(final Graphics2D g2) {
+	Polygon leftPoly = new Polygon();
+
+	Polygon rightPoly = new Polygon();
+
+	final int[] xPoints = selectedArea.getxPoints();
+	final int[] yPoints = selectedArea.getyPoints();
+
+	final int[] values = Arrays.copyOf(xPoints, xPoints.length);
+	Arrays.sort(values);
+	final int turningPoint = values[values.length / 2];
+
+	final Vector<Point> selectedAreaPoints = new Vector<>();
+	for (int i = 0; i < xPoints.length; i++) {
+	    selectedAreaPoints.add(new Point(xPoints[i], yPoints[i]));
+	}
+
+	int lastXLeft = 0, lastXRight = 0;
+	boolean addedLeftBaseRectangle = false;
+	boolean addedRightBaseRectangle = false;
+	for (final Point point : selectedAreaPoints) {
+	    if (point.x > turningPoint) {
+		if (lastXLeft != 0 && !addedRightBaseRectangle) {
+		    rightPoly.addPoint(turningPoint, frame.y + frame.height);
+		    rightPoly.addPoint(frame.x + frame.width, frame.y
+			    + frame.height);
+		    rightPoly.addPoint(frame.x + frame.width, frame.y);
+		    rightPoly.addPoint(turningPoint, frame.y);
+		    leftPoly.addPoint(point.x, point.y);
+		    addedRightBaseRectangle = true;
+		}
+		rightPoly.addPoint(point.x, point.y);
+		lastXRight = point.x;
+	    } else {
+		if (lastXRight != 0 && !addedLeftBaseRectangle) {
+		    rightPoly.addPoint(point.x, point.y);
+		    leftPoly.addPoint(turningPoint, frame.y);
+		    leftPoly.addPoint(frame.x, frame.y);
+		    leftPoly.addPoint(frame.x, frame.y + frame.height);
+		    leftPoly.addPoint(turningPoint, frame.y + frame.height);
+		    addedLeftBaseRectangle = true;
+		}
+		leftPoly.addPoint(point.x, point.y);
+		lastXLeft = point.x;
+	    }
+	}
+
+	Vector<Point> movedToZero = new Vector<>();
+	for (int i = 0; i < leftPoly.npoints; i++) {
+	    movedToZero.add(new Point(leftPoly.xpoints[i] - frame.x,
+		    leftPoly.ypoints[i] - frame.y));
+	}
+	leftPoly = new Polygon();
+	for (final Point point : movedToZero) {
+	    leftPoly.addPoint(point.x, point.y);
+	}
+
+	movedToZero = new Vector<>();
+	for (int i = 0; i < rightPoly.npoints; i++) {
+	    final int x = rightPoly.xpoints[i] - frame.x;
+	    final int y = rightPoly.ypoints[i] - frame.y;
+	    movedToZero.add(new Point(x, y));
+	}
+	rightPoly = new Polygon();
+	for (final Point point : movedToZero) {
+	    rightPoly.addPoint(point.x, point.y);
+	}
+
+	g2.setColor(Color.GRAY);
+	g2.fill(leftPoly);
+	g2.fill(rightPoly);
+
+    }
+
+    private void paintOverview(final Graphics2D g2) {
+	g2.drawImage(imgScaledOverview, 0, 0, null);
+
+	g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ALPHA));
+	g2.setColor(Color.GRAY);
+
+	if (highlightedArea != null) {
+	    g2.fillPolygon(highlightedArea.getPoly());
+	}
+
+	g2.setColor(Color.BLACK);
+
+	if (selectedArea != null) {
+	    g2.fillPolygon(selectedArea.getPoly());
+	}
+    }
+
+    private void paintZoomedIn(final Graphics2D g2) {
+	g2.drawImage(imgScaled, 0, 0, null);
+
+	g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ALPHA));
+
+	paintDisablePart(g2);
+    }
+
     private void setCurserDefault() {
 	final Cursor cursor = Cursor.getDefaultCursor();
 	setCursor(cursor);
@@ -333,7 +422,8 @@ public class Map extends JPanel {
 	final int y = (int) (areaFrame.y / sf);
 	final int width = (int) (areaFrame.width / sf);
 	final int height = (int) (areaFrame.height / sf);
-	final Rectangle frame = getSubFrame(new Rectangle(x, y, width, height));
+	frame = getSubFrame(new Rectangle(x, y, width, height));
+
 	imgScaled = img.getSubimage(frame.x, frame.y, frame.width, frame.height);
 	repaint();
     }
@@ -345,6 +435,9 @@ public class Map extends JPanel {
 
     /** The available areas. */
     private final HashMap<String, Area> areas;
+
+    /** The zoom frame. */
+    private Rectangle frame;
 
     /** The highlighted {@link Area}. */
     private Area highlightedArea = null;

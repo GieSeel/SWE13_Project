@@ -9,7 +9,7 @@ public interface PitchInterface {
 
     Site getDeliveryPoint();
 
-    String getDistrict();
+    String getArea();
 
     int getId();
 

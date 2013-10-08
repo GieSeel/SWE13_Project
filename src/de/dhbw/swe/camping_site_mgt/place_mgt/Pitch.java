@@ -17,7 +17,7 @@ public class Pitch implements PitchInterface {
 	this.id = id;
 	this.characteristics = characteristics;
 	this.deliveryPoint = deliveryPoint;
-	this.district = district;
+	this.area = district;
 	this.length = length;
 	this.natureOfSoil = natureOfSoil;
 	this.type = type;
@@ -48,7 +48,7 @@ public class Pitch implements PitchInterface {
 		"deliveryPoint",
 		DatabaseController.getInstance().queryInsertUpdateSite(
 			this.deliveryPoint));
-	objects.put("district", this.district);
+	objects.put("district", this.area);
 	objects.put("length", this.length);
 	objects.put("natureOfSoil", this.natureOfSoil);
 	objects.put("type", this.type);
@@ -64,8 +64,8 @@ public class Pitch implements PitchInterface {
     }
 
     @Override
-    public String getDistrict() {
-	return district;
+    public String getArea() {
+	return area;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class Pitch implements PitchInterface {
 
 	objects.put(className + "id", new Integer(this.id));
 	objects.put(className + "characteristics", new String(this.characteristics));
-	objects.put(className + "district", new String(this.district));
+	objects.put(className + "district", new String(this.area));
 	objects.put(className + "length", new Integer(this.length));
 	objects.put(className + "natureOfSoil", new String(this.natureOfSoil));
 	objects.put(className + "type", new String(this.type));
@@ -144,7 +144,7 @@ public class Pitch implements PitchInterface {
     private void setData(final HashMap<String, Object> objects) {
 	this.id = (int) objects.get("id");
 	this.characteristics = (String) objects.get("characteristics");
-	this.district = (String) objects.get("district");
+	this.area = (String) objects.get("district");
 	this.length = (int) objects.get("length");
 	this.natureOfSoil = (String) objects.get("natureOfSoil");
 	this.type = (String) objects.get("type");
@@ -155,7 +155,7 @@ public class Pitch implements PitchInterface {
 
     private String characteristics;
     private Site deliveryPoint;
-    private String district;
+    private String area;
     private int id;
     private int length;
     // private final Pitch_NatureOfSoil natureOfSoil;
