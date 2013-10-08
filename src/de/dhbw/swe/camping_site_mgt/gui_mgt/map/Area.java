@@ -13,11 +13,11 @@ public class Area {
 	this.xPoints = xPoints;
 	this.yPoints = yPoints;
 	this.areaName = areaName;
-	initPoly();
+	buildPoly();
     }
 
     public Rectangle getAreaFrame() {
-	return polygon.getBounds();
+	return buildPoly().getBounds();
     }
 
     public String getName() {
@@ -25,7 +25,7 @@ public class Area {
     }
 
     public Polygon getPoly() {
-	return polygon;
+	return buildPoly();
     }
 
     public int[] getScaledxPoints() {
@@ -54,11 +54,12 @@ public class Area {
 	return yPoints;
     }
 
-    private void initPoly() {
+    private Polygon buildPoly() {
 	int[] xPoints;
 	int[] yPoints;
 	xPoints = getScaledxPoints();
 	yPoints = getScaledyPoints();
+	Polygon polygon = null;
 	if (xPoints.length == yPoints.length) {
 	    polygon = new Polygon(xPoints, yPoints, xPoints.length);
 	} else {
@@ -66,11 +67,10 @@ public class Area {
 		    + ". " + xPoints.length + " X pints and " + yPoints.length
 		    + " Y points");
 	}
+	return polygon;
     }
 
     private final String areaName;
-
-    private Polygon polygon;
 
     private final int[] xPoints;
 
