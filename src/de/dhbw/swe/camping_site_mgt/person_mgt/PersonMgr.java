@@ -258,7 +258,10 @@ public class PersonMgr {
     private boolean isObjectInUse(final Person object) {
 	// TODO -- -1 weil es momentan noch benutzt wird
 	// Ask all parent manager classes if they use the object
-	return false;
+	if (GuestMgr.getInstance().isSubObjectInUse(object)) {
+	    return true;
+	}
+	return EmployeeMgr.getInstance().isSubObjectInUse(object);
     }
 
     /**

@@ -1,10 +1,12 @@
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
-import java.text.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
-import de.dhbw.swe.camping_site_mgt.person_mgt.*;
+import de.dhbw.swe.camping_site_mgt.person_mgt.Guest;
+import de.dhbw.swe.camping_site_mgt.person_mgt.GuestList;
 
 public class Booking {
     public Booking() {
@@ -138,7 +140,7 @@ public class Booking {
 	objects.putAll(this.extraBooking.getTableData(className));
 	objects.putAll(this.fellowTravelers.getTableData(className));
 	objects.putAll(this.pitchBooking.getTableData(className));
-	objects.putAll(this.responsiblePerson.getTableData(className));
+	// objects.putAll(this.responsiblePerson.getTableData(className));
 
 	return objects;
     }
@@ -194,7 +196,7 @@ public class Booking {
 	this.extraBooking = new ExtraBookingList().setTableData(extrabookingMap);
 	this.fellowTravelers = new GuestList().setTableData(guestlistMap);
 	this.pitchBooking = new PitchBookingList().setTableData(pitchbookinglistMap);
-	this.responsiblePerson = new Guest().setTableData(guestMap);
+	// this.responsiblePerson = new Guest().setTableData(guestMap);
 	setData(thisMap);
 	return this;
     }

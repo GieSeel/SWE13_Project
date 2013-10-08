@@ -26,7 +26,8 @@ public class SearchPanel extends JPanel {
 		objects.get(0).getClass().getSimpleName(), "");
 
 	// ## DEL
-	final HashMap<String, Object> bspData = objects.get(0).getTableData("");
+	// final HashMap<String, Object> bspData =
+	// objects.get(0).getTableData("");
 
 	// HashMap<String, HashMap<String, Object>> data;
 	// HashMap<String, Object> columnNames;
@@ -37,7 +38,7 @@ public class SearchPanel extends JPanel {
 
 	final List<HashMap<String, Object>> bodyData = new Vector<HashMap<String, Object>>();
 	for (final Guest guest : objects) {
-	    bodyData.add(guest.getTableData(""));
+	    // bodyData.add(guest.getTableData(""));
 	    // Guest.class.getd
 	}
 
@@ -56,7 +57,7 @@ public class SearchPanel extends JPanel {
 	bodyTable.setRowSorter(sorter);
 
 	// ## DEL
-	headTable.insertData(bspData);
+	// headTable.insertData(bspData);
 	// ##
 
 	// TODO
@@ -182,9 +183,10 @@ public class SearchPanel extends JPanel {
 		    System.out.println(data);
 		    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		    // ((DateFXI!!
-		    if (dbController.queryInsertUpdateGuest(new Guest().setTableData(data)) != 0) {
-			bodyTable.insertData(data);
-		    }
+		    // if (dbController.queryInsertUpdateGuest(new
+		    // Guest().setTableData(data)) != 0) {
+		    // bodyTable.insertData(data);
+		    // }
 		}
 	    }
 	});

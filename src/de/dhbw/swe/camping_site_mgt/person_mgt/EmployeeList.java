@@ -1,9 +1,11 @@
 package de.dhbw.swe.camping_site_mgt.person_mgt;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Set;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
 
+@Deprecated
 public class EmployeeList {
     public EmployeeList() {
 	super();
@@ -54,7 +56,7 @@ public class EmployeeList {
 	final String className = parentClass + "employeelist_";
 	objects.put(className + "id", new Integer(this.id));
 	objects.put(className + "number", new Integer(this.number));
-	objects.putAll(this.employee.getTableData(className));
+	// objects.putAll(this.employee.getTableData(className));
 	return objects;
     }
 
@@ -82,7 +84,7 @@ public class EmployeeList {
 		thisMap.put(key, val);
 	    }
 	}
-	this.employee = new Employee().setTableData(employeeMap);
+	// this.employee = new Employee().setTableData(employeeMap);
 	setData(thisMap);
 	return this;
     }
