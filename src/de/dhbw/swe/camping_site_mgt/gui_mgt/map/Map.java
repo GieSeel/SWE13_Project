@@ -190,12 +190,14 @@ public class Map extends JPanel {
     /**   */
     private static final long serialVersionUID = 1L;
 
-    public Map(final String mapImagePath) {
+    public Map(final String mapImagePath, final HashMap<String, Area> theAreas,
+	    final HashMap<Integer, PitchInterface> thePitches) {
 	final Toolkit toolkit = Toolkit.getDefaultToolkit();
 	img = getMapImage(mapImagePath);
 	final Dimension screenSize = toolkit.getScreenSize();
 	GuiController.setScaleFactor((screenSize.width * MAP_SCREEN_COVERAGE)
 		/ img.getWidth());
+
 	imgScaledOverview = getScaledImage(img);
 	imgScaled = getScaledImage(img);
 
@@ -204,7 +206,7 @@ public class Map extends JPanel {
 		(int) (img.getHeight() * GuiController.getScaleFactor()));
 	setPreferredSize(mapSize);
 
-	areas = new MapAreas().getAreas();
+	areas = theAreas;
 
 	addMouseListener(new MapMouseListener());
 	addMouseMotionListener(new MapMouseMotionListener());
