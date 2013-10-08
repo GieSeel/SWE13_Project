@@ -207,6 +207,7 @@ public class Map extends JPanel {
 	setPreferredSize(mapSize);
 
 	areas = theAreas;
+	pitches = thePitches;
 
 	addMouseListener(new MapMouseListener());
 	addMouseMotionListener(new MapMouseMotionListener());
@@ -454,7 +455,7 @@ public class Map extends JPanel {
     private final Image imgScaledOverview;
 
     /** The available {@link PitchInterface}. */
-    private final HashMap<String, PitchInterface> pitches;
+    private final HashMap<Integer, PitchInterface> pitches;
 
     /** The selected {@link Area}. */
     private Area selectedArea = null;
