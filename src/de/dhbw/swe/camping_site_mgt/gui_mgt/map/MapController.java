@@ -14,8 +14,8 @@ public class MapController implements Displayable {
 	final Site dev278 = new Site(278, "Electircity and Water", "Deliverypoint",
 		"0-24", "Deliverypoint");
 	pitches.put(1, new Pitch(1, "In the west!\nJust one direkt neighbour!",
-		dev278, "A", 100, "gras", "camper pitch", 100, "[7, 22, 40, 25]",
-		"[1354, 1337, 1351, 1370]"));
+		dev278, "A", 100, "gras", Pitch_Type.CAMPERPITCH, 100,
+		"[7, 22, 40, 25]", "[1354, 1337, 1351, 1370]"));
 	view = new Map(mapPath, areas, pitches);
     }
 
