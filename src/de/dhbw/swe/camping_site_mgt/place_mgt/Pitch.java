@@ -19,7 +19,6 @@ public class Pitch implements PitchInterface {
     private static Polygon buildShape(final String xCoords, final String yCoords) {
 	String trimedXCords = xCoords.replaceAll(" ", "");
 	String trimedYCords = yCoords.replaceAll(" ", "");
-
 	trimedXCords = trimedXCords.substring(1, trimedXCords.length() - 1);
 	trimedYCords = trimedYCords.substring(1, trimedYCords.length() - 1);
 
