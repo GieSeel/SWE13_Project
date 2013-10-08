@@ -54,6 +54,21 @@ public class Euro {
     }
 
     /**
+     * {@inheritDoc}.
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+	final Euro object = (Euro) obj;
+	if (this.euroValue == object.euroValue
+		&& this.centValue == object.centValue) {
+	    return true;
+	}
+	return false;
+    }
+
+    /**
      * Compares both objects.
      * 
      * @param obj

@@ -1,90 +1,93 @@
 package de.dhbw.swe.camping_site_mgt.person_mgt;
 
-import java.util.*;
-
 public class EmployeeRole {
 
+    /**
+     * Constructor.
+     * 
+     */
     public EmployeeRole() {
-	super();
-	this.id = 0;
-	this.arrangement = null;
-	this.labeling = null;
+	this(null, null);
     }
 
+    /**
+     * Constructor.
+     * 
+     * @param arrangement
+     * @param id
+     * @param labeling
+     */
     public EmployeeRole(final int id, final String arrangement,
 	    final String labeling) {
-	super();
+	this.arrangement = arrangement;
 	this.id = id;
-	this.arrangement = arrangement;
 	this.labeling = labeling;
     }
 
+    /**
+     * Constructor.
+     * 
+     * @param arrangement
+     * @param labeling
+     */
     public EmployeeRole(final String arrangement, final String labeling) {
-	super();
-	this.id = 0;
-	this.arrangement = arrangement;
-	this.labeling = labeling;
+	this(0, arrangement, labeling);
     }
 
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+	final EmployeeRole object = (EmployeeRole) obj;
+	if (this.arrangement.equals(object.getArrangement())
+		&& this.labeling.equals(object.getLabeling())) {
+	    setId(object.getId());
+	    return true;
+	}
+	return false;
+    }
+
+    /**
+     * Returns the arrangement.
+     * 
+     * @return the arrangement
+     */
     public String getArrangement() {
 	return arrangement;
     }
 
-    public HashMap<String, Object> getDatabaseData() {
-	final HashMap<String, Object> elements = new HashMap<String, Object>();
-	elements.put("id", this.id);
-	elements.put("arrangement", this.arrangement);
-	elements.put("labeling", this.labeling);
-	return elements;
-    }
-
+    /**
+     * Returns the id.
+     * 
+     * @return the id
+     */
     public int getId() {
 	return id;
     }
 
+    /**
+     * Returns the labeling.
+     * 
+     * @return the labeling
+     */
     public String getLabeling() {
 	return labeling;
     }
 
-    public HashMap<String, Object> getTableData(final String parentClass) {
-	final HashMap<String, Object> objects = new HashMap<String, Object>();
-	final String className = parentClass + "employeerole_";
-	objects.put(className + "id", new Integer(this.id));
-	objects.put(className + "arrangement", new String(this.arrangement));
-	objects.put(className + "labeling", new String(this.labeling));
-	return objects;
+    /**
+     * Sets the id.
+     * 
+     * @param id
+     *            the id to set
+     */
+    public void setId(final int id) {
+	this.id = id;
     }
 
-    public EmployeeRole setDatabaseData(final HashMap<String, Object> objects) {
-	this.id = (int) objects.get("id");
-	setData(objects);
-	return this;
-    }
-
-    public EmployeeRole setTableData(final HashMap<String, Object> objects) {
-	final String className = "employeerole_";
-	final int classNameLength = className.length();
-	final HashMap<String, Object> thisMap = new HashMap<String, Object>();
-
-	Object val;
-	final Set<String> keys = objects.keySet();
-	for (String key : keys) {
-	    val = objects.get(key);
-	    key = key.substring(classNameLength);
-	    thisMap.put(key, val);
-	}
-	setData(thisMap);
-	return this;
-    }
-
-    private void setData(final HashMap<String, Object> objects) {
-	this.arrangement = (String) objects.get("arrangement");
-	this.labeling = (String) objects.get("labeling");
-    }
-
-    // private final EmployeeRole_Arrangement arrangement;
-    private String arrangement;
+    private final String arrangement;
     private int id;
-    // private final EmployeeRole_Labeling labeling;
-    private String labeling;
+    private final String labeling;
 }

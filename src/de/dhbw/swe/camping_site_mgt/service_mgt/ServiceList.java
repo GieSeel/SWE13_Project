@@ -1,9 +1,11 @@
 package de.dhbw.swe.camping_site_mgt.service_mgt;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Set;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
 
+@Deprecated
 public class ServiceList {
     public ServiceList() {
 	super();
@@ -56,7 +58,7 @@ public class ServiceList {
 	objects.put(className + "id", new Integer(this.id));
 	objects.put(className + "number", new Integer(this.number));
 
-	objects.putAll(this.service.getTableData(className));
+	// objects.putAll(this.service.getTableData(className));
 
 	return objects;
     }
@@ -84,7 +86,7 @@ public class ServiceList {
 		thisMap.put(key, val);
 	    }
 	}
-	this.service = new Service().setTableData(serviceMap);
+	// this.service = new Service().setTableData(serviceMap);
 	setData(thisMap);
 	return this;
     }

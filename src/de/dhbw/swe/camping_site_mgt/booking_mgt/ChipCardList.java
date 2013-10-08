@@ -1,10 +1,12 @@
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Set;
 
 import de.dhbw.swe.camping_site_mgt.common.ChipCard;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
 
+@Deprecated
 public class ChipCardList {
     public ChipCardList() {
 	super();
@@ -58,7 +60,7 @@ public class ChipCardList {
 	objects.put(className + "id", new Integer(this.id));
 	objects.put(className + "number", new Integer(this.number));
 
-	objects.putAll(this.chipCard.getTableData(className));
+	// objects.putAll(this.chipCard.getTableData(className));
 
 	return objects;
     }
@@ -86,7 +88,7 @@ public class ChipCardList {
 		thisMap.put(key, val);
 	    }
 	}
-	this.chipCard = new ChipCard().setTableData(chipcardMap);
+	// this.chipCard = new ChipCard().setTableData(chipcardMap);
 	setData(thisMap);
 	return this;
     }

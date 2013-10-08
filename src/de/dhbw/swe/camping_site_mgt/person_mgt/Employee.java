@@ -1,155 +1,154 @@
 package de.dhbw.swe.camping_site_mgt.person_mgt;
 
-import java.util.HashMap;
-import java.util.Set;
-
 import de.dhbw.swe.camping_site_mgt.common.ChipCard;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
 
 public class Employee {
+
+    /**
+     * Constructor.
+     * 
+     */
     public Employee() {
-	super();
-	this.id = 0;
-	this.person = null;
-	this.blocked = true;
-	this.chipCard = null;
-	this.password = null;
-	this.role = null;
-	this.userName = null;
+	this(false, new ChipCard(), null, new Person(), new EmployeeRole(), null);
     }
 
-    public Employee(final int id, final Person person, final boolean blocked,
-	    final ChipCard chipCard, final String password,
-	    final EmployeeRole role, final String userName) {
-	super();
+    /**
+     * Constructor.
+     * 
+     * @param blocked
+     * @param chipCard
+     * @param password
+     * @param person
+     * @param role
+     * @param userName
+     */
+    public Employee(final boolean blocked, final ChipCard chipCard,
+	    final String password, final Person person, final EmployeeRole role,
+	    final String userName) {
+	this(0, blocked, chipCard, password, person, role, userName);
+    }
+
+    /**
+     * Constructor.
+     * 
+     * @param blocked
+     * @param chipCard
+     * @param id
+     * @param password
+     * @param person
+     * @param role
+     * @param userName
+     */
+    public Employee(final int id, final boolean blocked, final ChipCard chipCard,
+	    final String password, final Person person, final EmployeeRole role,
+	    final String userName) {
 	this.id = id;
-	this.person = person;
 	this.blocked = blocked;
 	this.chipCard = chipCard;
 	this.password = password;
+	this.person = person;
 	this.role = role;
 	this.userName = userName;
     }
 
-    public Employee(final Person person, final boolean blocked,
-	    final ChipCard chipCard, final String password,
-	    final EmployeeRole role, final String userName) {
-	super();
-	this.id = 0;
-	this.person = person;
-	this.blocked = blocked;
-	this.chipCard = chipCard;
-	this.password = password;
-	this.role = role;
-	this.userName = userName;
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+	final Employee object = (Employee) obj;
+	if (this.blocked == object.isBlocked()
+		&& this.chipCard.equals(object.getChipCard())
+		&& this.password.equals(object.getPassword())
+		&& this.person.equals(object.getPerson())
+		&& this.role.equals(object.getRole())
+		&& this.userName.equals(object.getUserName())) {
+	    setId(object.getId());
+	    return true;
+	}
+	return false;
     }
 
+    /**
+     * Returns the chipCard.
+     * 
+     * @return the chipCard
+     */
     public ChipCard getChipCard() {
 	return chipCard;
     }
 
-    public HashMap<String, Object> getDatabaseData() {
-	final DatabaseController db = DatabaseController.getInstance();
-	final HashMap<String, Object> objects = new HashMap<String, Object>();
-	objects.put("id", this.id);
-	objects.put("person_ID", db.queryInsertUpdatePerson(this.person));
-	objects.put("blocked", (this.blocked ? 1 : 0));
-	objects.put("chipCard_ID", db.queryInsertUpdateChipCard(this.chipCard));
-	objects.put("password", this.password);
-	objects.put("employeeRole_ID", db.queryInsertUpdateEmployeeRole(this.role));
-	objects.put("userName", this.userName);
-	return objects;
-    }
-
+    /**
+     * Returns the id.
+     * 
+     * @return the id
+     */
     public int getId() {
 	return id;
     }
 
+    /**
+     * Returns the password.
+     * 
+     * @return the password
+     */
     public String getPassword() {
 	return password;
     }
 
+    /**
+     * Returns the person.
+     * 
+     * @return the person
+     */
     public Person getPerson() {
 	return person;
     }
 
+    /**
+     * Returns the role.
+     * 
+     * @return the role
+     */
     public EmployeeRole getRole() {
 	return role;
     }
 
-    public HashMap<String, Object> getTableData(final String parentClass) {
-	final HashMap<String, Object> objects = new HashMap<String, Object>();
-	final String className = parentClass + "employee_";
-	objects.put(className + "id", new Integer(this.id));
-	objects.put("blocked", new String(this.blocked ? "yes" : "no")); // TODO
-									 // SPRACHE!!
-	objects.put("password", new String(this.password));
-	objects.put("userName", new String(this.userName));
-
-	// objects.putAll(this.person.getTableData(className));
-	objects.putAll(this.role.getTableData(className));
-	objects.putAll(this.chipCard.getTableData(className));
-
-	return objects;
-    }
-
+    /**
+     * Returns the userName.
+     * 
+     * @return the userName
+     */
     public String getUserName() {
 	return userName;
     }
 
+    /**
+     * Returns the blocked.
+     * 
+     * @return the blocked
+     */
     public boolean isBlocked() {
 	return blocked;
     }
 
-    public Employee setDatabaseData(final HashMap<String, Object> objects) {
-	final DatabaseController db = DatabaseController.getInstance();
-	this.person = db.querySelectPerson((int) objects.get("person_ID"));
-	this.role = db.querySelectEmployeeRole((int) objects.get("employeeRole_ID"));
-	this.chipCard = db.querySelectChipCard((int) objects.get("chipCard_ID"));
-	setData(objects);
-	return this;
+    /**
+     * Sets the id.
+     * 
+     * @param id
+     *            the id to set
+     */
+    public void setId(final int id) {
+	this.id = id;
     }
 
-    public Employee setTableData(final HashMap<String, Object> objects) {
-	final String className = "employee_";
-	final int classNameLength = className.length();
-	final HashMap<String, Object> thisMap = new HashMap<String, Object>(), employeeroleMap = new HashMap<String, Object>(), personMap = new HashMap<String, Object>(), chipcardMap = new HashMap<String, Object>();
-
-	Object val;
-	final Set<String> keys = objects.keySet();
-	for (String key : keys) {
-	    val = objects.get(key);
-	    key = key.substring(classNameLength);
-	    if (key.startsWith("employeerole_")) {
-		employeeroleMap.put(key, val);
-	    } else if (key.startsWith("person_")) {
-		personMap.put(key, val);
-	    } else if (key.startsWith("chipcard_")) {
-		chipcardMap.put(key, val);
-	    } else {
-		thisMap.put(key, val);
-	    }
-	}
-	this.role = new EmployeeRole().setTableData(employeeroleMap);
-	// this.person = new Person().setTableData(personMap);
-	this.chipCard = new ChipCard().setTableData(personMap);
-	setData(thisMap);
-	return this;
-    }
-
-    private void setData(final HashMap<String, Object> objects) {
-	this.id = (int) objects.get("id");
-	this.blocked = ((int) objects.get("blocked") == 1 ? true : false);
-	this.password = (String) objects.get("password");
-	this.userName = (String) objects.get("userName");
-
-    }
-
-    private boolean blocked;
-    private ChipCard chipCard;
+    private final boolean blocked;
+    private final ChipCard chipCard;
     private int id;
-    private String password;
-    private Person person;
-    private EmployeeRole role;
-    private String userName;
+    private final String password;
+    private final Person person;
+    private final EmployeeRole role;
+    private final String userName;
 }
