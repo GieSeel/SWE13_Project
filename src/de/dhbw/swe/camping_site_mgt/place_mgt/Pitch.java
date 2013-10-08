@@ -149,11 +149,7 @@ public class Pitch implements PitchInterface {
 	return natureOfSoil;
     }
 
-    /**
-     * Returns the shape.
-     * 
-     * @return the shape
-     */
+    @Override
     public Polygon getShape() {
 	return shape;
     }
@@ -163,11 +159,7 @@ public class Pitch implements PitchInterface {
 	return type;
     }
 
-    /**
-     * Returns the usage.
-     * 
-     * @return the usage
-     */
+    @Override
     public Usage getUsage() {
 	return usage;
     }
@@ -177,29 +169,17 @@ public class Pitch implements PitchInterface {
 	return width;
     }
 
-    /**
-     * Returns the xCoords.
-     * 
-     * @return the xCoords
-     */
+    @Override
     public String getxCoords() {
 	return xCoords;
     }
 
-    /**
-     * Returns the yCoords.
-     * 
-     * @return the yCoords
-     */
+    @Override
     public String getyCoords() {
 	return yCoords;
     }
 
-    /**
-     * Checks if the object is still in use.
-     * 
-     * @return true if it's still in use
-     */
+    @Override
     public boolean isInUse() {
 	return usage.isInUse();
     }

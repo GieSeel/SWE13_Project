@@ -1,5 +1,8 @@
 package de.dhbw.swe.camping_site_mgt.place_mgt;
 
+import java.awt.Polygon;
+
+import de.dhbw.swe.camping_site_mgt.common.Usage;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map.Area;
 
 /**
@@ -40,12 +43,47 @@ public interface PitchInterface {
     String getNatureOfSoil();
 
     /**
+     * Returns the shape.
+     * 
+     * @return the shape as {@link Polygon}.
+     */
+    Polygon getShape();
+
+    /**
      * @return the {@link Pitch_Type} of the {@link Pitch}.
      */
     Pitch_Type getType();
 
     /**
+     * Returns the usage.
+     * 
+     * @return the usage
+     */
+    Usage getUsage();
+
+    /**
      * @return the width of the {@link Pitch}.
      */
     int getWidth();
+
+    /**
+     * Returns the shape xCoords.
+     * 
+     * @return the xCoords in pattern: <code>[x1, x2, x3]</code>
+     */
+    String getxCoords();
+
+    /**
+     * Returns the shape yCoords.
+     * 
+     * @return the yCoords in pattern: <code>[y1, y2, y3]</code>
+     */
+    String getyCoords();
+
+    /**
+     * Checks if the object is still in use.
+     * 
+     * @return <code>true</code> if it's still used
+     */
+    boolean isInUse();
 }

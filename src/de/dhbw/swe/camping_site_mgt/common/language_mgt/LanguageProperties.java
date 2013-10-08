@@ -69,6 +69,7 @@ public interface LanguageProperties {
     String MAP = "Map";
     /** The no property. */
     String NO = "no";
+    String PITCH = "Pitch";
     /** The question for closing the application. */
     String QUESTION_CLOSE_APPLICATION = "Do you like to close the application?";
     /** The selected property. */

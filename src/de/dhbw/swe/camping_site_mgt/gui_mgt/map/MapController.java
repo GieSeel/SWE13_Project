@@ -1,5 +1,6 @@
 package de.dhbw.swe.camping_site_mgt.gui_mgt.map;
 
+import java.awt.Polygon;
 import java.util.HashMap;
 
 import javax.swing.JComponent;
@@ -16,6 +17,10 @@ public class MapController implements Displayable {
 	pitches.put(1, new Pitch(1, "In the west!\nJust one direkt neighbour!",
 		dev278, "A", 100, "gras", Pitch_Type.CAMPERPITCH, 100,
 		"[7, 22, 40, 25]", "[1354, 1337, 1351, 1370]"));
+	pitches.put(2, new Pitch(2, "In the west!\nJust two direkt neighbour!",
+		dev278, "A", 100, "gras", Pitch_Type.CAMPERPITCH, 100, new Polygon(
+			new int[] { 22, 37, 55, 40 }, new int[] { 1336, 1318, 1333,
+				1351 }, 4)));
 	view = new Map(mapPath, areas, pitches);
     }
 

@@ -140,13 +140,29 @@ public class Map extends JPanel {
 	    hoverInfo.append(" " + highlightedArea.getName());
 
 	    if (highlightedArea == selectedArea) {
-		return hoverInfo.toString();
+		return buildHoverInteractionHint(hoverInfo);
 	    }
 
+	    return buildHoverInteractionHint(hoverInfo);
+	}
+
+	private String buildHoverInteractionHint(final StringBuilder hoverInfo) {
 	    hoverInfo.append(" (" + lm.get(lp.CLICK_TO_SELECT) + " & ");
 	    hoverInfo.append(lm.get(lp.ADDITIONAL_INFO) + " | ");
 	    hoverInfo.append(lm.get(lp.HOW_TO_ZOOM_IN) + ")");
 	    return hoverInfo.toString();
+	}
+
+	private String buildPitchHoverInfo() {
+	    final StringBuilder hoverInfo = new StringBuilder();
+	    hoverInfo.append(lm.get(lp.PITCH));
+	    hoverInfo.append(" " + highlightedPitch.getId());
+
+	    if (highlightedPitch == selectedPitch) {
+		return buildHoverInteractionHint(hoverInfo);
+	    }
+
+	    return buildHoverInteractionHint(hoverInfo);
 	}
 
 	private void handleMouseMotionOverview(final MouseEvent e) {
@@ -169,7 +185,23 @@ public class Map extends JPanel {
 
 	private void handleMouseMotionZoom(final MouseEvent e) {
 	    statusBar.setHoverInfo(lm.get(lp.HOW_TO_ZOOM_OUT));
+
+	    for (final PitchInterface pitch : pitches.values()) {
+		if (!pitch.getArea().equalsIgnoreCase(selectedArea.getName())) {
+		    return;
+		}
+		statusBar.cleanupHoverInfo();
+		setCurserDefault();
+
+		if (pitch.getShape().contains(e.getX() + frame.x,
+			e.getY() + frame.y)) {
+		    highlightedPitch = pitch;
+		    statusBar.setHoverInfo(buildPitchHoverInfo());
+		}
+	    }
+	    repaint();
 	}
+
     }
 
     /** The opacity factor. */
@@ -444,6 +476,9 @@ public class Map extends JPanel {
 
     /** The highlighted {@link Area}. */
     private Area highlightedArea = null;
+
+    /** The highlighted {@link Pitch}. */
+    private PitchInterface highlightedPitch = null;
 
     /** The {@link BufferedImage} of the map. */
     private final BufferedImage img;
