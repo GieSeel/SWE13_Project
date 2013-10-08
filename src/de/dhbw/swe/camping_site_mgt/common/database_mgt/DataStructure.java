@@ -1,15 +1,12 @@
 package de.dhbw.swe.camping_site_mgt.common.database_mgt;
 
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 import de.dhbw.swe.camping_site_mgt.booking_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.*;
-import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageMgr;
-import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageProperties;
+import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
 import de.dhbw.swe.camping_site_mgt.person_mgt.*;
-import de.dhbw.swe.camping_site_mgt.place_mgt.Pitch;
-import de.dhbw.swe.camping_site_mgt.place_mgt.Site;
+import de.dhbw.swe.camping_site_mgt.place_mgt.*;
 import de.dhbw.swe.camping_site_mgt.service_mgt.Service;
 
 /**
@@ -53,21 +50,27 @@ public class DataStructure {
 	// TODO alle languageproperties noch einfügen und verwenden..
 
 	// "bill"
-	sqlObjects.put("bill", new ColumnInfo[] {
-		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("number", Integer.class, "Number"),
-		new ColumnInfo("billItem_ID", Integer.class, BillItem.class),
-		new ColumnInfo("multiplier", Integer.class, "Multiplier") });
-
-	// "billitem"
-	sqlObjects.put("billitem",
+	sqlObjects.put(
+		"bill",
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
-			new ColumnInfo("labeling", String.class, "Labeling"),
+			new ColumnInfo("number", Integer.class,
+				lm.get(lp.DM_NUMBER)),
+			new ColumnInfo("billItem_ID", Integer.class, BillItem.class),
+			new ColumnInfo("multiplier", Integer.class,
+				lm.get(lp.DM_MULTIPLIER)) });
+
+	// "billitem"
+	sqlObjects.put(
+		"billitem",
+		new ColumnInfo[] {
+			new ColumnInfo("id", Integer.class),
+			new ColumnInfo("labeling", String.class,
+				lm.get(lp.DM_LABELING)),
 			new ColumnInfo("priceBusySeason", Float.class,
-				"Price Busy Season"),
+				lm.get(lp.DM_PRICE_BUSY_SEASON)),
 			new ColumnInfo("priceLowSeason", Float.class,
-				"Price Low Season") });
+				lm.get(lp.DM_PRICE_LOW_SEASON)) });
 
 	// "booking"
 	sqlObjects.put("booking", new ColumnInfo[] {
@@ -92,26 +95,26 @@ public class DataStructure {
 	// "bookinglist"
 	sqlObjects.put("bookinglist", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("number", Integer.class, "Number"),
+		new ColumnInfo("number", Integer.class, lm.get(lp.DM_NUMBER)),
 		new ColumnInfo("booking_ID", Integer.class, Booking.class) });
 
 	// "chipcard"
 	sqlObjects.put("chipcard", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("validFrom", Date.class, "Valide From"),
-		new ColumnInfo("validTo", Date.class, "Valide To") });
+		new ColumnInfo("validFrom", Date.class, lm.get(lp.DM_VALIDE_FROM)),
+		new ColumnInfo("validTo", Date.class, lm.get(lp.DM_VALIDE_TO)) });
 
 	// "chipcardlist"
 	sqlObjects.put("chipcardlist", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("number", Integer.class, "Number"),
+		new ColumnInfo("number", Integer.class, lm.get(lp.DM_NUMBER)),
 		new ColumnInfo("chipCard_ID", Integer.class, ChipCard.class) });
 
 	// "country"
 	sqlObjects.put("country", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("name", String.class, "Name"),
-		new ColumnInfo("acronym", String.class, "Acronym") });
+		new ColumnInfo("name", String.class, lm.get(lp.DM_NAME)),
+		new ColumnInfo("acronym", String.class, lm.get(lp.DM_ACRONYM)) });
 
 	// "employee"
 	sqlObjects.put("employee",
@@ -121,47 +124,54 @@ public class DataStructure {
 		new ColumnInfo("person_ID", Integer.class, Person.class),
 		new ColumnInfo("employeeRole_ID", Integer.class, null, "role",
 			EmployeeRole.class),
-		new ColumnInfo("userName", String.class, "User Name"),
-		new ColumnInfo("password", String.class, "Password"),
-		new ColumnInfo("blocked", Integer.class, "Is Blocked"),
+		new ColumnInfo("userName", String.class, lm.get(lp.DM_USER_NAME)),
+		new ColumnInfo("password", String.class, lm.get(lp.DM_PASSWORD)),
+		new ColumnInfo("blocked", Integer.class, lm.get(lp.DM_IS_BLOCKED)),
 		new ColumnInfo("chipCard_ID", Integer.class, ChipCard.class) });
 
 	// "employeelist"
 	sqlObjects.put("employeelist", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("number", Integer.class, "Number"),
+		new ColumnInfo("number", Integer.class, lm.get(lp.DM_NUMBER)),
 		new ColumnInfo("employee_ID", Integer.class, Employee.class) });
 
 	// "employeerole"
-	sqlObjects.put("employeerole", new ColumnInfo[] {
-		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("labeling", String.class, "Labeling"),
-		new ColumnInfo("arrangement", String.class, "Arrangement") });
+	sqlObjects.put(
+		"employeerole",
+		new ColumnInfo[] {
+			new ColumnInfo("id", Integer.class),
+			new ColumnInfo("labeling", String.class,
+				lm.get(lp.DM_LABELING)),
+			new ColumnInfo("arrangement", String.class,
+				lm.get(lp.DM_ARRANGEMENT)) });
 
 	// "equipment"
-	sqlObjects.put("equipment", new ColumnInfo[] {
-		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("type", String.class, "Type"),
-		new ColumnInfo("size", String.class, "Size"),
-		new ColumnInfo("identification", String.class, "Identification") });
+	sqlObjects.put(
+		"equipment",
+		new ColumnInfo[] {
+			new ColumnInfo("id", Integer.class),
+			new ColumnInfo("type", String.class, lm.get(lp.DM_TYPE)),
+			new ColumnInfo("size", String.class, lm.get(lp.DM_SIZE)),
+			new ColumnInfo("identification", String.class,
+				lm.get(lp.DM_IDENTIFICATION)) });
 
 	// "equipmentlist"
 	sqlObjects.put("equipmentlist", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("number", Integer.class, "Number"),
+		new ColumnInfo("number", Integer.class, lm.get(lp.DM_NUMBER)),
 		new ColumnInfo("equipment_ID", Integer.class, Equipment.class) });
 
 	// "extrabooking"
 	sqlObjects.put("extrabooking", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("name", String.class, "Name"),
-		new ColumnInfo("labeling", String.class, "Labeling"),
+		new ColumnInfo("name", String.class, lm.get(lp.DM_NAME)),
+		new ColumnInfo("labeling", String.class, lm.get(lp.DM_LABELING)),
 		new ColumnInfo("site_ID", Integer.class, Site.class) });
 
 	// "extrabookinglist"
 	sqlObjects.put("extrabookinglist", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("number", Integer.class, "Number"),
+		new ColumnInfo("number", Integer.class, lm.get(lp.DM_NUMBER)),
 		new ColumnInfo("site_ID", Integer.class, Site.class) });
 
 	// "guest"
@@ -174,54 +184,69 @@ public class DataStructure {
 	// "guestlist"
 	sqlObjects.put("guestlist", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("number", Integer.class, "Number"),
+		new ColumnInfo("number", Integer.class, lm.get(lp.DM_NUMBER)),
 		new ColumnInfo("guest_ID", Integer.class, Guest.class) });
 
 	// "person"
-	sqlObjects.put("person", new ColumnInfo[] {
-		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("identificationNumber", String.class,
-			"Identification Number"),
-		new ColumnInfo("name", String.class, "Name"),
-		new ColumnInfo("firstName", String.class, "First Name"),
-		new ColumnInfo("street", String.class, "Street"),
-		new ColumnInfo("houseNumber", String.class, "House Number"),
-		new ColumnInfo("town_ID", Integer.class, Town.class),
-		new ColumnInfo("country_ID", Integer.class, Country.class),
-		new ColumnInfo("dateOfBirth", Date.class, "Date of Birth") });
-
-	// "pitch"
-	sqlObjects.put("pitch", new ColumnInfo[] {
-		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("area", String.class, "Area"),
-		new ColumnInfo("type", String.class, "Type"),
-		new ColumnInfo("length", Integer.class, "Length"),
-		new ColumnInfo("width", Integer.class, "Width"),
-		new ColumnInfo("natureOfSoil", String.class, "Nature of Soil"),
-		new ColumnInfo("deliveryPoint_ID", Integer.class, null,
-			"deliveryPoint", Site.class),
-		new ColumnInfo("characteristics", String.class, "Characteristics"),
-		new ColumnInfo("xCoords", String.class),
-		new ColumnInfo("yCoords", String.class) });
-
-	// "pitchbooking"
-	sqlObjects.put("pitchbooking", new ColumnInfo[] {
-		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("pitch_ID", Integer.class, Pitch.class),
-		new ColumnInfo("electricity", Integer.class, "Electricity") });
-
-	// "pitchbookinglist"
-	sqlObjects.put("pitchbookinglist",
+	sqlObjects.put(
+		"person",
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
-			new ColumnInfo("number", Integer.class, "Number"),
+			new ColumnInfo("identificationNumber", String.class,
+				lm.get(lp.DM_IDENTIFICATION_NUMBER)),
+			new ColumnInfo("name", String.class, lm.get(lp.DM_NAME)),
+			new ColumnInfo("firstName", String.class,
+				lm.get(lp.DM_FIRST_NAME)),
+			new ColumnInfo("street", String.class, lm.get(lp.DM_STREET)),
+			new ColumnInfo("houseNumber", String.class,
+				lm.get(lp.DM_HOUSE_NUMBER)),
+			new ColumnInfo("town_ID", Integer.class, Town.class),
+			new ColumnInfo("country_ID", Integer.class, Country.class),
+			new ColumnInfo("dateOfBirth", Date.class,
+				lm.get(lp.DM_DATE_OF_BIRTH)) });
+
+	// "pitch"
+	sqlObjects.put(
+		"pitch",
+		new ColumnInfo[] {
+			new ColumnInfo("id", Integer.class),
+			new ColumnInfo("area", String.class, lm.get(lp.DM_AREA)),
+			new ColumnInfo("type", String.class, lm.get(lp.DM_TYPE)),
+			new ColumnInfo("length", Integer.class,
+				lm.get(lp.DM_LENGTH)),
+			new ColumnInfo("width", Integer.class, lm.get(lp.DM_WIDTH)),
+			new ColumnInfo("natureOfSoil", String.class,
+				lm.get(lp.DM_NATURE_OF_SOIL)),
+			new ColumnInfo("deliveryPoint_ID", Integer.class, null,
+				"deliveryPoint", Site.class),
+			new ColumnInfo("characteristics", String.class,
+				lm.get(lp.DM_CHARACTERISTICS)),
+			new ColumnInfo("xCoords", String.class),
+			new ColumnInfo("yCoords", String.class) });
+
+	// "pitchbooking"
+	sqlObjects.put(
+		"pitchbooking",
+		new ColumnInfo[] {
+			new ColumnInfo("id", Integer.class),
+			new ColumnInfo("pitch_ID", Integer.class, Pitch.class),
+			new ColumnInfo("electricity", Integer.class,
+				lm.get(lp.DM_ELECTRICITY)) });
+
+	// "pitchbookinglist"
+	sqlObjects.put(
+		"pitchbookinglist",
+		new ColumnInfo[] {
+			new ColumnInfo("id", Integer.class),
+			new ColumnInfo("number", Integer.class,
+				lm.get(lp.DM_NUMBER)),
 			new ColumnInfo("pitchBooking_ID", Integer.class,
 				PitchBooking.class) });
 
 	// "pitchlist"
 	sqlObjects.put("pitchlist", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("number", Integer.class, "Number"),
+		new ColumnInfo("number", Integer.class, lm.get(lp.DM_NUMBER)),
 		new ColumnInfo("pitch_ID", Integer.class, Pitch.class) });
 
 	// "service"
@@ -233,42 +258,54 @@ public class DataStructure {
 			new ColumnInfo("site_ID", Integer.class, Site.class),
 			new ColumnInfo("employeeRole_ID", Integer.class,
 				EmployeeRole.class),
-			new ColumnInfo("description", String.class, "Description"),
-			new ColumnInfo("creationDate", Date.class, "Creation Date"),
-			new ColumnInfo("priority", Integer.class, "Priority"),
-			new ColumnInfo("doneDate", Date.class, "Done Date") });
+			new ColumnInfo("description", String.class,
+				lm.get(lp.DM_DESCRIPTION)),
+			new ColumnInfo("creationDate", Date.class,
+				lm.get(lp.DM_CREATION_DATE)),
+			new ColumnInfo("priority", Integer.class,
+				lm.get(lp.DM_PRIORITY)),
+			new ColumnInfo("doneDate", Date.class,
+				lm.get(lp.DM_DONE_DATE)) });
 
 	// "servicelist"
 	sqlObjects.put("servicelist", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("number", Integer.class, "Number"),
+		new ColumnInfo("number", Integer.class, lm.get(lp.DM_NUMBER)),
 		new ColumnInfo("service_ID", Integer.class, Service.class) });
 
 	// "site"
-	sqlObjects.put("site", new ColumnInfo[] {
-		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("labeling", String.class, "Labeling"),
-		new ColumnInfo("type", String.class, "Type"),
-		new ColumnInfo("openingHours", String.class, "Opening Hours"),
-		new ColumnInfo("description", String.class, "Description") });
+	sqlObjects.put(
+		"site",
+		new ColumnInfo[] {
+			new ColumnInfo("id", Integer.class),
+			new ColumnInfo("labeling", String.class,
+				lm.get(lp.DM_LABELING)),
+			new ColumnInfo("type", String.class, "Type"),
+			new ColumnInfo("openingHours", String.class,
+				lm.get(lp.DM_OPENING_HOURS)),
+			new ColumnInfo("description", String.class,
+				lm.get(lp.DM_DESCRIPTION)) });
 
 	// "sitelist"
 	sqlObjects.put("sitelist", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("number", Integer.class, "Number"),
+		new ColumnInfo("number", Integer.class, lm.get(lp.DM_NUMBER)),
 		new ColumnInfo("site_ID", Integer.class, Site.class) });
 
 	// "town"
-	sqlObjects.put("town", new ColumnInfo[] {
-		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("name", String.class, "Name"),
-		new ColumnInfo("postalCode", String.class, "Postal Code") });
+	sqlObjects.put(
+		"town",
+		new ColumnInfo[] {
+			new ColumnInfo("id", Integer.class),
+			new ColumnInfo("name", String.class, lm.get(lp.DM_NAME)),
+			new ColumnInfo("postalCode", String.class,
+				lm.get(lp.DM_POSTAL_CODE)) });
 
 	// "visitorstaxclass"
 	sqlObjects.put("visitorstaxclass",
 
 	new ColumnInfo[] { new ColumnInfo("id", Integer.class),
-		new ColumnInfo("labeling", String.class, "Labeling"),
-		new ColumnInfo("price", Float.class, "Price") });
+		new ColumnInfo("labeling", String.class, lm.get(lp.DM_LABELING)),
+		new ColumnInfo("price", Float.class, lm.get(lp.DM_PRICE)) });
     }
 }
