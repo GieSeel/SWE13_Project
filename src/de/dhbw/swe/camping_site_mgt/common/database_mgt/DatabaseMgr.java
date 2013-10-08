@@ -22,7 +22,11 @@ import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
+import de.dhbw.swe.camping_site_mgt.common.Country;
+import de.dhbw.swe.camping_site_mgt.common.Town;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
+import de.dhbw.swe.camping_site_mgt.person_mgt.Person;
+import de.dhbw.swe.camping_site_mgt.person_mgt.PersonMgr;
 
 /**
  * Insert description for DatabaseMgr
@@ -81,18 +85,18 @@ public class DatabaseMgr {
 	    logger.info("Connected with Database.");
 	    // TODO del -- Tests v
 	    //
-	    // final PersonMgr test = PersonMgr.getInstance();
-	    // final Country country = new Country("DE", "Deutschland");
-	    // final Town town = new Town("Pforzheim", "75177");
-	    // final Person person = new Person(country, new Date(
-	    // System.currentTimeMillis()), "Florian", "3", "0123456789D",
-	    // "Seel", "Ebersteinstr.", town);
-	    // test.insert(person);
-	    // final Town town2 = new Town("Haigerloch", "72401");
-	    // test.update(person,
-	    // new Person(country, new Date(System.currentTimeMillis()),
-	    // "Florian", "22/2", "0123456789D", "Seel", "Buchenweg",
-	    // town2));
+	    final PersonMgr test = PersonMgr.getInstance();
+	    final Country country = new Country("DE", "Deutschland");
+	    final Town town = new Town("Pforzheim", "75177");
+	    final Person person = new Person(country, new Date(
+		    System.currentTimeMillis()), "Florian", "3", "0123456789D",
+		    "Seel", "Ebersteinstr.", town);
+	    test.objectInsert(person);
+	    final Town town2 = new Town("Haigerloch", "72401");
+	    test.objectUpdate(person,
+		    new Person(country, new Date(System.currentTimeMillis()),
+			    "Florian", "22/2", "0123456789D", "Seel", "Buchenweg",
+			    town2));
 
 	    // TODO del -- Tests ^
 	} catch (final SQLException e) {

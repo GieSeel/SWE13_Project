@@ -1,23 +1,37 @@
 package de.dhbw.swe.camping_site_mgt.place_mgt;
 
-import java.util.*;
-
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
-
 public class Pitch implements PitchInterface {
 
+    /**
+     * Constructor.
+     * 
+     */
     public Pitch() {
-	this(0, null, null, null, 0, null, null, 0, null, null);
+	this(null, new Site(), null, 0, null, null, 0, null, null);
     }
 
+    /**
+     * Constructor.
+     * 
+     * @param id
+     * @param characteristics
+     * @param deliveryPoint
+     * @param area
+     * @param length
+     * @param natureOfSoil
+     * @param type
+     * @param width
+     * @param xCoords
+     * @param yCoords
+     */
     public Pitch(final int id, final String characteristics,
-	    final Site deliveryPoint, final String district, final int length,
+	    final Site deliveryPoint, final String area, final int length,
 	    final String natureOfSoil, final String type, final int width,
 	    final String xCoords, final String yCoords) {
 	this.id = id;
 	this.characteristics = characteristics;
 	this.deliveryPoint = deliveryPoint;
-	this.area = district;
+	this.area = area;
 	this.length = length;
 	this.natureOfSoil = natureOfSoil;
 	this.type = type;
@@ -26,143 +40,167 @@ public class Pitch implements PitchInterface {
 	this.yCoords = yCoords;
     }
 
+    /**
+     * Constructor.
+     * 
+     * @param characteristics
+     * @param deliveryPoint
+     * @param area
+     * @param length
+     * @param natureOfSoil
+     * @param type
+     * @param width
+     * @param xCoords
+     * @param yCoords
+     */
     public Pitch(final String characteristics, final Site deliveryPoint,
-	    final String district, final int length, final String natureOfSoil,
+	    final String area, final int length, final String natureOfSoil,
 	    final String type, final int width, final String xCoords,
 	    final String yCoords) {
-	this(0, characteristics, deliveryPoint, district, length, natureOfSoil,
+	this(width, characteristics, deliveryPoint, area, length, natureOfSoil,
 		type, width, xCoords, yCoords);
     }
 
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     @Override
-    public String getCharacteristics() {
-	return characteristics;
+    public boolean equals(final Object obj) {
+	final Pitch object = (Pitch) obj;
+	if (this.area.equals(object.getArea())
+		&& this.characteristics.equals(object.getCharacteristics())
+		&& this.deliveryPoint.equals(object.getDeliveryPoint())
+		&& this.length == object.getLength()
+		&& this.natureOfSoil.equals(object.getNatureOfSoil())
+		&& this.type.equals(object.getType())
+		&& this.width == object.getWidth()
+		&& this.xCoords.equals(object.getxCoords())
+		&& this.yCoords.equals(object.getyCoords())) {
+	    return true;
+	}
+	return false;
     }
 
-    @Override
-    public HashMap<String, Object> getDatabaseData() {
-	final HashMap<String, Object> objects = new HashMap<String, Object>();
-	objects.put("id", this.id);
-	objects.put("characteristics", this.characteristics);
-	objects.put(
-		"deliveryPoint",
-		DatabaseController.getInstance().queryInsertUpdateSite(
-			this.deliveryPoint));
-	objects.put("district", this.area);
-	objects.put("length", this.length);
-	objects.put("natureOfSoil", this.natureOfSoil);
-	objects.put("type", this.type);
-	objects.put("width", this.width);
-	objects.put("xCoords", this.xCoords);
-	objects.put("yCoords", this.yCoords);
-	return objects;
-    }
-
-    @Override
-    public Site getDeliveryPoint() {
-	return deliveryPoint;
-    }
-
+    /**
+     * Returns the area.
+     * 
+     * @return the area
+     */
     @Override
     public String getArea() {
 	return area;
     }
 
+    /**
+     * Returns the characteristics.
+     * 
+     * @return the characteristics
+     */
+    @Override
+    public String getCharacteristics() {
+	return characteristics;
+    }
+
+    /**
+     * Returns the deliveryPoint.
+     * 
+     * @return the deliveryPoint
+     */
+    @Override
+    public Site getDeliveryPoint() {
+	return deliveryPoint;
+    }
+
+    /**
+     * Returns the id.
+     * 
+     * @return the id
+     */
     @Override
     public int getId() {
 	return id;
     }
 
+    /**
+     * Returns the length.
+     * 
+     * @return the length
+     */
     @Override
     public int getLength() {
 	return length;
     }
 
+    /**
+     * Returns the natureOfSoil.
+     * 
+     * @return the natureOfSoil
+     */
     @Override
     public String getNatureOfSoil() {
 	return natureOfSoil;
     }
 
-    @Override
-    public HashMap<String, Object> getTableData(final String parentClass) {
-	final HashMap<String, Object> objects = new HashMap<String, Object>();
-	final String className = parentClass + "pitch_";
-
-	objects.put(className + "id", new Integer(this.id));
-	objects.put(className + "characteristics", new String(this.characteristics));
-	objects.put(className + "district", new String(this.area));
-	objects.put(className + "length", new Integer(this.length));
-	objects.put(className + "natureOfSoil", new String(this.natureOfSoil));
-	objects.put(className + "type", new String(this.type));
-	objects.put(className + "width", new Integer(this.width));
-	objects.put(className + "xCoords", new String(this.xCoords));
-	objects.put(className + "yCoords", new String(this.yCoords));
-
-	objects.putAll(this.deliveryPoint.getTableData(className));
-
-	return objects;
-    }
-
+    /**
+     * Returns the type.
+     * 
+     * @return the type
+     */
     @Override
     public String getType() {
 	return type;
     }
 
+    /**
+     * Returns the width.
+     * 
+     * @return the width
+     */
     @Override
     public int getWidth() {
 	return width;
     }
 
-    public Pitch setDatabaseData(final HashMap<String, Object> objects) {
-	this.deliveryPoint = DatabaseController.getInstance().querySelectSite(
-		(int) objects.get("deliveryPoint"));
-	setData(objects);
-	return this;
+    /**
+     * Returns the xCoords.
+     * 
+     * @return the xCoords
+     */
+    @Override
+    public String getxCoords() {
+	return xCoords;
     }
 
-    public Pitch setTableData(final HashMap<String, Object> objects) {
-	final String className = "pitch_";
-	final int classNameLength = className.length();
-	final HashMap<String, Object> thisMap = new HashMap<String, Object>(), siteMap = new HashMap<String, Object>();
-
-	Object val;
-	final Set<String> keys = objects.keySet();
-	for (String key : keys) {
-	    val = objects.get(key);
-	    key = key.substring(classNameLength);
-	    if (key.startsWith("site_")) {
-		siteMap.put(key, val);
-	    } else {
-		thisMap.put(key, val);
-	    }
-	}
-	this.deliveryPoint = new Site().setTableData(siteMap);
-	setData(thisMap);
-	return this;
+    /**
+     * Returns the yCoords.
+     * 
+     * @return the yCoords
+     */
+    @Override
+    public String getyCoords() {
+	return yCoords;
     }
 
-    private void setData(final HashMap<String, Object> objects) {
-	this.id = (int) objects.get("id");
-	this.characteristics = (String) objects.get("characteristics");
-	this.area = (String) objects.get("district");
-	this.length = (int) objects.get("length");
-	this.natureOfSoil = (String) objects.get("natureOfSoil");
-	this.type = (String) objects.get("type");
-	this.width = (int) objects.get("width");
-	this.xCoords = (String) objects.get("xCoords");
-	this.yCoords = (String) objects.get("yCoords");
+    /**
+     * Sets the id.
+     * 
+     * @param id
+     *            the id to set
+     */
+    public void setId(final int id) {
+	this.id = id;
     }
 
-    private String characteristics;
-    private Site deliveryPoint;
-    private String area;
+    private final String area;
+    private final String characteristics;
+    private final Site deliveryPoint;
     private int id;
-    private int length;
-    // private final Pitch_NatureOfSoil natureOfSoil;
-    private String natureOfSoil;
-    // private final Pitch_Type type;
-    private String type;
-    private int width;
-    private String xCoords;
-    private String yCoords;
+    private final int length;
+    private final String natureOfSoil;
+    private final String type;
+    private final int width;
+    private final String xCoords;
+    private final String yCoords;
 }

@@ -1,9 +1,11 @@
 package de.dhbw.swe.camping_site_mgt.place_mgt;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Set;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
 
+@Deprecated
 public class SiteList {
     public SiteList() {
 	super();

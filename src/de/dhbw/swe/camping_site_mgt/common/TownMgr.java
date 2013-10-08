@@ -22,7 +22,6 @@ import java.util.HashMap;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseMgr;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
-import de.dhbw.swe.camping_site_mgt.person_mgt.PersonMgr;
 
 /**
  * The manager class for the {@link Town} objects.
@@ -58,60 +57,90 @@ public class TownMgr {
     }
 
     /**
-     * Gets the object from the object list.
+     * Gets the object.
      * 
      * @param id
      *            the {@link Town} object id
-     * @return the {@link Town}
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     * @return the {@link Town} object
      */
-    public Town get(final int id) {
-	if (towns.containsKey(id)) {
-	    return towns.get(id);
+    public Town objectGet(final int id, final String parentTableName,
+	    final int parentID) {
+	final Town object = get(id);
+	if (parentTableName != null) {
+	    object.addUsage(parentTableName, parentID);
 	}
-	return null;
+	return object;
     }
 
     /**
-     * Inserts object into database.
+     * Inserts the object in database.
      * 
      * @param object
      *            the {@link Town} object
      */
-    public void insert(final Town object) {
-	// If object already exists just save this id
-	insert(isObjectExisting(object), object);
+    public void objectInsert(final Town object) {
+	// Sub objects
+
+	// If object already exists just save that id
+	int id = isObjectExisting(object);
+	if (id == 0) {
+	    id = db.insertEntryInto(tableName, object2entry(object));
+	}
+
+	// Add or replace object in object list
+	add(id, object);
     }
 
     /**
-     * Removes object from object list.
      * 
-     * @param id
-     *            the {@link Town} object id
+     * Deletes the object.
+     * 
+     * @param object
+     *            the {@link Town} object
+     * @return true if it was successful
      */
     @Unfinished
-    public void remove(final int id) {
-	// towns.remove(id);
-	// TODO remove from database. Check if object is still in use (from
-	// parents)!!
+    public boolean objectRemove(final Town object) {
+	return false;
+	// // Sub objects
+	// final int id = object.getId();
+	//
+	// if (isObjectInUse(object)) {
+	// logger.error("Object is already in use!");
+	// return false;
+	// }
+	// db.removeEntryFrom(tableName, id);
+	// return remove(id);
     }
 
     /**
-     * Updates object in database.
+     * Updates the object.
      * 
-     * @param id
-     *            the {@link Town} object id
      * @param object
-     *            the {@link Town} object
+     *            the old {@link Town} object
+     * @param newObject
+     *            the new {@link Town} object
      */
-    public void update(final Town oldObject, final Town object) {
-	final int id = isObjectExisting(oldObject);
-	if (id == 0 || isObjectInUse(oldObject)) {
-	    // If object doesn't exists or if it's still in use insert a new one
-	    insert(object);
-	} else {
-	    add(id, object);
-	    db.updateEntryIn(tableName, object2entry(object));
+    public void objectUpdate(final Town object, final Town newObject) {
+	// Sub objects
+	int id = object.getId();
+
+	id = isObjectExisting(object);
+	if (id == 0 || isObjectInUse(object)) {
+	    // If object is in use or it doesn't exists a new one is needed
+	    objectInsert(newObject);
+	    return;
 	}
+	// TODO if newObject already exists the old object should be removed and
+	// the existing object should be used!
+
+	// Update object in object list and database
+	add(id, newObject);
+	db.updateEntryIn(tableName, object2entry(newObject));
     }
 
     /**
@@ -126,7 +155,7 @@ public class TownMgr {
     }
 
     /**
-     * Adds object to object list.
+     * Adds or updates the object to object list.
      * 
      * @param id
      *            the {@link Town} object id
@@ -152,28 +181,26 @@ public class TownMgr {
 	String postalCode;
 
 	id = (int) entry.get("id");
-	name = (String) entry.get("name");
 	postalCode = (String) entry.get("postalCode");
+	name = (String) entry.get("name");
 
 	object.put(id, new Town(id, name, postalCode));
 	return object;
     }
 
     /**
-     * Inserts object into database.
+     * Gets an object from the object list.
      * 
      * @param id
-     *            the id of the {@link Town} object
-     * @param object
-     *            the {@link Town} object
+     *            the {@link Town} object id
+     * @return the {@link Town} object
      */
-    private void insert(int id, final Town object) {
-	// TODO evtl. unnötige -> alles in "insert(Town object)"
-	if (id == 0) {
-	    id = db.insertEntryInto(tableName, object2entry(object));
+    private Town get(final int id) {
+	if (towns.containsKey(id)) {
+	    final Town object = towns.get(id);
+	    return object;
 	}
-	// Add or replace object in object list
-	add(id, object);
+	return null;
     }
 
     /**
@@ -181,7 +208,7 @@ public class TownMgr {
      * 
      * @param object
      *            the {@link Town} object
-     * @return id of the object (0 if it doesn't exists)
+     * @return the id of the {@link Town} object
      */
     private int isObjectExisting(final Town object) {
 	if (towns.containsValue(object)) {
@@ -198,9 +225,7 @@ public class TownMgr {
      * @return true if object is still in use
      */
     private boolean isObjectInUse(final Town object) {
-	// TODO -- -1 weil es momentan noch benutzt wird
-	// Ask all parent manager classes if they use the object
-	return PersonMgr.getInstance().isSubObjectInUse(object);
+	return object.isInUse();
     }
 
     /**
@@ -227,6 +252,22 @@ public class TownMgr {
 	entry.put("name", object.getName());
 	entry.put("postalCode", object.getPostalCode());
 	return entry;
+    }
+
+    /**
+     * Removes the object from the object list.
+     * 
+     * @param id
+     *            the {@link Town} object id
+     * @return true if it was successful
+     */
+    @Unfinished
+    private boolean remove(final int id) {
+	if (towns.containsKey(id)) {
+	    towns.remove(id);
+	    return true;
+	}
+	return false;
     }
 
     private final DatabaseMgr db;

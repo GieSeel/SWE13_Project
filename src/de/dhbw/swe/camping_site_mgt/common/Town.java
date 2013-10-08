@@ -21,6 +21,7 @@ public class Town {
 	this.id = id;
 	this.name = name;
 	this.postalCode = postalCode;
+	this.usage = new Usage();
     }
 
     /**
@@ -34,6 +35,30 @@ public class Town {
     }
 
     /**
+     * Adds entry to usage list.
+     * 
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     */
+    public void addUsage(final String parentTableName, final int parentID) {
+	usage.addUsage(parentTableName, parentID);
+    }
+
+    /**
+     * Deletes entry from usage list.
+     * 
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     */
+    public void delUsage(final String parentTableName, final int parentID) {
+	usage.delUsage(parentTableName, parentID);
+    }
+
+    /**
      * {@inheritDoc}.
      * 
      * @see java.lang.Object#equals(java.lang.Object)
@@ -44,6 +69,7 @@ public class Town {
 	if (this.name.equals(object.getName())
 		&& this.postalCode.equals(object.getPostalCode())) {
 	    setId(object.getId());
+	    setUsage(object.getUsage());
 	    return true;
 	}
 	return false;
@@ -77,6 +103,24 @@ public class Town {
     }
 
     /**
+     * Returns the usage.
+     * 
+     * @return the usage
+     */
+    public Usage getUsage() {
+	return usage;
+    }
+
+    /**
+     * Checks if the object is still in use.
+     * 
+     * @return true if it's still in use
+     */
+    public boolean isInUse() {
+	return usage.isInUse();
+    }
+
+    /**
      * Sets the id.
      * 
      * @param id
@@ -86,67 +130,19 @@ public class Town {
 	this.id = id;
     }
 
+    /**
+     * Sets the usage.
+     * 
+     * @param usage
+     *            the usage to set
+     */
+    public void setUsage(final Usage usage) {
+	this.usage = usage;
+    }
+
     private int id;
     private final String name;
     private final String postalCode;
 
-    // ############################################################
-    // public HashMap<String, Object> getDatabaseData() {
-    // final HashMap<String, Object> elements = new HashMap<String, Object>();
-    // elements.put("id", this.id);
-    // elements.put(
-    // "country_ID",
-    // DatabaseController.getInstance().queryInsertUpdateCountry(
-    // this.country));
-    // elements.put("name", this.name);
-    // elements.put("postalCode", this.postalCode);
-    // return elements;
-    // }
-    //
-    // public HashMap<String, Object> getTableData(final String parentClass) {
-    // final HashMap<String, Object> objects = new HashMap<String, Object>();
-    // final String className = parentClass + "town_";
-    // objects.put(className + "id", new Integer(this.id));
-    // objects.put(className + "postalCode", new String(this.postalCode));
-    // objects.put(className + "name", new String(this.name));
-    // objects.putAll(this.country.getTableData(className));
-    // return objects;
-    // }
-    //
-    // public Town setDatabaseData(final HashMap<String, Object> objects) {
-    // final DatabaseController db = DatabaseController.getInstance();
-    // this.country = db.querySelectCountry((int) objects.get("country_ID"));
-    // setData(objects);
-    // return this;
-    // }
-    //
-    // public Town setTableData(final HashMap<String, Object> objects) {
-    // final String className = "town_";
-    // final int classNameLength = className.length();
-    // final HashMap<String, Object> thisMap = new HashMap<String, Object>(),
-    // countryMap = new HashMap<String, Object>();
-    //
-    // Object val;
-    // final Set<String> keys = objects.keySet();
-    // for (String key : keys) {
-    // val = objects.get(key);
-    // key = key.substring(classNameLength);
-    // if (key.startsWith("country_")) {
-    // countryMap.put(key, val);
-    // } else {
-    // thisMap.put(key, val);
-    // }
-    // }
-    // this.country = new Country().setTableData(countryMap);
-    // setData(thisMap);
-    // return this;
-    // }
-    //
-    // private void setData(final HashMap<String, Object> objects) {
-    // this.id = (int) objects.get("id");
-    // this.name = (String) objects.get("name");
-    // this.postalCode = (String) objects.get("postalCode");
-    //
-    // }
-    // ############################################################
+    private Usage usage;
 }

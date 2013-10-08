@@ -1,113 +1,121 @@
 package de.dhbw.swe.camping_site_mgt.place_mgt;
 
-import java.util.*;
-
 public class Site {
+
+    /**
+     * Constructor.
+     * 
+     */
     public Site() {
-	super();
-	this.id = 0;
-	this.description = null;
-	this.labeling = null;
-	this.openingHours = null;
-	this.type = null;
+	this(null, null, null, null);
     }
 
+    /**
+     * Constructor.
+     * 
+     * @param id
+     * @param description
+     * @param labeling
+     * @param openingHours
+     * @param type
+     */
     public Site(final int id, final String description, final String labeling,
 	    final String openingHours, final String type) {
-	super();
-	this.id = id;
 	this.description = description;
+	this.id = id;
 	this.labeling = labeling;
 	this.openingHours = openingHours;
 	this.type = type;
     }
 
+    /**
+     * Constructor.
+     * 
+     * @param description
+     * @param labeling
+     * @param openingHours
+     * @param type
+     */
     public Site(final String description, final String labeling,
 	    final String openingHours, final String type) {
-	super();
-	this.id = 0;
-	this.description = description;
-	this.labeling = labeling;
-	this.openingHours = openingHours;
-	this.type = type;
+	this(0, description, labeling, openingHours, type);
     }
 
-    public HashMap<String, Object> getDatabaseData() {
-	final HashMap<String, Object> objects = new HashMap<String, Object>();
-	objects.put("id", this.id);
-	objects.put("description", this.description);
-	objects.put("labeling", this.labeling);
-	objects.put("openingHours", this.openingHours);
-	objects.put("type", this.type);
-	return objects;
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+	final Site object = (Site) obj;
+	if (this.description.equals(object.getDescription())
+		&& this.labeling.equals(object.getLabeling())
+		&& this.openingHours.equals(object.getOpeningHours())
+		&& this.type.equals(object.getType())) {
+	    return true;
+	}
+	return false;
     }
 
+    /**
+     * Returns the description.
+     * 
+     * @return the description
+     */
     public String getDescription() {
 	return description;
     }
 
+    /**
+     * Returns the id.
+     * 
+     * @return the id
+     */
     public int getId() {
 	return id;
     }
 
+    /**
+     * Returns the labeling.
+     * 
+     * @return the labeling
+     */
     public String getLabeling() {
 	return labeling;
     }
 
+    /**
+     * Returns the openingHours.
+     * 
+     * @return the openingHours
+     */
     public String getOpeningHours() {
 	return openingHours;
     }
 
-    public HashMap<String, Object> getTableData(final String parentClass) {
-	final HashMap<String, Object> objects = new HashMap<String, Object>();
-	final String className = parentClass + "site_";
-
-	objects.put(className + "id", new Integer(this.id));
-	objects.put(className + "description", new String(this.description));
-	objects.put(className + "labeling", new String(this.labeling));
-	objects.put(className + "openingHours", new String(this.openingHours));
-	objects.put(className + "type", new String(this.type));
-
-	return objects;
-    }
-
+    /**
+     * Returns the type.
+     * 
+     * @return the type
+     */
     public String getType() {
 	return type;
     }
 
-    public Site setDatabaseData(final HashMap<String, Object> objects) {
-	setData(objects);
-	return this;
+    /**
+     * Sets the id.
+     * 
+     * @param id
+     *            the id to set
+     */
+    public void setId(final int id) {
+	this.id = id;
     }
 
-    public Site setTableData(final HashMap<String, Object> objects) {
-	final String className = "site_";
-	final int classNameLength = className.length();
-	final HashMap<String, Object> thisMap = new HashMap<String, Object>();
-
-	Object val;
-	final Set<String> keys = objects.keySet();
-	for (String key : keys) {
-	    val = objects.get(key);
-	    key = key.substring(classNameLength);
-	    thisMap.put(key, val);
-	}
-	setData(thisMap);
-	return this;
-    }
-
-    private void setData(final HashMap<String, Object> objects) {
-	this.id = (int) objects.get("id");
-	this.description = (String) objects.get("description");
-	this.labeling = (String) objects.get("labeling");
-	this.openingHours = (String) objects.get("openingHours");
-	this.type = (String) objects.get("type");
-    }
-
-    private String description;
+    private final String description;
     private int id;
-    private String labeling;
-    private String openingHours;
-    // private final Site_Type type;
-    private String type;
+    private final String labeling;
+    private final String openingHours;
+    private final String type;
 }

@@ -2,8 +2,7 @@ package de.dhbw.swe.camping_site_mgt.person_mgt;
 
 import java.util.Date;
 
-import de.dhbw.swe.camping_site_mgt.common.Country;
-import de.dhbw.swe.camping_site_mgt.common.Town;
+import de.dhbw.swe.camping_site_mgt.common.*;
 
 public class Person {
 
@@ -61,6 +60,31 @@ public class Person {
 	this.name = name;
 	this.street = street;
 	this.town = town;
+	this.usage = new Usage();
+    }
+
+    /**
+     * Adds entry to usage list.
+     * 
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     */
+    public void addUsage(final String parentTableName, final int parentID) {
+	usage.addUsage(parentTableName, parentID);
+    }
+
+    /**
+     * Deletes entry from usage list.
+     * 
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     */
+    public void delUsage(final String parentTableName, final int parentID) {
+	usage.delUsage(parentTableName, parentID);
     }
 
     /**
@@ -80,6 +104,7 @@ public class Person {
 		&& this.street.equals(object.getStreet())
 		&& this.town.equals(object.getTown())) {
 	    setId(object.getId());
+	    setUsage(object.getUsage());
 	    return true;
 	}
 	return false;
@@ -167,6 +192,24 @@ public class Person {
     }
 
     /**
+     * Returns the usage.
+     * 
+     * @return the usage
+     */
+    public Usage getUsage() {
+	return usage;
+    }
+
+    /**
+     * Checks if the object is still in use.
+     * 
+     * @return true if it's still in use
+     */
+    public boolean isInUse() {
+	return usage.isInUse();
+    }
+
+    /**
      * Sets the id.
      * 
      * @param id
@@ -174,6 +217,16 @@ public class Person {
      */
     public void setId(final int id) {
 	this.id = id;
+    }
+
+    /**
+     * Sets the usage.
+     * 
+     * @param usage
+     *            the usage to set
+     */
+    public void setUsage(final Usage usage) {
+	this.usage = usage;
     }
 
     private final Country country;
@@ -185,4 +238,6 @@ public class Person {
     private final String name;
     private final String street;
     private final Town town;
+
+    private Usage usage;
 }

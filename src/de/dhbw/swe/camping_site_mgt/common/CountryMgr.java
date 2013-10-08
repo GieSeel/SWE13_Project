@@ -22,7 +22,6 @@ import java.util.HashMap;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseMgr;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
-import de.dhbw.swe.camping_site_mgt.person_mgt.PersonMgr;
 
 /**
  * The manager class for the {@link Country} objects.
@@ -58,60 +57,90 @@ public class CountryMgr {
     }
 
     /**
-     * Gets the object from the object list.
+     * Gets the object.
      * 
      * @param id
      *            the {@link Country} object id
-     * @return the {@link Country}
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     * @return the {@link Country} object
      */
-    public Country get(final int id) {
-	if (countries.containsKey(id)) {
-	    return countries.get(id);
+    public Country objectGet(final int id, final String parentTableName,
+	    final int parentID) {
+	final Country object = get(id);
+	if (parentTableName != null) {
+	    object.addUsage(parentTableName, parentID);
 	}
-	return null;
+	return object;
     }
 
     /**
-     * Inserts object into database.
+     * Inserts the object in database.
      * 
      * @param object
      *            the {@link Country} object
      */
-    public void insert(final Country object) {
-	// If object already exists just save this id
-	insert(isObjectExisting(object), object);
+    public void objectInsert(final Country object) {
+	// Sub objects
+
+	// If object already exists just save that id
+	int id = isObjectExisting(object);
+	if (id == 0) {
+	    id = db.insertEntryInto(tableName, object2entry(object));
+	}
+
+	// Add or replace object in object list
+	add(id, object);
     }
 
     /**
-     * Removes object from object list.
      * 
-     * @param id
-     *            the {@link Country} object id
+     * Deletes the object.
+     * 
+     * @param object
+     *            the {@link Country} object
+     * @return true if it was successful
      */
     @Unfinished
-    public void remove(final int id) {
-	// countries.remove(id);
-	// TODO remove from database. Check if object is still in use (from
-	// parents)!!
+    public boolean objectRemove(final Country object) {
+	return false;
+	// // Sub objects
+	// final int id = object.getId();
+	//
+	// if (isObjectInUse(object)) {
+	// logger.error("Object is already in use!");
+	// return false;
+	// }
+	// db.removeEntryFrom(tableName, id);
+	// return remove(id);
     }
 
     /**
-     * Updates object in database.
+     * Updates the object.
      * 
-     * @param id
-     *            the {@link Country} object id
      * @param object
-     *            the {@link Country} object
+     *            the old {@link Country} object
+     * @param newObject
+     *            the new {@link Country} object
      */
-    public void update(final Country oldObject, final Country object) {
-	final int id = isObjectExisting(oldObject);
-	if (id == 0 || isObjectInUse(oldObject)) {
-	    // If object doesn't exists or if it's still in use insert a new one
-	    insert(object);
-	} else {
-	    add(id, object);
-	    db.updateEntryIn(tableName, object2entry(object));
+    public void objectUpdate(final Country object, final Country newObject) {
+	// Sub objects
+	int id = object.getId();
+
+	id = isObjectExisting(object);
+	if (id == 0 || isObjectInUse(object)) {
+	    // If object is in use or it doesn't exists a new one is needed
+	    objectInsert(newObject);
+	    return;
 	}
+	// TODO if newObject already exists the old object should be removed and
+	// the existing object should be used!
+
+	// Update object in object list and database
+	add(id, newObject);
+	db.updateEntryIn(tableName, object2entry(newObject));
     }
 
     /**
@@ -126,7 +155,7 @@ public class CountryMgr {
     }
 
     /**
-     * Adds object to object list.
+     * Adds or updates the object to object list.
      * 
      * @param id
      *            the {@link Country} object id
@@ -161,20 +190,18 @@ public class CountryMgr {
     }
 
     /**
-     * Inserts object into database.
+     * Gets an object from the object list.
      * 
      * @param id
-     *            the id of the {@link Country} object
-     * @param object
-     *            the {@link Country} object
+     *            the {@link Country} object id
+     * @return the {@link Country} object
      */
-    private void insert(int id, final Country object) {
-	// TODO evtl. unnötige -> alles in "insert(Town object)"
-	if (id == 0) {
-	    id = db.insertEntryInto(tableName, object2entry(object));
+    private Country get(final int id) {
+	if (countries.containsKey(id)) {
+	    final Country object = countries.get(id);
+	    return object;
 	}
-	// Add or replace object in object list
-	add(id, object);
+	return null;
     }
 
     /**
@@ -182,7 +209,7 @@ public class CountryMgr {
      * 
      * @param object
      *            the {@link Country} object
-     * @return id of the object (0 if it doesn't exists)
+     * @return the id of the {@link Country} object
      */
     private int isObjectExisting(final Country object) {
 	if (countries.containsValue(object)) {
@@ -199,9 +226,7 @@ public class CountryMgr {
      * @return true if object is still in use
      */
     private boolean isObjectInUse(final Country object) {
-	// TODO -- -1 weil es momentan noch benutzt wird
-	// Ask all parent manager classes if they use the object
-	return PersonMgr.getInstance().isSubObjectInUse(object);
+	return object.isInUse();
     }
 
     /**
@@ -228,6 +253,22 @@ public class CountryMgr {
 	entry.put("acronym", object.getAcronym());
 	entry.put("name", object.getName());
 	return entry;
+    }
+
+    /**
+     * Removes the object from the object list.
+     * 
+     * @param id
+     *            the {@link Country} object id
+     * @return true if it was successful
+     */
+    @Unfinished
+    private boolean remove(final int id) {
+	if (countries.containsKey(id)) {
+	    countries.remove(id);
+	    return true;
+	}
+	return false;
     }
 
     private final HashMap<Integer, Country> countries;

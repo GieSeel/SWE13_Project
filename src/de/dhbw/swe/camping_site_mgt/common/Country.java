@@ -27,6 +27,7 @@ public class Country {
 	this.id = id;
 	this.acronym = acronym;
 	this.name = name;
+	this.usage = new Usage();
     }
 
     /**
@@ -40,6 +41,30 @@ public class Country {
     }
 
     /**
+     * Adds entry to usage list.
+     * 
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     */
+    public void addUsage(final String parentTableName, final int parentID) {
+	usage.addUsage(parentTableName, parentID);
+    }
+
+    /**
+     * Deletes entry from usage list.
+     * 
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     */
+    public void delUsage(final String parentTableName, final int parentID) {
+	usage.delUsage(parentTableName, parentID);
+    }
+
+    /**
      * {@inheritDoc}.
      * 
      * @see java.lang.Object#equals(java.lang.Object)
@@ -50,6 +75,7 @@ public class Country {
 	if (this.acronym.equals(object.getAcronym())
 		&& this.name.equals(object.getName())) {
 	    setId(object.getId());
+	    setUsage(object.getUsage());
 	    return true;
 	}
 	return false;
@@ -83,6 +109,24 @@ public class Country {
     }
 
     /**
+     * Returns the usage.
+     * 
+     * @return the usage
+     */
+    public Usage getUsage() {
+	return usage;
+    }
+
+    /**
+     * Checks if the object is still in use.
+     * 
+     * @return true if it's still in use
+     */
+    public boolean isInUse() {
+	return usage.isInUse();
+    }
+
+    /**
      * Sets the id.
      * 
      * @param id
@@ -92,51 +136,18 @@ public class Country {
 	this.id = id;
     }
 
+    /**
+     * Sets the usage.
+     * 
+     * @param usage
+     *            the usage to set
+     */
+    public void setUsage(final Usage usage) {
+	this.usage = usage;
+    }
+
     private final String acronym;
     private int id;
     private final String name;
-
-    // public HashMap<String, Object> getDatabaseData() {
-    // final HashMap<String, Object> elements = new HashMap<String, Object>();
-    // elements.put("id", this.id);
-    // elements.put("acronym", this.acronym);
-    // elements.put("name", this.name);
-    // return elements;
-    // }
-    //
-    // public HashMap<String, Object> getTableData(final String parentClass) {
-    // final HashMap<String, Object> objects = new HashMap<String, Object>();
-    // final String className = parentClass + "country_";
-    // objects.put(className + "id", new Integer(this.id));
-    // objects.put(className + "name", new String(this.name));
-    // objects.put(className + "acronym", new String(this.acronym));
-    // return objects;
-    // }
-    //
-    // public Country setDatabaseData(final HashMap<String, Object> objects) {
-    // setData(objects);
-    // return this;
-    // }
-    //
-    // public Country setTableData(final HashMap<String, Object> objects) {
-    // final String className = "country_";
-    // final int classNameLength = className.length();
-    // final HashMap<String, Object> thisMap = new HashMap<String, Object>();
-    //
-    // Object val;
-    // final Set<String> keys = objects.keySet();
-    // for (String key : keys) {
-    // val = objects.get(key);
-    // key = key.substring(classNameLength);
-    // thisMap.put(key, val);
-    // }
-    // setData(thisMap);
-    // return this;
-    // }
-    //
-    // private void setData(final HashMap<String, Object> objects) {
-    // this.id = (int) objects.get("id");
-    // this.acronym = (String) objects.get("acronym");
-    // this.name = (String) objects.get("name");
-    // }
+    private Usage usage;
 }

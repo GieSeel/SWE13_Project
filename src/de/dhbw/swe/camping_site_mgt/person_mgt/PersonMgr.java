@@ -18,7 +18,8 @@
  */
 package de.dhbw.swe.camping_site_mgt.person_mgt;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
 
 import de.dhbw.swe.camping_site_mgt.common.*;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseMgr;
@@ -58,102 +59,106 @@ public class PersonMgr {
     }
 
     /**
-     * Gets the object from the object list.
+     * Gets the object.
      * 
      * @param id
      *            the {@link Person} object id
-     * @return the {@link Person}
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     * @return the {@link Person} object
      */
-    public Person get(final int id) {
-	if (persons.containsKey(id)) {
-	    return persons.get(id);
+    public Person objectGet(final int id, final String parentTableName,
+	    final int parentID) {
+	final Person object = get(id);
+	if (parentTableName != null) {
+	    object.addUsage(parentTableName, parentID);
 	}
-	return null;
+	return object;
     }
 
     /**
-     * Inserts object into database.
+     * Inserts the object in database.
      * 
      * @param object
      *            the {@link Person} object
      */
-    public void insert(final Person object) {
+    public void objectInsert(final Person object) {
 	// Sub objects
-	CountryMgr.getInstance().insert(object.getCountry());
-	TownMgr.getInstance().insert(object.getTown());
+	CountryMgr.getInstance().objectInsert(object.getCountry());
+	TownMgr.getInstance().objectInsert(object.getTown());
 
-	// If object already exists just save this id
-	insert(isObjectExisting(object), object);
+	// If object already exists just save that id
+	int id = isObjectExisting(object);
+	if (id == 0) {
+	    id = db.insertEntryInto(tableName, object2entry(object));
+	}
+
+	// Add or replace object in object list
+	add(id, object);
     }
 
     /**
-     * Checks if the object is used by any {@link Person} object.
+     * 
+     * Deletes the object.
      * 
      * @param object
-     *            the {@link Country} object
-     * @return true if object is still in use
-     */
-    public boolean isSubObjectInUse(final Country object) {
-	final List<Country> countries = new Vector<>();
-
-	for (final Person person : persons.values()) {
-	    countries.add(person.getCountry());
-	}
-	return countries.contains(object);
-    }
-
-    /**
-     * Checks if the object is used by any {@link Person} object.
-     * 
-     * @param country
-     *            the {@link Town} object
-     * @return true if object is still in use
-     */
-    public boolean isSubObjectInUse(final Town object) {
-	final List<Town> towns = new Vector<>();
-
-	for (final Person person : persons.values()) {
-	    towns.add(person.getTown());
-	}
-	return towns.contains(object);
-    }
-
-    /**
-     * Removes object from object list.
-     * 
-     * @param id
-     *            the {@link Person} object id
+     *            the {@link Person} object
+     * @return true if it was successful
      */
     @Unfinished
-    public void remove(final int id) {
-	// Sub objects
-
-	// persons.remove(id);
-	// TODO remove from database. Check if object is still in use (from
-	// parents)!!
+    public boolean objectRemove(final Person object) {
+	return false;
+	// // Sub objects
+	// final int id = object.getId();
+	//
+	// object.getCountry().delUsage(tableName, id);
+	// object.getTown().delUsage(tableName, id);
+	//
+	// CountryMgr.getInstance().objectRemove(object.getCountry());
+	// TownMgr.getInstance().objectRemove(object.getTown());
+	//
+	// if (isObjectInUse(object)) {
+	// logger.error("Object is already in use!");
+	// return false;
+	// }
+	// db.removeEntryFrom(tableName, id);
+	// return remove(id);
     }
 
     /**
-     * Updates object in database.
+     * Updates the object.
      * 
-     * @param id
-     *            the {@link Person} object id
      * @param object
-     *            the {@link Person} object
+     *            the old {@link Person} object
+     * @param newObject
+     *            the new {@link Person} object
      */
-    public void update(final Person oldObject, final Person object) {
+    public void objectUpdate(final Person object, final Person newObject) {
 	// Sub objects
-	CountryMgr.getInstance().update(oldObject.getCountry(), object.getCountry());
-	TownMgr.getInstance().update(oldObject.getTown(), object.getTown());
+	int id = object.getId();
 
-	final int id = isObjectExisting(oldObject);
-	if (id == 0) {// || isObjectInUse(oldObject)) { // Person immer update
-	    // If object doesn't exists or if it's still in use insert a new one
-	    insert(object);
-	} else {
-	    add(id, object);
-	    db.updateEntryIn(tableName, object2entry(object));
+	object.getCountry().delUsage(tableName, id);
+	object.getTown().delUsage(tableName, id);
+
+	CountryMgr.getInstance().objectUpdate(object.getCountry(),
+		newObject.getCountry());
+	TownMgr.getInstance().objectUpdate(object.getTown(), newObject.getTown());
+
+	// Update object
+	id = isObjectExisting(object);
+	if (id == 0) { // TODO || isObjectInUse(object)) {
+	    // If object is in use or it doesn't exists a new one is needed
+	    objectInsert(newObject);
+	    return;
 	}
+	// TODO if newObject already exists the old object should be removed and
+	// the existing object should be used!
+
+	// Update object in object list and database
+	add(id, newObject);
+	db.updateEntryIn(tableName, object2entry(newObject));
     }
 
     /**
@@ -168,7 +173,7 @@ public class PersonMgr {
     }
 
     /**
-     * Adds object to object list.
+     * Adds or updates the object to object list.
      * 
      * @param id
      *            the {@link Person} object id
@@ -176,6 +181,8 @@ public class PersonMgr {
      *            the {@link Person} object
      */
     private void add(final int id, final Person object) {
+	object.getCountry().addUsage(tableName, id);
+	object.getTown().addUsage(tableName, id);
 	object.setId(id);
 	persons.put(id, object);
     }
@@ -190,7 +197,6 @@ public class PersonMgr {
     private HashMap<Integer, Person> entry2object(
 	    final HashMap<String, Object> entry) {
 	final HashMap<Integer, Person> object = new HashMap<>();
-
 	int id;
 	Country country;
 	Date dateOfBirth;
@@ -202,14 +208,16 @@ public class PersonMgr {
 	Town town;
 
 	id = (int) entry.get("id");
-	country = CountryMgr.getInstance().get((int) entry.get("country"));
+	country = CountryMgr.getInstance().objectGet((int) entry.get("country"),
+		tableName, id);
 	dateOfBirth = (Date) entry.get("dateOfBirth");
 	firstName = (String) entry.get("firstName");
 	houseNumber = (String) entry.get("houseNumber");
 	identificationNumber = (String) entry.get("identificationNumber");
 	name = (String) entry.get("name");
 	street = (String) entry.get("street");
-	town = TownMgr.getInstance().get((int) entry.get("town"));
+	town = TownMgr.getInstance().objectGet((int) entry.get("town"), tableName,
+		id);
 
 	object.put(id, new Person(id, country, dateOfBirth, firstName, houseNumber,
 		identificationNumber, name, street, town));
@@ -217,20 +225,18 @@ public class PersonMgr {
     }
 
     /**
-     * Inserts object into database.
+     * Gets an object from the object list.
      * 
      * @param id
-     *            the id of the {@link Person} object
-     * @param object
-     *            the {@link Person} object
+     *            the {@link Person} object id
+     * @return the {@link Person} object
      */
-    private void insert(int id, final Person object) {
-	// TODO evtl. unnötige -> alles in "insert(Town object)"
-	if (id == 0) {
-	    id = db.insertEntryInto(tableName, object2entry(object));
+    private Person get(final int id) {
+	if (persons.containsKey(id)) {
+	    final Person object = persons.get(id);
+	    return object;
 	}
-	// Add or replace object in object list
-	add(id, object);
+	return null;
     }
 
     /**
@@ -238,7 +244,7 @@ public class PersonMgr {
      * 
      * @param object
      *            the {@link Person} object
-     * @return id of the object (0 if it doesn't exists)
+     * @return the id of the {@link Person} object
      */
     private int isObjectExisting(final Person object) {
 	if (persons.containsValue(object)) {
@@ -254,14 +260,8 @@ public class PersonMgr {
      *            the {@link Person} object
      * @return true if object is still in use
      */
-    @Unfinished
     private boolean isObjectInUse(final Person object) {
-	// TODO -- -1 weil es momentan noch benutzt wird
-	// Ask all parent manager classes if they use the object
-	if (GuestMgr.getInstance().isSubObjectInUse(object)) {
-	    return true;
-	}
-	return EmployeeMgr.getInstance().isSubObjectInUse(object);
+	return object.isInUse();
     }
 
     /**
@@ -294,6 +294,22 @@ public class PersonMgr {
 	entry.put("street", object.getStreet());
 	entry.put("town", object.getTown().getId());
 	return entry;
+    }
+
+    /**
+     * Removes the object from the object list.
+     * 
+     * @param id
+     *            the {@link Person} object id
+     * @return true if it was successful
+     */
+    @Unfinished
+    private boolean remove(final int id) {
+	if (persons.containsKey(id)) {
+	    persons.remove(id);
+	    return true;
+	}
+	return false;
     }
 
     private final DatabaseMgr db;
