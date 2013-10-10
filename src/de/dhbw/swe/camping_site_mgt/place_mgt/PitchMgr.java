@@ -92,9 +92,9 @@ public class PitchMgr {
     public boolean objectRemove(final Pitch object) {
 	// Sub objects
 	final int id = object.getId();
-	object.getDeliveryPoint().delUsage(tableName, id);
-
-	SiteMgr.getInstance().objectRemove(object.getDeliveryPoint());
+	final Site site = object.getDeliveryPoint();
+	site.delUsage(tableName, id);
+	SiteMgr.getInstance().objectRemove(site);
 
 	if (isObjectInUse(object)) {
 	    logger.error("Object is already in use!");
@@ -115,11 +115,9 @@ public class PitchMgr {
     public void objectUpdate(final Pitch object, final Pitch newObject) {
 	// Sub objects
 	int id = object.getId();
-
-	object.getDeliveryPoint().delUsage(tableName, id);
-
-	SiteMgr.getInstance().objectUpdate(object.getDeliveryPoint(),
-		newObject.getDeliveryPoint());
+	final Site site = object.getDeliveryPoint();
+	site.delUsage(tableName, id);
+	SiteMgr.getInstance().objectUpdate(site, newObject.getDeliveryPoint());
 
 	// Update object
 	id = isObjectExisting(object);

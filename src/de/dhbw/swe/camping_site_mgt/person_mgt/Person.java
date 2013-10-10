@@ -238,6 +238,5 @@ public class Person {
     private final String name;
     private final String street;
     private final Town town;
-
     private Usage usage;
 }

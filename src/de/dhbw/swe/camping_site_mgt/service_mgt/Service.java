@@ -2,6 +2,7 @@ package de.dhbw.swe.camping_site_mgt.service_mgt;
 
 import java.util.Date;
 
+import de.dhbw.swe.camping_site_mgt.common.Usage;
 import de.dhbw.swe.camping_site_mgt.person_mgt.EmployeeRole;
 import de.dhbw.swe.camping_site_mgt.place_mgt.Pitch;
 import de.dhbw.swe.camping_site_mgt.place_mgt.Site;
@@ -63,6 +64,31 @@ public class Service {
 	this.priority = priority;
 	this.serviceNumber = serviceNumber;
 	this.site = site;
+	this.usage = new Usage();
+    }
+
+    /**
+     * Adds entry to usage list.
+     * 
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     */
+    public void addUsage(final String parentTableName, final int parentID) {
+	usage.addUsage(parentTableName, parentID);
+    }
+
+    /**
+     * Deletes entry from usage list.
+     * 
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     */
+    public void delUsage(final String parentTableName, final int parentID) {
+	usage.delUsage(parentTableName, parentID);
     }
 
     /**
@@ -147,6 +173,24 @@ public class Service {
     }
 
     /**
+     * Returns the usage.
+     * 
+     * @return the usage
+     */
+    public Usage getUsage() {
+	return usage;
+    }
+
+    /**
+     * Checks if the object is still in use.
+     * 
+     * @return true if it's still in use
+     */
+    public boolean isInUse() {
+	return usage.isInUse();
+    }
+
+    /**
      * Sets the id.
      * 
      * @param id
@@ -154,6 +198,16 @@ public class Service {
      */
     public void setId(final int id) {
 	this.id = id;
+    }
+
+    /**
+     * Sets the usage.
+     * 
+     * @param usage
+     *            the usage to set
+     */
+    public void setUsage(final Usage usage) {
+	this.usage = usage;
     }
 
     private final Date creationDate;
@@ -165,4 +219,5 @@ public class Service {
     private final int priority;
     private final int serviceNumber;
     private final Site site;
+    private Usage usage;
 }

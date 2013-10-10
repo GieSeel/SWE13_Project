@@ -1,6 +1,7 @@
 package de.dhbw.swe.camping_site_mgt.service_mgt;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
 
 import de.dhbw.swe.camping_site_mgt.common.Unfinished;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseMgr;
@@ -36,117 +37,123 @@ public class ServiceMgr {
      */
     private ServiceMgr() {
 	services = new HashMap<>();
-	tableName = "visitorsTaxClass";
+	tableName = "service";
 	logger = CampingLogger.getLogger(this.getClass());
 	db = DatabaseMgr.getInstance();
 	load(); // Load all data from database
     }
 
     /**
-     * Gets the object from the object list.
+     * Gets the object.
      * 
      * @param id
      *            the {@link Service} object id
-     * @return the {@link Service}
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     * @return the {@link Service} object
      */
-    public Service get(final int id) {
-	if (services.containsKey(id)) {
-	    return services.get(id);
+    public Service objectGet(final int id, final String parentTableName,
+	    final int parentID) {
+	final Service object = get(id);
+	if (parentTableName != null) {
+	    object.addUsage(parentTableName, parentID);
 	}
-	return null;
+	return object;
     }
 
     /**
-     * Inserts object into database.
+     * Inserts the object in database.
      * 
      * @param object
      *            the {@link Service} object
      */
-    public void insert(final Service object) {
-	// If object already exists just save this id
-	insert(isObjectExisting(object), object);
+    public void objectInsert(final Service object) {
+	// Sub objects
+	EmployeeRoleMgr.getInstance().objectInsert(object.getEmployeeRole());
+	PitchMgr.getInstance().objectInsert(object.getPitch());
+	SiteMgr.getInstance().objectInsert(object.getSite());
+
+	// If object already exists just save that id
+	int id = isObjectExisting(object);
+	if (id == 0) {
+	    id = db.insertEntryInto(tableName, object2entry(object));
+	}
+
+	// Add or replace object in object list
+	add(id, object);
     }
 
     /**
-     * Checks if the object is used by any {@link Service} object.
+     * 
+     * Deletes the object.
      * 
      * @param object
-     *            the {@link EmployeeRole} object
-     * @return true if object is still in use
-     */
-    public boolean isSubObjectInUse(final EmployeeRole object) {
-	final List<EmployeeRole> employeeRoles = new Vector<>();
-
-	for (final Service service : services.values()) {
-	    employeeRoles.add(service.getEmployeeRole());
-	}
-	return employeeRoles.contains(object);
-    }
-
-    /**
-     * Checks if the object is used by any {@link Service} object.
-     * 
-     * @param object
-     *            the {@link Pitch} object
-     * @return true if object is still in use
-     */
-    public boolean isSubObjectInUse(final Pitch object) {
-	final List<Pitch> pitches = new Vector<>();
-
-	for (final Service service : services.values()) {
-	    pitches.add(service.getPitch());
-	}
-	return pitches.contains(object);
-    }
-
-    /**
-     * Checks if the object is used by any {@link Service} object.
-     * 
-     * @param object
-     *            the {@link Site} object
-     * @return true if object is still in use
-     */
-    public boolean isSubObjectInUse(final Site object) {
-	final List<Site> sites = new Vector<>();
-
-	for (final Service service : services.values()) {
-	    sites.add(service.getSite());
-	}
-	return sites.contains(object);
-    }
-
-    /**
-     * Removes object from object list.
-     * 
-     * @param id
-     *            the {@link Service} object id
+     *            the {@link Service} object
+     * @return true if it was successful
      */
     @Unfinished
-    public void remove(final int id) {
+    public boolean objectRemove(final Service object) {
 	// Sub objects
+	final int id = object.getId();
+	final EmployeeRole employeeRole = object.getEmployeeRole();
+	final Pitch pitch = object.getPitch();
+	final Site site = object.getSite();
+	employeeRole.delUsage(tableName, id);
+	pitch.delUsage(tableName, id);
+	site.delUsage(tableName, id);
+	EmployeeRoleMgr.getInstance().objectRemove(employeeRole);
+	PitchMgr.getInstance().objectRemove(pitch);
+	SiteMgr.getInstance().objectRemove(site);
 
-	// service.remove(id);
-	// TODO remove from database. Check if object is still in use (from
-	// parents)!!
+	if (isObjectInUse(object)) {
+	    logger.error("Object is already in use!");
+	    return false;
+	}
+	db.removeEntryFrom(tableName, object2entry(object));
+	return remove(id);
     }
 
     /**
-     * Updates object in database.
+     * Updates the object.
      * 
-     * @param id
-     *            the {@link Service} object id
      * @param object
-     *            the {@link Service} object
+     *            the old {@link Service} object
+     * @param newObject
+     *            the new {@link Service} object
      */
-    public void update(final Service oldObject, final Service object) {
-	final int id = isObjectExisting(oldObject);
-	if (id == 0) { // || isObjectInUse(oldObject)) { // Service immer
-		       // update
-	    // If object doesn't exists or if it's still in use insert a new one
-	    insert(object);
+    public void objectUpdate(final Service object, final Service newObject) {
+	// Sub objects
+	int id = object.getId();
+	final EmployeeRole employeeRole = object.getEmployeeRole();
+	final Pitch pitch = object.getPitch();
+	final Site site = object.getSite();
+	employeeRole.delUsage(tableName, id);
+	pitch.delUsage(tableName, id);
+	site.delUsage(tableName, id);
+	EmployeeRoleMgr.getInstance().objectUpdate(employeeRole,
+		newObject.getEmployeeRole());
+	PitchMgr.getInstance().objectUpdate(pitch, newObject.getPitch());
+	SiteMgr.getInstance().objectUpdate(site, newObject.getSite());
+
+	// Update object
+	id = isObjectExisting(object);
+	if (id == 0) { // TODO || isObjectInUse(object)) {
+	    // If object is in use or it doesn't exists a new one is needed
+	    objectInsert(newObject);
+	    return;
+	}
+	// If newObject already exists the old object will be removed and
+	// the existing object will be used!
+	final int newID = isObjectExisting(newObject);
+	if (newID != 0) {
+	    objectRemove(object);
+	    add(newID, newObject);
 	} else {
-	    add(id, object);
-	    db.updateEntryIn(tableName, object2entry(object));
+	    // Update object in object list and database
+	    add(id, newObject);
+	    db.updateEntryIn(tableName, object2entry(newObject));
 	}
     }
 
@@ -162,7 +169,7 @@ public class ServiceMgr {
     }
 
     /**
-     * Adds object to object list.
+     * Adds or updates the object to object list.
      * 
      * @param id
      *            the {@link Service} object id
@@ -170,6 +177,9 @@ public class ServiceMgr {
      *            the {@link Service} object
      */
     private void add(final int id, final Service object) {
+	object.getEmployeeRole().addUsage(tableName, id);
+	object.getPitch().addUsage(tableName, id);
+	object.getSite().addUsage(tableName, id);
 	object.setId(id);
 	services.put(id, object);
     }
@@ -184,7 +194,6 @@ public class ServiceMgr {
     private HashMap<Integer, Service> entry2object(
 	    final HashMap<String, Object> entry) {
 	final HashMap<Integer, Service> object = new HashMap<>();
-
 	int id;
 	Date creationDate;
 	String description;
@@ -199,13 +208,14 @@ public class ServiceMgr {
 	creationDate = (Date) entry.get("creationDate");
 	description = (String) entry.get("description");
 	doneDate = (Date) entry.get("doneDate");
-	employeeRole = EmployeeRoleMgr.getInstance().get(
-		(int) entry.get("employeeRole"));
-	pitch = PitchMgr.getInstance().get(
-		(int) entry.get((int) entry.get("pitch")));
+	employeeRole = EmployeeRoleMgr.getInstance().objectGet(
+		(int) entry.get("employeeRole"), tableName, id);
+	pitch = PitchMgr.getInstance().objectGet((int) entry.get("pitch"),
+		tableName, id);
 	priority = (int) entry.get("priority");
 	serviceNumber = (int) entry.get("serviceNumber");
-	site = SiteMgr.getInstance().get((int) entry.get((int) entry.get("site")));
+	site = SiteMgr.getInstance().objectGet((int) entry.get("site"), tableName,
+		id);
 
 	object.put(id, new Service(id, creationDate, description, doneDate,
 		employeeRole, pitch, priority, serviceNumber, site));
@@ -213,20 +223,18 @@ public class ServiceMgr {
     }
 
     /**
-     * Inserts object into database.
+     * Gets an object from the object list.
      * 
      * @param id
-     *            the id of the {@link Service} object
-     * @param object
-     *            the {@link Service} object
+     *            the {@link Service} object id
+     * @return the {@link Service} object
      */
-    private void insert(int id, final Service object) {
-	// TODO evtl. unnötige -> alles in "insert(Town object)"
-	if (id == 0) {
-	    id = db.insertEntryInto(tableName, object2entry(object));
+    private Service get(final int id) {
+	if (services.containsKey(id)) {
+	    final Service object = services.get(id);
+	    return object;
 	}
-	// Add or replace object in object list
-	add(id, object);
+	return null;
     }
 
     /**
@@ -234,7 +242,7 @@ public class ServiceMgr {
      * 
      * @param object
      *            the {@link Service} object
-     * @return id of the object (0 if it doesn't exists)
+     * @return the id of the {@link Service} object
      */
     private int isObjectExisting(final Service object) {
 	if (services.containsValue(object)) {
@@ -250,11 +258,8 @@ public class ServiceMgr {
      *            the {@link Service} object
      * @return true if object is still in use
      */
-    @Unfinished
     private boolean isObjectInUse(final Service object) {
-	// TODO -- -1 weil es momentan noch benutzt wird
-	// Ask all parent manager classes if they use the object
-	return false;
+	return object.isInUse();
     }
 
     /**
@@ -287,6 +292,22 @@ public class ServiceMgr {
 	entry.put("serviceNumber", object.getServiceNumber());
 	entry.put("site", object.getSite().getId());
 	return entry;
+    }
+
+    /**
+     * Removes the object from the object list.
+     * 
+     * @param id
+     *            the {@link Service} object id
+     * @return true if it was successful
+     */
+    @Unfinished
+    private boolean remove(final int id) {
+	if (services.containsKey(id)) {
+	    services.remove(id);
+	    return true;
+	}
+	return false;
     }
 
     private final DatabaseMgr db;

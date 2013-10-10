@@ -1,5 +1,7 @@
 package de.dhbw.swe.camping_site_mgt.person_mgt;
 
+import de.dhbw.swe.camping_site_mgt.common.Usage;
+
 public class Guest {
 
     /**
@@ -22,6 +24,7 @@ public class Guest {
 	this.id = id;
 	this.person = person;
 	this.visitorsTaxClass = visitorsTaxClass;
+	this.usage = new Usage();
     }
 
     /**
@@ -32,6 +35,30 @@ public class Guest {
      */
     public Guest(final Person person, final VisitorsTaxClass visitorsTaxClass) {
 	this(0, person, visitorsTaxClass);
+    }
+
+    /**
+     * Adds entry to usage list.
+     * 
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     */
+    public void addUsage(final String parentTableName, final int parentID) {
+	usage.addUsage(parentTableName, parentID);
+    }
+
+    /**
+     * Deletes entry from usage list.
+     * 
+     * @param parentTableName
+     *            the parents table name
+     * @param parentID
+     *            the id of the parent
+     */
+    public void delUsage(final String parentTableName, final int parentID) {
+	usage.delUsage(parentTableName, parentID);
     }
 
     /**
@@ -69,12 +96,30 @@ public class Guest {
     }
 
     /**
+     * Returns the usage.
+     * 
+     * @return the usage
+     */
+    public Usage getUsage() {
+	return usage;
+    }
+
+    /**
      * Returns the visitorsTaxClass.
      * 
      * @return the visitorsTaxClass
      */
     public VisitorsTaxClass getVisitorsTaxClass() {
 	return visitorsTaxClass;
+    }
+
+    /**
+     * Checks if the object is still in use.
+     * 
+     * @return true if it's still in use
+     */
+    public boolean isInUse() {
+	return usage.isInUse();
     }
 
     /**
@@ -87,7 +132,18 @@ public class Guest {
 	this.id = id;
     }
 
+    /**
+     * Sets the usage.
+     * 
+     * @param usage
+     *            the usage to set
+     */
+    public void setUsage(final Usage usage) {
+	this.usage = usage;
+    }
+
     private int id;
     private final Person person;
+    private Usage usage;
     private final VisitorsTaxClass visitorsTaxClass;
 }

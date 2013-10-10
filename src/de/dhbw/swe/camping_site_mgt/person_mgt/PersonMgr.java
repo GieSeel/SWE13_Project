@@ -111,11 +111,12 @@ public class PersonMgr {
     public boolean objectRemove(final Person object) {
 	// Sub objects
 	final int id = object.getId();
-	object.getCountry().delUsage(tableName, id);
-	object.getTown().delUsage(tableName, id);
-
-	CountryMgr.getInstance().objectRemove(object.getCountry());
-	TownMgr.getInstance().objectRemove(object.getTown());
+	final Country country = object.getCountry();
+	final Town town = object.getTown();
+	country.delUsage(tableName, id);
+	town.delUsage(tableName, id);
+	CountryMgr.getInstance().objectRemove(country);
+	TownMgr.getInstance().objectRemove(town);
 
 	if (isObjectInUse(object)) {
 	    logger.error("Object is already in use!");
@@ -136,13 +137,12 @@ public class PersonMgr {
     public void objectUpdate(final Person object, final Person newObject) {
 	// Sub objects
 	int id = object.getId();
-
-	object.getCountry().delUsage(tableName, id);
-	object.getTown().delUsage(tableName, id);
-
-	CountryMgr.getInstance().objectUpdate(object.getCountry(),
-		newObject.getCountry());
-	TownMgr.getInstance().objectUpdate(object.getTown(), newObject.getTown());
+	final Country country = object.getCountry();
+	final Town town = object.getTown();
+	country.delUsage(tableName, id);
+	town.delUsage(tableName, id);
+	CountryMgr.getInstance().objectUpdate(country, newObject.getCountry());
+	TownMgr.getInstance().objectUpdate(town, newObject.getTown());
 
 	// Update object
 	id = isObjectExisting(object);

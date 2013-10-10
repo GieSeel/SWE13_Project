@@ -130,8 +130,18 @@ public class ChipCard {
 	this.id = id;
     }
 
+    /**
+     * Sets the usage.
+     * 
+     * @param usage
+     *            the usage to set
+     */
+    public void setUsage(final Usage usage) {
+	this.usage = usage;
+    }
+
     private int id;
-    private final Usage usage;
+    private Usage usage;
     private final Date validFrom;
     private final Date validTo;
 }
