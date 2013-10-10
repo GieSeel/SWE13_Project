@@ -9,6 +9,10 @@ import de.dhbw.swe.camping_site_mgt.gui_mgt.Displayable;
 import de.dhbw.swe.camping_site_mgt.place_mgt.*;
 
 public class MapController implements Displayable {
+    class MapListnener {
+
+    }
+
     public MapController(final String mapPath) {
 	final HashMap<String, Area> areas = new MapAreas().getAreas();
 	final HashMap<Integer, PitchInterface> pitches = new HashMap<>();
@@ -16,11 +20,11 @@ public class MapController implements Displayable {
 		"0-24", "Deliverypoint");
 	pitches.put(1, new Pitch(1, "In the west!\nJust one direkt neighbour!",
 		dev278, "A", 100, "gras", Pitch_Type.CAMPERPITCH, 100,
-		"[7, 22, 40, 25]", "[1354, 1337, 1351, 1370]"));
+		"[7, 21, 39, 24]", "[1354, 1336, 1351, 1369]"));
 	pitches.put(2, new Pitch(2, "In the west!\nJust two direkt neighbour!",
 		dev278, "A", 100, "gras", Pitch_Type.CAMPERPITCH, 100, new Polygon(
-			new int[] { 22, 37, 55, 40 }, new int[] { 1336, 1318, 1333,
-				1351 }, 4)));
+			new int[] { 23, 36, 53, 40 }, new int[] { 1335, 1319, 1333,
+				1349 }, 4)));
 	view = new Map(mapPath, areas, pitches);
     }
 

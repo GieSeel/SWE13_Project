@@ -62,7 +62,7 @@ public interface LanguageProperties {
     /** The how to zoom in property. */
     String HOW_TO_ZOOM_IN = "double click to zoom in";
     /** The how to zoom out property. */
-    String HOW_TO_ZOOM_OUT = "double click to zoom in";
+    String HOW_TO_ZOOM_OUT = "double click to zoom out";
     /** The comment marker. */
     String JUST_A_COMMENT = "//";
     /** The map (word) property */

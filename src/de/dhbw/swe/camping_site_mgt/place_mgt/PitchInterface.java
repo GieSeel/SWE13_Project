@@ -50,6 +50,17 @@ public interface PitchInterface {
     Polygon getShape();
 
     /**
+     * Get the shifted shape.
+     * 
+     * @param xShift
+     *            the pixels count to shift in x direction
+     * @param yShift
+     *            the pixels count to shift in y direction
+     * @return the shifted {@link Polygon}
+     */
+    Polygon getShape(int xShift, int yShift);
+
+    /**
      * @return the {@link Pitch_Type} of the {@link Pitch}.
      */
     Pitch_Type getType();

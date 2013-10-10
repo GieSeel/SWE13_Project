@@ -34,8 +34,8 @@ public class Pitch implements PitchInterface {
 	for (int i = 0; i < yPointStr.length; i++) {
 	    yPoints[i] = Integer.parseInt(yPointStr[i]);
 	}
-
-	return new Polygon(xPoints, yPoints, xPoints.length);
+	final Polygon polygon = new Polygon(xPoints, yPoints, xPoints.length);
+	return polygon;
     }
 
     public Pitch() {
@@ -152,6 +152,19 @@ public class Pitch implements PitchInterface {
     @Override
     public Polygon getShape() {
 	return shape;
+    }
+
+    @Override
+    public Polygon getShape(final int xShift, final int yShift) {
+	final int[] xPoints = shape.xpoints;
+	final int[] yPoints = shape.ypoints;
+	final int[] shiftedXPoints = new int[xPoints.length];
+	final int[] shiftedYPoints = new int[yPoints.length];
+	for (int i = 0; i < xPoints.length; i++) {
+	    shiftedXPoints[i] = xPoints[i] - xShift;
+	    shiftedYPoints[i] = yPoints[i] - yShift;
+	}
+	return new Polygon(shiftedXPoints, shiftedYPoints, shiftedXPoints.length);
     }
 
     @Override
