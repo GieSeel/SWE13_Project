@@ -19,12 +19,12 @@ public class MapController implements Displayable {
 	final Site dev278 = new Site(278, "Electircity and Water", "Deliverypoint",
 		"0-24", "Deliverypoint");
 	pitches.put(1, new Pitch(1, "In the west!\nJust one direkt neighbour!",
-		dev278, "A", 100, "gras", Pitch_Type.CAMPERPITCH, 100,
-		"[7, 21, 39, 24]", "[1354, 1336, 1351, 1369]"));
+		dev278, "A", 100, Pitch_NatureOfSoil.GRASS, Pitch_Type.CAMPERPITCH,
+		100, "[7, 21, 39, 24]", "[1354, 1336, 1351, 1369]"));
 	pitches.put(2, new Pitch(2, "In the west!\nJust two direkt neighbour!",
-		dev278, "A", 100, "gras", Pitch_Type.CAMPERPITCH, 100, new Polygon(
-			new int[] { 23, 36, 53, 40 }, new int[] { 1335, 1319, 1333,
-				1349 }, 4)));
+		dev278, "A", 100, Pitch_NatureOfSoil.GRASS, Pitch_Type.CAMPERPITCH,
+		100, new Polygon(new int[] { 23, 36, 53, 40 }, new int[] { 1335,
+			1319, 1333, 1349 }, 4)));
 	view = new Map(mapPath, areas, pitches);
     }
 
