@@ -2,6 +2,7 @@ package de.dhbw.swe.camping_site_mgt.place_mgt;
 
 import java.awt.Polygon;
 
+import de.dhbw.swe.camping_site_mgt.common.Usage;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map.Area;
 
 /**
@@ -25,6 +26,11 @@ public interface PitchInterface {
      * @return the delivery point {@link Site}.
      */
     Site getDeliveryPoint();
+
+    /**
+     * @return the ID of the {@link Pitch}.
+     */
+    int getId();
 
     /**
      * @return the length of the Pitch in <code>dm</code>.
@@ -60,6 +66,13 @@ public interface PitchInterface {
     Pitch_Type getType();
 
     /**
+     * Returns the usage.
+     * 
+     * @return the usage
+     */
+    Usage getUsage();
+
+    /**
      * @return the width of the {@link Pitch}.
      */
     int getWidth();
@@ -78,4 +91,10 @@ public interface PitchInterface {
      */
     String getyCoords();
 
+    /**
+     * Checks if the object is still in use.
+     * 
+     * @return <code>true</code> if it's still used
+     */
+    boolean isInUse();
 }
