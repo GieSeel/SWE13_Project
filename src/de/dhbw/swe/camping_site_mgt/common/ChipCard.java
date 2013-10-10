@@ -2,7 +2,9 @@ package de.dhbw.swe.camping_site_mgt.common;
 
 import java.util.Date;
 
-public class ChipCard {
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
+
+public class ChipCard extends BaseDataObject {
 
     /**
      * Constructor.
@@ -30,44 +32,19 @@ public class ChipCard {
      * @param validTo
      */
     public ChipCard(final int id, final Date validFrom, final Date validTo) {
-	this.id = id;
+	super(id);
 	this.validFrom = validFrom;
 	this.validTo = validTo;
-	this.usage = new Usage();
-    }
-
-    /**
-     * Adds entry to usage list.
-     * 
-     * @param parentTableName
-     *            the parents table name
-     * @param parentID
-     *            the id of the parent
-     */
-    public void addUsage(final String parentTableName, final int parentID) {
-	usage.addUsage(parentTableName, parentID);
-    }
-
-    /**
-     * Deletes entry from usage list.
-     * 
-     * @param parentTableName
-     *            the parents table name
-     * @param parentID
-     *            the id of the parent
-     */
-    public void delUsage(final String parentTableName, final int parentID) {
-	usage.delUsage(parentTableName, parentID);
     }
 
     /**
      * {@inheritDoc}.
      * 
-     * @see java.lang.Object#equals(java.lang.Object)
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#equals(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
      */
     @Override
-    public boolean equals(final Object obj) {
-	final ChipCard object = (ChipCard) obj;
+    public boolean equals(final DataObject dataObject) {
+	final ChipCard object = (ChipCard) dataObject;
 	if (this.validFrom.equals(object.getValidFrom())
 		&& this.validTo.equals(object.getValidTo())) {
 	    return true;
@@ -76,21 +53,13 @@ public class ChipCard {
     }
 
     /**
-     * Returns the id.
+     * {@inheritDoc}.
      * 
-     * @return the id
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#getTableName()
      */
-    public int getId() {
-	return id;
-    }
-
-    /**
-     * Returns the usage.
-     * 
-     * @return the usage
-     */
-    public Usage getUsage() {
-	return usage;
+    @Override
+    public String getTableName() {
+	return "chipcard";
     }
 
     /**
@@ -111,37 +80,7 @@ public class ChipCard {
 	return validTo;
     }
 
-    /**
-     * Checks if the object is still in use.
-     * 
-     * @return true if it's still in use
-     */
-    public boolean isInUse() {
-	return usage.isInUse();
-    }
-
-    /**
-     * Sets the id.
-     * 
-     * @param id
-     *            the id to set
-     */
-    public void setId(final int id) {
-	this.id = id;
-    }
-
-    /**
-     * Sets the usage.
-     * 
-     * @param usage
-     *            the usage to set
-     */
-    public void setUsage(final Usage usage) {
-	this.usage = usage;
-    }
-
-    private int id;
-    private Usage usage;
     private final Date validFrom;
+
     private final Date validTo;
 }

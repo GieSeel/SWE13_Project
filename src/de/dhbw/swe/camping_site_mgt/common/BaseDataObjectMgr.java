@@ -30,6 +30,7 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
  * @version 1.0
  */
 public abstract class BaseDataObjectMgr {
+    /** The {@link DatabaseMgr}. */
     private final static DatabaseMgr db = DatabaseMgr.getInstance();
 
     protected BaseDataObjectMgr() {
@@ -37,6 +38,20 @@ public abstract class BaseDataObjectMgr {
 	logger = getLogger();
 	checkForSubObjects();
 	load(); // Load all data from database
+    }
+
+    /**
+     * Gets an {@link DataObject} from the data list.
+     * 
+     * @param id
+     *            the {@link DataObject} id
+     * @return the {@link DataObject}
+     */
+    public DataObject get(final int id) {
+	if (data.containsKey(id)) {
+	    return data.get(id);
+	}
+	return null;
     }
 
     /**
@@ -309,20 +324,6 @@ public abstract class BaseDataObjectMgr {
     }
 
     /**
-     * Gets an {@link DataObject} from the data list.
-     * 
-     * @param id
-     *            the {@link DataObject} id
-     * @return the {@link DataObject}
-     */
-    private DataObject get(final int id) {
-	if (data.containsKey(id)) {
-	    return data.get(id);
-	}
-	return null;
-    }
-
-    /**
      * Loads the {@link DataObject}s from the database.
      */
     private void load() {
@@ -337,5 +338,6 @@ public abstract class BaseDataObjectMgr {
     protected final CampingLogger logger;
     /** All {@link DataObject} of one table. */
     private final HashMap<Integer, DataObject> data;
+    /** If the {@link DataObject} has sub objects. */
     private boolean hasSubObjects;
 }

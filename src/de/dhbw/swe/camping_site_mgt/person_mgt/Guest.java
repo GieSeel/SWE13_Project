@@ -1,8 +1,9 @@
 package de.dhbw.swe.camping_site_mgt.person_mgt;
 
-import de.dhbw.swe.camping_site_mgt.common.Usage;
+import de.dhbw.swe.camping_site_mgt.common.BaseDataObject;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 
-public class Guest {
+public class Guest extends BaseDataObject {
 
     /**
      * Constructor.
@@ -21,10 +22,9 @@ public class Guest {
      */
     public Guest(final int id, final Person person,
 	    final VisitorsTaxClass visitorsTaxClass) {
-	this.id = id;
+	super(id);
 	this.person = person;
 	this.visitorsTaxClass = visitorsTaxClass;
-	this.usage = new Usage();
     }
 
     /**
@@ -38,52 +38,19 @@ public class Guest {
     }
 
     /**
-     * Adds entry to usage list.
-     * 
-     * @param parentTableName
-     *            the parents table name
-     * @param parentID
-     *            the id of the parent
-     */
-    public void addUsage(final String parentTableName, final int parentID) {
-	usage.addUsage(parentTableName, parentID);
-    }
-
-    /**
-     * Deletes entry from usage list.
-     * 
-     * @param parentTableName
-     *            the parents table name
-     * @param parentID
-     *            the id of the parent
-     */
-    public void delUsage(final String parentTableName, final int parentID) {
-	usage.delUsage(parentTableName, parentID);
-    }
-
-    /**
      * {@inheritDoc}.
      * 
-     * @see java.lang.Object#equals(java.lang.Object)
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#equals(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
      */
     @Override
-    public boolean equals(final Object obj) {
-	final Guest object = (Guest) obj;
+    public boolean equals(final DataObject dataObject) {
+	final Guest object = (Guest) dataObject;
 	if (this.person.equals(object.getPerson())
 		&& this.visitorsTaxClass.equals(object.getVisitorsTaxClass())) {
 	    setId(object.getId());
 	    return true;
 	}
 	return false;
-    }
-
-    /**
-     * Returns the id.
-     * 
-     * @return the id
-     */
-    public int getId() {
-	return id;
     }
 
     /**
@@ -96,12 +63,13 @@ public class Guest {
     }
 
     /**
-     * Returns the usage.
+     * {@inheritDoc}.
      * 
-     * @return the usage
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#getTableName()
      */
-    public Usage getUsage() {
-	return usage;
+    @Override
+    public String getTableName() {
+	return "guest";
     }
 
     /**
@@ -113,37 +81,6 @@ public class Guest {
 	return visitorsTaxClass;
     }
 
-    /**
-     * Checks if the object is still in use.
-     * 
-     * @return true if it's still in use
-     */
-    public boolean isInUse() {
-	return usage.isInUse();
-    }
-
-    /**
-     * Sets the id.
-     * 
-     * @param id
-     *            the id to set
-     */
-    public void setId(final int id) {
-	this.id = id;
-    }
-
-    /**
-     * Sets the usage.
-     * 
-     * @param usage
-     *            the usage to set
-     */
-    public void setUsage(final Usage usage) {
-	this.usage = usage;
-    }
-
-    private int id;
     private final Person person;
-    private Usage usage;
     private final VisitorsTaxClass visitorsTaxClass;
 }

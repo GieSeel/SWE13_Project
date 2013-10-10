@@ -8,7 +8,7 @@ import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
  * @author GieSeel
  * @version 1.0
  */
-public class Country implements DataObject {
+public class Country extends BaseDataObject {
 
     /**
      * Constructor for empty object.
@@ -26,10 +26,9 @@ public class Country implements DataObject {
      * @param name
      */
     public Country(final int id, final String acronym, final String name) {
-	this.id = id;
+	super(id);
 	this.acronym = acronym;
 	this.name = name;
-	this.usage = new Usage();
     }
 
     /**
@@ -43,38 +42,13 @@ public class Country implements DataObject {
     }
 
     /**
-     * Adds entry to usage list.
-     * 
-     * @param parentTableName
-     *            the parents table name
-     * @param parentID
-     *            the id of the parent
-     */
-    @Override
-    public void addUsage(final String parentTableName, final int parentID) {
-	usage.addUsage(parentTableName, parentID);
-    }
-
-    /**
-     * Deletes entry from usage list.
-     * 
-     * @param parentTableName
-     *            the parents table name
-     * @param parentID
-     *            the id of the parent
-     */
-    public void delUsage(final String parentTableName, final int parentID) {
-	usage.delUsage(parentTableName, parentID);
-    }
-
-    /**
      * {@inheritDoc}.
      * 
-     * @see java.lang.Object#equals(java.lang.Object)
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#equals(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
      */
     @Override
-    public boolean equals(final Object obj) {
-	final Country object = (Country) obj;
+    public boolean equals(final DataObject dataObject) {
+	final Country object = (Country) dataObject;
 	if (this.acronym.equals(object.getAcronym())
 		&& this.name.equals(object.getName())) {
 	    setId(object.getId());
@@ -94,16 +68,6 @@ public class Country implements DataObject {
     }
 
     /**
-     * Returns the id.
-     * 
-     * @return the id
-     */
-    @Override
-    public int getId() {
-	return id;
-    }
-
-    /**
      * Returns the name.
      * 
      * @return the name
@@ -115,55 +79,13 @@ public class Country implements DataObject {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject#getTableName()
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#getTableName()
      */
     @Override
     public String getTableName() {
 	return "country";
     }
 
-    /**
-     * Returns the usage.
-     * 
-     * @return the usage
-     */
-    public Usage getUsage() {
-	return usage;
-    }
-
-    /**
-     * Checks if the object is still in use.
-     * 
-     * @return true if it's still in use
-     */
-    @Override
-    public boolean isInUse() {
-	return usage.isInUse();
-    }
-
-    /**
-     * Sets the id.
-     * 
-     * @param id
-     *            the id to set
-     */
-    @Override
-    public void setId(final int id) {
-	this.id = id;
-    }
-
-    /**
-     * Sets the usage.
-     * 
-     * @param usage
-     *            the usage to set
-     */
-    public void setUsage(final Usage usage) {
-	this.usage = usage;
-    }
-
     private final String acronym;
-    private int id;
     private final String name;
-    private Usage usage;
 }

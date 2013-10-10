@@ -2,7 +2,7 @@ package de.dhbw.swe.camping_site_mgt.common;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 
-public class Town implements DataObject {
+public class Town extends BaseDataObject {
 
     /**
      * Constructor for empty object.
@@ -20,10 +20,9 @@ public class Town implements DataObject {
      * @param postalCode
      */
     public Town(final int id, final String name, final String postalCode) {
-	this.id = id;
+	super(id);
 	this.name = name;
 	this.postalCode = postalCode;
-	this.usage = new Usage();
     }
 
     /**
@@ -37,38 +36,13 @@ public class Town implements DataObject {
     }
 
     /**
-     * Adds entry to usage list.
-     * 
-     * @param parentTableName
-     *            the parents table name
-     * @param parentID
-     *            the id of the parent
-     */
-    @Override
-    public void addUsage(final String parentTableName, final int parentID) {
-	usage.addUsage(parentTableName, parentID);
-    }
-
-    /**
-     * Deletes entry from usage list.
-     * 
-     * @param parentTableName
-     *            the parents table name
-     * @param parentID
-     *            the id of the parent
-     */
-    public void delUsage(final String parentTableName, final int parentID) {
-	usage.delUsage(parentTableName, parentID);
-    }
-
-    /**
      * {@inheritDoc}.
      * 
-     * @see java.lang.Object#equals(java.lang.Object)
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#equals(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
      */
     @Override
-    public boolean equals(final Object obj) {
-	final Town object = (Town) obj;
+    public boolean equals(final DataObject dataObject) {
+	final Town object = (Town) dataObject;
 	if (this.name.equals(object.getName())
 		&& this.postalCode.equals(object.getPostalCode())) {
 	    setId(object.getId());
@@ -76,16 +50,6 @@ public class Town implements DataObject {
 	    return true;
 	}
 	return false;
-    }
-
-    /**
-     * Returns the id.
-     * 
-     * @return the id
-     */
-    @Override
-    public int getId() {
-	return id;
     }
 
     /**
@@ -109,55 +73,13 @@ public class Town implements DataObject {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject#getTableName()
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#getTableName()
      */
     @Override
     public String getTableName() {
 	return "town";
     }
 
-    /**
-     * Returns the usage.
-     * 
-     * @return the usage
-     */
-    public Usage getUsage() {
-	return usage;
-    }
-
-    /**
-     * Checks if the object is still in use.
-     * 
-     * @return true if it's still in use
-     */
-    @Override
-    public boolean isInUse() {
-	return usage.isInUse();
-    }
-
-    /**
-     * Sets the id.
-     * 
-     * @param id
-     *            the id to set
-     */
-    @Override
-    public void setId(final int id) {
-	this.id = id;
-    }
-
-    /**
-     * Sets the usage.
-     * 
-     * @param usage
-     *            the usage to set
-     */
-    public void setUsage(final Usage usage) {
-	this.usage = usage;
-    }
-
-    private int id;
     private final String name;
     private final String postalCode;
-    private Usage usage;
 }

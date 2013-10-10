@@ -5,7 +5,7 @@ import java.util.Date;
 import de.dhbw.swe.camping_site_mgt.common.*;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 
-public class Person implements PersonInterface, DataObject {
+public class Person extends BaseDataObject implements PersonInterface {
 
     /**
      * Constructor for empty object.
@@ -41,7 +41,7 @@ public class Person implements PersonInterface, DataObject {
 	    final String firstName, final String name, final Date dateOfBirth,
 	    final String street, final String houseNumber, final Town town,
 	    final Country country) {
-	this.id = id;
+	super(id);
 	this.identificationNumber = identificationNumber;
 	this.firstName = firstName;
 	this.name = name;
@@ -50,7 +50,6 @@ public class Person implements PersonInterface, DataObject {
 	this.houseNumber = houseNumber;
 	this.town = town;
 	this.country = country;
-	this.usage = new Usage();
     }
 
     /**
@@ -81,38 +80,13 @@ public class Person implements PersonInterface, DataObject {
     }
 
     /**
-     * Adds entry to usage list.
-     * 
-     * @param parentTableName
-     *            the parents table name
-     * @param parentID
-     *            the id of the parent
-     */
-    @Override
-    public void addUsage(final String parentTableName, final int parentID) {
-	usage.addUsage(parentTableName, parentID);
-    }
-
-    /**
-     * Deletes entry from usage list.
-     * 
-     * @param parentTableName
-     *            the parents table name
-     * @param parentID
-     *            the id of the parent
-     */
-    public void delUsage(final String parentTableName, final int parentID) {
-	usage.delUsage(parentTableName, parentID);
-    }
-
-    /**
      * {@inheritDoc}.
      * 
-     * @see java.lang.Object#equals(java.lang.Object)
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#equals(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
      */
     @Override
-    public boolean equals(final Object obj) {
-	final Person object = (Person) obj;
+    public boolean equals(final DataObject dataObject) {
+	final Person object = (Person) dataObject;
 	if (this.country.equals(object.getCountry())
 		&& this.dateOfBirth.equals(object.getDateOfBirth())
 		&& this.firstName.equals(object.getFirstName())
@@ -128,41 +102,71 @@ public class Person implements PersonInterface, DataObject {
 	return false;
     }
 
+    /**
+     * Returns the country.
+     * 
+     * @return the country
+     */
     @Override
     public Country getCountry() {
 	return country;
     }
 
+    /**
+     * Returns the dateOfBirth.
+     * 
+     * @return the dateOfBirth
+     */
     @Override
     public Date getDateOfBirth() {
 	return dateOfBirth;
     }
 
+    /**
+     * Returns the firstName.
+     * 
+     * @return the firstName
+     */
     @Override
     public String getFirstName() {
 	return firstName;
     }
 
+    /**
+     * Returns the houseNumber.
+     * 
+     * @return the houseNumber
+     */
     @Override
     public String getHouseNumber() {
 	return houseNumber;
     }
 
-    @Override
-    public int getId() {
-	return id;
-    }
-
+    /**
+     * Returns the identificationNumber.
+     * 
+     * @return the identificationNumber
+     */
     @Override
     public String getIdentificationNumber() {
 	return identificationNumber;
     }
 
+    /**
+     * Returns the name.
+     * 
+     * @return the name
+     */
     @Override
     public String getName() {
 	return name;
     }
 
+    /**
+     * Returns the street.
+     * 
+     * @return the street
+     */
     @Override
     public String getStreet() {
 	return street;
@@ -171,57 +175,36 @@ public class Person implements PersonInterface, DataObject {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject#getTableName()
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#getTableName()
      */
     @Override
     public String getTableName() {
 	return "person";
     }
 
+    /**
+     * Returns the town.
+     * 
+     * @return the town
+     */
     @Override
     public Town getTown() {
 	return town;
     }
 
-    @Override
-    public Usage getUsage() {
-	return usage;
-    }
-
-    @Override
-    public boolean isInUse() {
-	return usage.isInUse();
-    }
-
-    /**
-     * Sets the id.
-     * 
-     * @param id
-     *            the id to set
-     */
-    @Override
-    public void setId(final int id) {
-	this.id = id;
-    }
-
-    /**
-     * Sets the usage.
-     * 
-     * @param usage
-     *            the usage to set
-     */
-    public void setUsage(final Usage usage) {
-	this.usage = usage;
-    }
-
     private final Country country;
+
     private final Date dateOfBirth;
+
     private final String firstName;
+
     private final String houseNumber;
-    private int id;
+
     private final String identificationNumber;
+
     private final String name;
+
     private final String street;
+
     private final Town town;
-    private Usage usage;
 }
