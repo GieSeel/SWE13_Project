@@ -88,15 +88,17 @@ public class DatabaseMgr {
 	    final PersonMgr test = PersonMgr.getInstance();
 	    final Country country = new Country("DE", "Deutschland");
 	    final Town town = new Town("Pforzheim", "75177");
-	    final Person person = new Person(country, new Date(
-		    System.currentTimeMillis()), "Florian", "3", "0123456789D",
-		    "Seel", "Ebersteinstr.", town);
+	    final Calendar cal = Calendar.getInstance();
+	    cal.setTimeInMillis(0);
+	    cal.set(1992, 5, 27);
+	    final Date datum = cal.getTime();
+	    final Person person = new Person("0123456789D", "Florian", "Seel",
+		    datum, "Ebersteinstr.", "3", town, country);
 	    test.objectInsert(person);
+
 	    final Town town2 = new Town("Haigerloch", "72401");
-	    test.objectUpdate(person,
-		    new Person(country, new Date(System.currentTimeMillis()),
-			    "Florian", "22/2", "0123456789D", "Seel", "Buchenweg",
-			    town2));
+	    test.objectUpdate(person, new Person("0123456789D", "Florian", "Seel",
+		    datum, "Buchenweg", "22/2", town2, country));
 
 	    // TODO del -- Tests ^
 	} catch (final SQLException e) {
@@ -114,7 +116,7 @@ public class DatabaseMgr {
     public boolean disconnect() {
 	try {
 	    conncetion.close();
-	    System.out.println("Disconnected from Database.");
+	    logger.info("Disconnected from Database.");
 	} catch (final SQLException e) {
 	    logger.error("Error in SQL..." + e.getMessage());
 	    return false;

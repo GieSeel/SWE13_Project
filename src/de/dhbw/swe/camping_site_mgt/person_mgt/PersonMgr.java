@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import de.dhbw.swe.camping_site_mgt.common.*;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseMgr;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
@@ -31,7 +31,7 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
  * @author GieSeel
  * @version 1.0
  */
-public class PersonMgr {
+public class PersonMgr extends BaseDataObjectMgr {
     /** The singleton instance. */
     private static PersonMgr instance;
 
@@ -51,143 +51,7 @@ public class PersonMgr {
      * Private constructor. Singleton.
      */
     private PersonMgr() {
-	persons = new HashMap<>();
-	tableName = "person";
-	logger = CampingLogger.getLogger(this.getClass());
-	db = DatabaseMgr.getInstance();
-	load(); // Load all data from database
-    }
-
-    /**
-     * Gets the object.
-     * 
-     * @param id
-     *            the {@link Person} object id
-     * @param parentTableName
-     *            the parents table name
-     * @param parentID
-     *            the id of the parent
-     * @return the {@link Person} object
-     */
-    public Person objectGet(final int id, final String parentTableName,
-	    final int parentID) {
-	final Person object = get(id);
-	if (parentTableName != null) {
-	    object.addUsage(parentTableName, parentID);
-	}
-	return object;
-    }
-
-    /**
-     * Inserts the object in database.
-     * 
-     * @param object
-     *            the {@link Person} object
-     */
-    public void objectInsert(final Person object) {
-	// Sub objects
-	CountryMgr.getInstance().objectInsert(object.getCountry());
-	TownMgr.getInstance().objectInsert(object.getTown());
-
-	// If object already exists just save that id
-	int id = isObjectExisting(object);
-	if (id == 0) {
-	    id = db.insertEntryInto(tableName, object2entry(object));
-	}
-
-	// Add or replace object in object list
-	add(id, object);
-    }
-
-    /**
-     * 
-     * Deletes the object.
-     * 
-     * @param object
-     *            the {@link Person} object
-     * @return true if it was successful
-     */
-    @Unfinished
-    public boolean objectRemove(final Person object) {
-	// Sub objects
-	final int id = object.getId();
-	final Country country = object.getCountry();
-	final Town town = object.getTown();
-	country.delUsage(tableName, id);
-	town.delUsage(tableName, id);
-	CountryMgr.getInstance().objectRemove(country);
-	TownMgr.getInstance().objectRemove(town);
-
-	if (isObjectInUse(object)) {
-	    logger.error("Object is already in use!");
-	    return false;
-	}
-	db.removeEntryFrom(tableName, object2entry(object));
-	return remove(id);
-    }
-
-    /**
-     * Updates the object.
-     * 
-     * @param object
-     *            the old {@link Person} object
-     * @param newObject
-     *            the new {@link Person} object
-     */
-    public void objectUpdate(final Person object, final Person newObject) {
-	// Sub objects
-	int id = object.getId();
-	final Country country = object.getCountry();
-	final Town town = object.getTown();
-	country.delUsage(tableName, id);
-	town.delUsage(tableName, id);
-	CountryMgr.getInstance().objectUpdate(country, newObject.getCountry());
-	TownMgr.getInstance().objectUpdate(town, newObject.getTown());
-
-	// Update object
-	id = isObjectExisting(object);
-	if (id == 0) { // TODO || isObjectInUse(object)) {
-	    // If object is in use or it doesn't exists a new one is needed
-	    objectInsert(newObject);
-	    return;
-	}
-	// If newObject already exists the old object will be removed and
-	// the existing object will be used!
-	final int newID = isObjectExisting(newObject);
-	if (newID != 0) {
-	    objectRemove(object);
-	    add(newID, newObject);
-	} else {
-	    // Update object in object list and database
-	    add(id, newObject);
-	    db.updateEntryIn(tableName, object2entry(newObject));
-	}
-    }
-
-    /**
-     * Adds objects to object list.
-     * 
-     * @param objects
-     *            the list with the {@link Person} objects
-     * 
-     */
-    private void add(final HashMap<Integer, Person> objects) {
-	persons.putAll(objects);
-    }
-
-    /**
-     * Adds or updates the object to object list.
-     * 
-     * @param id
-     *            the {@link Person} object id
-     * @param object
-     *            the {@link Person} object
-     */
-    private void add(final int id, final Person object) {
-	object.getCountry().addUsage(tableName, id);
-	object.getTown().addUsage(tableName, id);
-	object.setId(id);
-	persons.put(id, object);
+	super();
     }
 
     /**
@@ -197,9 +61,9 @@ public class PersonMgr {
      *            the entry
      * @return the prepared {@link Person} object
      */
-    private HashMap<Integer, Person> entry2object(
-	    final HashMap<String, Object> entry) {
-	final HashMap<Integer, Person> object = new HashMap<>();
+    @Override
+    protected DataObject entry2object(final HashMap<String, Object> entry) {
+	final String tableName = getTableName();
 	int id;
 	Country country;
 	Date dateOfBirth;
@@ -211,112 +75,128 @@ public class PersonMgr {
 	Town town;
 
 	id = (int) entry.get("id");
-	country = CountryMgr.getInstance().objectGet((int) entry.get("country"),
-		tableName, id);
+	country = (Country) CountryMgr.getInstance().objectGet(
+		(int) entry.get("country"), tableName, id);
 	dateOfBirth = (Date) entry.get("dateOfBirth");
 	firstName = (String) entry.get("firstName");
 	houseNumber = (String) entry.get("houseNumber");
 	identificationNumber = (String) entry.get("identificationNumber");
 	name = (String) entry.get("name");
 	street = (String) entry.get("street");
-	town = TownMgr.getInstance().objectGet((int) entry.get("town"), tableName,
-		id);
+	town = (Town) TownMgr.getInstance().objectGet((int) entry.get("town"),
+		tableName, id);
 
-	object.put(id, new Person(id, country, dateOfBirth, firstName, houseNumber,
-		identificationNumber, name, street, town));
-	return object;
+	return new Person(id, identificationNumber, firstName, name, dateOfBirth,
+		street, houseNumber, town, country);
     }
 
     /**
-     * Gets an object from the object list.
+     * {@inheritDoc}.
      * 
-     * @param id
-     *            the {@link Person} object id
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#evenUpdateInUse()
+     */
+    @Override
+    protected boolean evenUpdateInUse() {
+	return true;
+    }
+
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getLogger()
+     */
+    @Override
+    protected CampingLogger getLogger() {
+	return CampingLogger.getLogger(getClass());
+    }
+
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
+     */
+    @Override
+    protected String getTableName() {
+	return new Person().getTableName();
+    }
+
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectAdd(int,
+     *      de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
+     */
+    @Override
+    protected void subObjectAdd(final int id, final DataObject dataObject) {
+	final Person object = castObject(dataObject);
+	final String tableName = object.getTableName();
+
+	object.getCountry().addUsage(tableName, id);
+	object.getTown().addUsage(tableName, id);
+    }
+
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectInsert(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
+     */
+    @Override
+    protected void subObjectInsert(final DataObject dataObject) {
+	final Person object = castObject(dataObject);
+
+	CountryMgr.getInstance().objectInsert(object.getCountry());
+	TownMgr.getInstance().objectInsert(object.getTown());
+    }
+
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectRemove(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
+     */
+    @Override
+    protected void subObjectRemove(final DataObject dataObject) {
+	final Person object = castObject(dataObject);
+	final int id = object.getId();
+	final String tableName = object.getTableName();
+
+	final Country country = object.getCountry();
+	final Town town = object.getTown();
+	country.delUsage(tableName, id);
+	town.delUsage(tableName, id);
+	CountryMgr.getInstance().objectRemove(country);
+	TownMgr.getInstance().objectRemove(town);
+    }
+
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectUpdate(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject,
+     *      de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
+     */
+    @Override
+    protected void subObjectUpdate(final DataObject dataObject,
+	    final DataObject newDataObject) {
+	final Person object = castObject(dataObject);
+	final Person newObject = castObject(newDataObject);
+	final int id = object.getId();
+	final String tableName = object.getTableName();
+
+	final Country country = object.getCountry();
+	final Town town = object.getTown();
+	country.delUsage(tableName, id);
+	town.delUsage(tableName, id);
+	CountryMgr.getInstance().objectUpdate(country, newObject.getCountry());
+	TownMgr.getInstance().objectUpdate(town, newObject.getTown());
+    }
+
+    /**
+     * Cast {@link DataObject} to {@link Person} object.
+     * 
+     * @param dataObject
+     *            the {@link DataObject}
      * @return the {@link Person} object
      */
-    private Person get(final int id) {
-	if (persons.containsKey(id)) {
-	    final Person object = persons.get(id);
-	    return object;
-	}
-	return null;
+    private Person castObject(final DataObject dataObject) {
+	return (Person) dataObject;
     }
-
-    /**
-     * Checks if the object already exists.
-     * 
-     * @param object
-     *            the {@link Person} object
-     * @return the id of the {@link Person} object
-     */
-    private int isObjectExisting(final Person object) {
-	if (persons.containsValue(object)) {
-	    return object.getId();
-	}
-	return 0;
-    }
-
-    /**
-     * Checks if the object is still in use.
-     * 
-     * @param object
-     *            the {@link Person} object
-     * @return true if object is still in use
-     */
-    private boolean isObjectInUse(final Person object) {
-	return object.isInUse();
-    }
-
-    /**
-     * Loads the objects from the database.
-     */
-    private void load() {
-	for (final HashMap<String, Object> entry : db.getAllEntriesOf(tableName)) {
-	    add(entry2object(entry));
-	}
-    }
-
-    /**
-     * Parses an object to a database entry.
-     * 
-     * @param id
-     *            the {@link Person} object id
-     * @param object
-     *            the {@link Person} object
-     * @return the prepared entry
-     */
-    private HashMap<String, Object> object2entry(final Person object) {
-	final HashMap<String, Object> entry = new HashMap<>();
-	entry.put("id", object.getId());
-	entry.put("country", object.getCountry().getId());
-	entry.put("dateOfBirth", object.getDateOfBirth());
-	entry.put("firstName", object.getFirstName());
-	entry.put("houseNumber", object.getHouseNumber());
-	entry.put("identificationNumber", object.getIdentificationNumber());
-	entry.put("name", object.getName());
-	entry.put("street", object.getStreet());
-	entry.put("town", object.getTown().getId());
-	return entry;
-    }
-
-    /**
-     * Removes the object from the object list.
-     * 
-     * @param id
-     *            the {@link Person} object id
-     * @return true if it was successful
-     */
-    @Unfinished
-    private boolean remove(final int id) {
-	if (persons.containsKey(id)) {
-	    persons.remove(id);
-	    return true;
-	}
-	return false;
-    }
-
-    private final DatabaseMgr db;
-    private final CampingLogger logger;
-    private final HashMap<Integer, Person> persons;
-    private final String tableName;
 }

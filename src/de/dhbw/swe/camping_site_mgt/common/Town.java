@@ -1,6 +1,8 @@
 package de.dhbw.swe.camping_site_mgt.common;
 
-public class Town {
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
+
+public class Town implements DataObject {
 
     /**
      * Constructor for empty object.
@@ -42,6 +44,7 @@ public class Town {
      * @param parentID
      *            the id of the parent
      */
+    @Override
     public void addUsage(final String parentTableName, final int parentID) {
 	usage.addUsage(parentTableName, parentID);
     }
@@ -80,6 +83,7 @@ public class Town {
      * 
      * @return the id
      */
+    @Override
     public int getId() {
 	return id;
     }
@@ -103,6 +107,16 @@ public class Town {
     }
 
     /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject#getTableName()
+     */
+    @Override
+    public String getTableName() {
+	return "town";
+    }
+
+    /**
      * Returns the usage.
      * 
      * @return the usage
@@ -116,6 +130,7 @@ public class Town {
      * 
      * @return true if it's still in use
      */
+    @Override
     public boolean isInUse() {
 	return usage.isInUse();
     }
@@ -126,6 +141,7 @@ public class Town {
      * @param id
      *            the id to set
      */
+    @Override
     public void setId(final int id) {
 	this.id = id;
     }

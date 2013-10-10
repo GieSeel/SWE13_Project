@@ -19,7 +19,7 @@ public class DataObjectMethods {
 	    final DataObject dataObject) {
 	final HashMap<String, Object> elements = new HashMap<String, Object>();
 	Object tmpObj;
-	for (final ColumnInfo column : DataStructure.getStructureFor(dataObject.getName())) {
+	for (final ColumnInfo column : DataStructure.getStructureFor(dataObject.getTableName())) {
 	    tmpObj = ObjectFieldAccess.getValueOf(column.getFieldName(), dataObject);
 	    elements.put(column.getFieldName(), tmpObj);
 	}

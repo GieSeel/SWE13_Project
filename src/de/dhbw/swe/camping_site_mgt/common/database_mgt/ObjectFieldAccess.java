@@ -22,7 +22,7 @@ public class ObjectFieldAccess {
      * @param object
      * @return
      */
-    static public Object getValueOf(final String columnName, final Object object) {
+    static public Object getValueOf(final String columnName, final DataObject object) {
 	logger = CampingLogger.getLogger(object.getClass());
 	final String methodName = "get" + columnName;
 

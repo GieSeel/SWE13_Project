@@ -1,12 +1,14 @@
 package de.dhbw.swe.camping_site_mgt.common;
 
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
+
 /**
  * Insert description for Country
  * 
  * @author GieSeel
  * @version 1.0
  */
-public class Country {
+public class Country implements DataObject {
 
     /**
      * Constructor for empty object.
@@ -48,6 +50,7 @@ public class Country {
      * @param parentID
      *            the id of the parent
      */
+    @Override
     public void addUsage(final String parentTableName, final int parentID) {
 	usage.addUsage(parentTableName, parentID);
     }
@@ -95,6 +98,7 @@ public class Country {
      * 
      * @return the id
      */
+    @Override
     public int getId() {
 	return id;
     }
@@ -106,6 +110,16 @@ public class Country {
      */
     public String getName() {
 	return name;
+    }
+
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject#getTableName()
+     */
+    @Override
+    public String getTableName() {
+	return "country";
     }
 
     /**
@@ -122,6 +136,7 @@ public class Country {
      * 
      * @return true if it's still in use
      */
+    @Override
     public boolean isInUse() {
 	return usage.isInUse();
     }
@@ -132,6 +147,7 @@ public class Country {
      * @param id
      *            the id to set
      */
+    @Override
     public void setId(final int id) {
 	this.id = id;
     }

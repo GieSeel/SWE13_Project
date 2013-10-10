@@ -3,8 +3,9 @@ package de.dhbw.swe.camping_site_mgt.person_mgt;
 import java.util.Date;
 
 import de.dhbw.swe.camping_site_mgt.common.*;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 
-public class Person implements PersonInterface {
+public class Person implements PersonInterface, DataObject {
 
     /**
      * Constructor for empty object.
@@ -87,6 +88,7 @@ public class Person implements PersonInterface {
      * @param parentID
      *            the id of the parent
      */
+    @Override
     public void addUsage(final String parentTableName, final int parentID) {
 	usage.addUsage(parentTableName, parentID);
     }
@@ -166,6 +168,16 @@ public class Person implements PersonInterface {
 	return street;
     }
 
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject#getTableName()
+     */
+    @Override
+    public String getTableName() {
+	return "person";
+    }
+
     @Override
     public Town getTown() {
 	return town;
@@ -187,6 +199,7 @@ public class Person implements PersonInterface {
      * @param id
      *            the id to set
      */
+    @Override
     public void setId(final int id) {
 	this.id = id;
     }
