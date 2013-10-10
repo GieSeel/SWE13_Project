@@ -182,6 +182,19 @@ public class Pitch extends BaseDataObject implements PitchInterface {
      * @return the type
      */
     @Override
+    public Polygon getShape(final int xShift, final int yShift) {
+	final int[] xPoints = shape.xpoints;
+	final int[] yPoints = shape.ypoints;
+	final int[] shiftedXPoints = new int[xPoints.length];
+	final int[] shiftedYPoints = new int[yPoints.length];
+	for (int i = 0; i < xPoints.length; i++) {
+	    shiftedXPoints[i] = xPoints[i] - xShift;
+	    shiftedYPoints[i] = yPoints[i] - yShift;
+	}
+	return new Polygon(shiftedXPoints, shiftedYPoints, shiftedXPoints.length);
+    }
+
+    @Override
     public Pitch_Type getType() {
 	return type;
     }

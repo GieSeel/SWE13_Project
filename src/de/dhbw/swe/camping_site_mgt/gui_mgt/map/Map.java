@@ -16,7 +16,8 @@ import de.dhbw.swe.camping_site_mgt.gui_mgt.GuiController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.statusbar.*;
 import de.dhbw.swe.camping_site_mgt.place_mgt.*;
 
-public class Map extends JPanel {
+@SuppressWarnings("static-access")
+public class Map extends JPanel implements AccessableMap {
     private class AreaKeyListener implements AWTEventListener {
 	public AreaKeyListener() {
 	    Toolkit.getDefaultToolkit().addAWTEventListener(this,
@@ -77,6 +78,15 @@ public class Map extends JPanel {
 	    }
 	}
 
+	private String buildPitchSelectedInfo() {
+	    final StringBuilder info = new StringBuilder();
+	    info.append(selectedArea.getName());
+	    info.append(selectedPitch.getId());
+	    info.append(" " + lm.get(lp.PITCH));
+	    info.append(" " + lm.get(lp.SELECTED));
+	    return info.toString();
+	}
+
 	private void handleOverviewClick(final MouseEvent e) {
 	    for (final Area area : areas.values()) {
 		statusBar.cleanupStatus();
@@ -100,21 +110,22 @@ public class Map extends JPanel {
 	}
 
 	private void handleZoomedInClick(final MouseEvent e) {
-	    // for (final Area area : areas) {
-	    // statusBar.cleanupStatus();
-	    //
-	    // if (area.getPoly().contains(e.getX(), e.getY())) {
-	    // if (selectedArea == area && !wasDoubleClick) {
-	    // selectedArea = null;
-	    // break;
-	    // }
-	    // selectedArea = area;
-	    // statusBar.setStatus(buildAreaSelectedInfo());
-	    // break;
-	    // }
-	    //
-	    // }
-	    // repaint();
+	    for (final PitchInterface pitch : pitches.values()) {
+		statusBar.cleanupStatus();
+
+		if (pitch.getShape().contains(e.getX() + frame.x,
+			e.getY() + frame.y)) {
+		    if (selectedPitch == pitch && !wasDoubleClick) {
+			selectedPitch = null;
+			break;
+		    }
+		    selectedPitch = pitch;
+		    statusBar.setStatus(buildPitchSelectedInfo());
+		    break;
+		}
+
+	    }
+	    repaint();
 
 	    if (wasDoubleClick) {
 		zoomOut();
@@ -185,18 +196,20 @@ public class Map extends JPanel {
 
 	private void handleMouseMotionZoom(final MouseEvent e) {
 	    statusBar.setHoverInfo(lm.get(lp.HOW_TO_ZOOM_OUT));
+	    highlightedPitch = null;
 
 	    for (final PitchInterface pitch : pitches.values()) {
 		if (!pitch.getArea().equalsIgnoreCase(selectedArea.getName())) {
 		    return;
 		}
-		statusBar.cleanupHoverInfo();
+		statusBar.setHoverInfo(lm.get(lp.HOW_TO_ZOOM_OUT));
 		setCurserDefault();
 
 		if (pitch.getShape().contains(e.getX() + frame.x,
 			e.getY() + frame.y)) {
 		    highlightedPitch = pitch;
 		    statusBar.setHoverInfo(buildPitchHoverInfo());
+		    break;
 		}
 	    }
 	    repaint();
@@ -246,17 +259,13 @@ public class Map extends JPanel {
 	new AreaKeyListener();
     }
 
-    /**
-     * @return the selected {@link Area}.
-     */
+    @Override
     public Area getSelectedArea() {
 	return selectedArea;
     }
 
-    /**
-     * @return the selected {@link Pitch}.
-     */
-    public PitchInterface getSelectedPlace() {
+    @Override
+    public PitchInterface getSelectedPitch() {
 	return selectedPitch;
     }
 
@@ -436,6 +445,21 @@ public class Map extends JPanel {
 	g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ALPHA));
 
 	paintDisablePart(g2);
+
+	if (highlightedPitch != null) {
+	    if (highlightedPitch.isInUse()) {
+		g2.setColor(Color.RED);
+	    }
+	    g2.setColor(Color.GREEN);
+
+	    g2.fillPolygon(highlightedPitch.getShape(frame.x, frame.y));
+	}
+
+	if (selectedPitch != null) {
+	    g2.setColor(Color.DARK_GRAY);
+
+	    g2.fillPolygon(selectedPitch.getShape(frame.x, frame.y));
+	}
     }
 
     private void setCurserDefault() {
@@ -450,6 +474,7 @@ public class Map extends JPanel {
 
     private void zoomIn() {
 	zoomedIn = true;
+	statusBar.cleanupHoverInfo();
 	setCurserDefault();
 	final float sf = GuiController.getScaleFactor();
 	final Rectangle areaFrame = selectedArea.getAreaFrame();
@@ -464,6 +489,7 @@ public class Map extends JPanel {
     }
 
     private void zoomOut() {
+	statusBar.cleanupStatus();
 	zoomedIn = false;
 	repaint();
     }
@@ -496,7 +522,7 @@ public class Map extends JPanel {
     private Area selectedArea = null;
 
     /** The selected {@link Pitch}. */
-    private Pitch selectedPitch;
+    private PitchInterface selectedPitch;
 
     /** The access interface to the status bar. */
     private final StatusBarInterface statusBar = StatusBarController.getInstance();
