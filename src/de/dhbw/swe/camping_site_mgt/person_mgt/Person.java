@@ -4,63 +4,79 @@ import java.util.Date;
 
 import de.dhbw.swe.camping_site_mgt.common.*;
 
-public class Person {
+public class Person implements PersonInterface {
 
     /**
      * Constructor for empty object.
      * 
      */
     public Person() {
-	this(new Country(), null, null, null, null, null, null, new Town());
-    }
-
-    /**
-     * Constructor.
-     * 
-     * @param country
-     * @param dateOfBirth
-     * @param firstName
-     * @param houseNumber
-     * @param identificationNumber
-     * @param name
-     * @param street
-     * @param town
-     */
-    public Person(final Country country, final Date dateOfBirth,
-	    final String firstName, final String houseNumber,
-	    final String identificationNumber, final String name,
-	    final String street, final Town town) {
-	this(0, country, dateOfBirth, firstName, houseNumber, identificationNumber,
-		name, street, town);
+	this(null, null, null, null, null, null, new Town(), new Country());
     }
 
     /**
      * Constructor.
      * 
      * @param id
-     * @param country
-     * @param dateOfBirth
-     * @param firstName
-     * @param houseNumber
+     *            the id
      * @param identificationNumber
+     *            identification number
+     * @param firstName
+     *            the first name
      * @param name
+     *            the name
+     * @param dateOfBirth
+     *            the birth date
      * @param street
+     *            the street
+     * @param houseNumber
+     *            the house number
      * @param town
+     *            the {@link Town}
+     * @param country
+     *            the {@link Country}
      */
-    public Person(final int id, final Country country, final Date dateOfBirth,
-	    final String firstName, final String houseNumber,
-	    final String identificationNumber, final String name,
-	    final String street, final Town town) {
+    public Person(final int id, final String identificationNumber,
+	    final String firstName, final String name, final Date dateOfBirth,
+	    final String street, final String houseNumber, final Town town,
+	    final Country country) {
 	this.id = id;
-	this.country = country;
-	this.dateOfBirth = dateOfBirth;
-	this.firstName = firstName;
-	this.houseNumber = houseNumber;
 	this.identificationNumber = identificationNumber;
+	this.firstName = firstName;
 	this.name = name;
+	this.dateOfBirth = dateOfBirth;
 	this.street = street;
+	this.houseNumber = houseNumber;
 	this.town = town;
+	this.country = country;
 	this.usage = new Usage();
+    }
+
+    /**
+     * Constructor.
+     * 
+     * @param identificationNumber
+     *            identification number
+     * @param firstName
+     *            the first name
+     * @param name
+     *            the name
+     * @param dateOfBirth
+     *            the birth date
+     * @param street
+     *            the street
+     * @param houseNumber
+     *            the house number
+     * @param town
+     *            the {@link Town}
+     * @param country
+     *            the {@link Country}
+     */
+    public Person(final String identificationNumber, final String firstName,
+	    final String name, final Date dateOfBirth, final String street,
+	    final String houseNumber, final Town town, final Country country) {
+	this(0, identificationNumber, firstName, name, dateOfBirth, street,
+		houseNumber, town, country);
     }
 
     /**
@@ -110,101 +126,57 @@ public class Person {
 	return false;
     }
 
-    /**
-     * Returns the country.
-     * 
-     * @return the country
-     */
+    @Override
     public Country getCountry() {
 	return country;
     }
 
-    /**
-     * Returns the dateOfBirth.
-     * 
-     * @return the dateOfBirth
-     */
+    @Override
     public Date getDateOfBirth() {
 	return dateOfBirth;
     }
 
-    /**
-     * Returns the firstName.
-     * 
-     * @return the firstName
-     */
+    @Override
     public String getFirstName() {
 	return firstName;
     }
 
-    /**
-     * Returns the houseNumber.
-     * 
-     * @return the houseNumber
-     */
+    @Override
     public String getHouseNumber() {
 	return houseNumber;
     }
 
-    /**
-     * Returns the id.
-     * 
-     * @return the id
-     */
+    @Override
     public int getId() {
 	return id;
     }
 
-    /**
-     * Returns the identificationNumber.
-     * 
-     * @return the identificationNumber
-     */
+    @Override
     public String getIdentificationNumber() {
 	return identificationNumber;
     }
 
-    /**
-     * Returns the name.
-     * 
-     * @return the name
-     */
+    @Override
     public String getName() {
 	return name;
     }
 
-    /**
-     * Returns the street.
-     * 
-     * @return the street
-     */
+    @Override
     public String getStreet() {
 	return street;
     }
 
-    /**
-     * Returns the town.
-     * 
-     * @return the town
-     */
+    @Override
     public Town getTown() {
 	return town;
     }
 
-    /**
-     * Returns the usage.
-     * 
-     * @return the usage
-     */
+    @Override
     public Usage getUsage() {
 	return usage;
     }
 
-    /**
-     * Checks if the object is still in use.
-     * 
-     * @return true if it's still in use
-     */
+    @Override
     public boolean isInUse() {
 	return usage.isInUse();
     }

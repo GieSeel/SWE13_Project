@@ -195,7 +195,7 @@ public class PitchMgr {
 	natureOfSoil = (String) entry.get("natureOfSoil");
 	xCoords = (String) entry.get("xCoords");
 	yCoords = (String) entry.get("yCoords");
-	// Pitch_Type type; TODO
+	type = (Pitch_Type) entry.get("type");
 	width = (int) entry.get("width");
 
 	object.put(id, new Pitch(id, characteristics, deliveryPoint, area, length,
