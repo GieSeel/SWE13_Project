@@ -56,7 +56,7 @@ public class SiteList {
 	objects.put(className + "id", new Integer(this.id));
 	objects.put(className + "number", new Integer(this.number));
 
-	objects.putAll(this.site.getTableData(className));
+	// objects.putAll(this.site.getTableData(className));
 
 	return objects;
     }
@@ -84,7 +84,7 @@ public class SiteList {
 		thisMap.put(key, val);
 	    }
 	}
-	this.site = new Site().setTableData(siteMap);
+	// this.site = new Site().setTableData(siteMap);
 	setData(thisMap);
 	return this;
     }

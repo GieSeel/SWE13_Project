@@ -154,9 +154,9 @@ public class Pitch extends BaseDataObject implements PitchInterface {
     }
 
     /**
-     * {@inheritDoc}.
+     * Returns the type.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#getTableName()
+     * @return the type
      */
     @Override
     public Polygon getShape(final int xShift, final int yShift) {
@@ -174,24 +174,6 @@ public class Pitch extends BaseDataObject implements PitchInterface {
     @Override
     public String getTableName() {
 	return "pitch";
-    }
-
-    /**
-     * Returns the type.
-     * 
-     * @return the type
-     */
-    @Override
-    public Polygon getShape(final int xShift, final int yShift) {
-	final int[] xPoints = shape.xpoints;
-	final int[] yPoints = shape.ypoints;
-	final int[] shiftedXPoints = new int[xPoints.length];
-	final int[] shiftedYPoints = new int[yPoints.length];
-	for (int i = 0; i < xPoints.length; i++) {
-	    shiftedXPoints[i] = xPoints[i] - xShift;
-	    shiftedYPoints[i] = yPoints[i] - yShift;
-	}
-	return new Polygon(shiftedXPoints, shiftedYPoints, shiftedXPoints.length);
     }
 
     @Override

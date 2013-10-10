@@ -56,7 +56,7 @@ public class PitchList {
 	objects.put(className + "id", new Integer(this.id));
 	objects.put(className + "number", new Integer(this.number));
 
-	objects.putAll(this.pitch.getTableData(className));
+	// objects.putAll(this.pitch.getTableData(className));
 
 	return objects;
     }
@@ -84,7 +84,7 @@ public class PitchList {
 		thisMap.put(key, val);
 	    }
 	}
-	this.pitch = new Pitch().setTableData(pitchMap);
+	// this.pitch = new Pitch().setTableData(pitchMap);
 	setData(thisMap);
 	return this;
     }

@@ -63,12 +63,12 @@ public class ServiceMgr extends BaseDataObjectMgr {
 	doneDate = (Date) entry.get("doneDate");
 	employeeRole = (EmployeeRole) EmployeeRoleMgr.getInstance().objectGet(
 		(int) entry.get("employeeRole"), tableName, id);
-	pitch = PitchMgr.getInstance().objectGet((int) entry.get("pitch"),
+	pitch = (Pitch) PitchMgr.getInstance().objectGet((int) entry.get("pitch"),
 		tableName, id);
 	priority = (int) entry.get("priority");
 	serviceNumber = (int) entry.get("serviceNumber");
-	site = SiteMgr.getInstance().objectGet((int) entry.get("site"), tableName,
-		id);
+	site = (Site) SiteMgr.getInstance().objectGet((int) entry.get("site"),
+		tableName, id);
 
 	return new Service(id, creationDate, description, doneDate, employeeRole,
 		pitch, priority, serviceNumber, site);

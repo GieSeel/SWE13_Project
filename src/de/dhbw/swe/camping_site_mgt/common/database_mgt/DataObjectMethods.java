@@ -34,22 +34,26 @@ public class DataObjectMethods {
      * @return
      */
     public static HashMap<String, Object> getDisplayDataOf(final Object obj) {
-	if (!(obj instanceof DataObject)) {
-	    // logger: object is not an instance of...
-	    return null;
-	}
-	final HashMap<String, Object> elements = new HashMap<String, Object>();
-	final String className = obj.getClass().toString().toLowerCase() + "_";
-	Object tmpObj;
-	for (final ColumnInfo column : DataStructure.getStructureFor(((DataObject) obj).getName())) {
-	    tmpObj = ObjectFieldAccess.getValueOf(column.getFieldName(), obj);
-	    if (column.getReleationToColumn() == null) {
-		elements.put(className + column.getFieldName(), tmpObj);
-	    } else {
-		elements.putAll(getDisplayDataOf(tmpObj));
-	    }
-	}
-	return elements;
+	return null;
+	// if (!(obj instanceof DataObject)) {
+	// // logger: object is not an instance of...
+	// return null;
+	// }
+	// final HashMap<String, Object> elements = new HashMap<String,
+	// Object>();
+	// final String className = obj.getClass().toString().toLowerCase() +
+	// "_";
+	// Object tmpObj;
+	// for (final ColumnInfo column :
+	// DataStructure.getStructureFor(((DataObject) obj).getName())) {
+	// tmpObj = ObjectFieldAccess.getValueOf(column.getFieldName(), obj);
+	// if (column.getReleationToColumn() == null) {
+	// elements.put(className + column.getFieldName(), tmpObj);
+	// } else {
+	// elements.putAll(getDisplayDataOf(tmpObj));
+	// }
+	// }
+	// return elements;
     }
 
     public static boolean insertOrUpdateDatabase(final Object object) {
