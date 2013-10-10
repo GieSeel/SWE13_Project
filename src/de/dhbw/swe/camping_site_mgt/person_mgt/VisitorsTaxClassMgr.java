@@ -20,9 +20,9 @@ package de.dhbw.swe.camping_site_mgt.person_mgt;
 
 import java.util.HashMap;
 
+import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
 import de.dhbw.swe.camping_site_mgt.common.Euro;
-import de.dhbw.swe.camping_site_mgt.common.Unfinished;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseMgr;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
@@ -31,7 +31,7 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
  * @author GieSeel
  * @version 1.0
  */
-public class VisitorsTaxClassMgr {
+public class VisitorsTaxClassMgr extends BaseDataObjectMgr {
     /** The singleton instance. */
     private static VisitorsTaxClassMgr instance;
 
@@ -51,108 +51,16 @@ public class VisitorsTaxClassMgr {
      * Private constructor. Singleton.
      */
     private VisitorsTaxClassMgr() {
-	visitorsTaxClasss = new HashMap<>();
-	tableName = "visitorsTaxClass";
-	logger = CampingLogger.getLogger(this.getClass());
-	db = DatabaseMgr.getInstance();
-	load(); // Load all data from database
+	super();
     }
 
     /**
-     * Gets the object from the object list.
+     * {@inheritDoc}.
      * 
-     * @param id
-     *            the {@link VisitorsTaxClass} object id
-     * @return the {@link VisitorsTaxClass}
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#entry2object(java.util.HashMap)
      */
-    public VisitorsTaxClass get(final int id) {
-	if (visitorsTaxClasss.containsKey(id)) {
-	    return visitorsTaxClasss.get(id);
-	}
-	return null;
-    }
-
-    /**
-     * Inserts object into database.
-     * 
-     * @param object
-     *            the {@link VisitorsTaxClass} object
-     */
-    public void insert(final VisitorsTaxClass object) {
-	// If object already exists just save this id
-	insert(isObjectExisting(object), object);
-    }
-
-    /**
-     * Removes object from object list.
-     * 
-     * @param id
-     *            the {@link VisitorsTaxClass} object id
-     */
-    @Unfinished
-    public void remove(final int id) {
-	// Sub objects
-
-	// visitorsTaxClasss.remove(id);
-	// TODO remove from database. Check if object is still in use (from
-	// parents)!!
-    }
-
-    /**
-     * Updates object in database.
-     * 
-     * @param id
-     *            the {@link VisitorsTaxClass} object id
-     * @param object
-     *            the {@link VisitorsTaxClass} object
-     */
-    public void update(final VisitorsTaxClass oldObject,
-	    final VisitorsTaxClass object) {
-	final int id = isObjectExisting(oldObject);
-	if (id == 0 || isObjectInUse(oldObject)) {
-	    // If object doesn't exists or if it's still in use insert a new one
-	    insert(object);
-	} else {
-	    add(id, object);
-	    db.updateEntryIn(tableName, object2entry(object));
-	}
-    }
-
-    /**
-     * Adds objects to object list.
-     * 
-     * @param objects
-     *            the list with the {@link VisitorsTaxClass} objects
-     * 
-     */
-    private void add(final HashMap<Integer, VisitorsTaxClass> objects) {
-	visitorsTaxClasss.putAll(objects);
-    }
-
-    /**
-     * Adds object to object list.
-     * 
-     * @param id
-     *            the {@link VisitorsTaxClass} object id
-     * @param object
-     *            the {@link VisitorsTaxClass} object
-     */
-    private void add(final int id, final VisitorsTaxClass object) {
-	object.setId(id);
-	visitorsTaxClasss.put(id, object);
-    }
-
-    /**
-     * Parses a database entry to an object.
-     * 
-     * @param entry
-     *            the entry
-     * @return the prepared {@link VisitorsTaxClass} object
-     */
-    private HashMap<Integer, VisitorsTaxClass> entry2object(
-	    final HashMap<String, Object> entry) {
-	final HashMap<Integer, VisitorsTaxClass> object = new HashMap<>();
-
+    @Override
+    protected DataObject entry2object(final HashMap<String, Object> entry) {
 	int id;
 	String labeling;
 	Euro price;
@@ -161,82 +69,37 @@ public class VisitorsTaxClassMgr {
 	labeling = (String) entry.get("labeling");
 	price = (Euro) entry.get("price");
 
-	object.put(id, new VisitorsTaxClass(id, labeling, price));
-	return object;
+	return new VisitorsTaxClass(id, labeling, price);
     }
 
     /**
-     * Inserts object into database.
+     * {@inheritDoc}.
      * 
-     * @param id
-     *            the id of the {@link VisitorsTaxClass} object
-     * @param object
-     *            the {@link VisitorsTaxClass} object
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#evenUpdateInUse()
      */
-    private void insert(int id, final VisitorsTaxClass object) {
-	// TODO evtl. unnötige -> alles in "insert(Town object)"
-	if (id == 0) {
-	    id = db.insertEntryInto(tableName, object2entry(object));
-	}
-	// Add or replace object in object list
-	add(id, object);
+    @Override
+    protected boolean evenUpdateInUse() {
+	return true;
     }
 
     /**
-     * Checks if the object already exists.
+     * {@inheritDoc}.
      * 
-     * @param object
-     *            the {@link VisitorsTaxClass} object
-     * @return id of the object (0 if it doesn't exists)
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getLogger()
      */
-    private int isObjectExisting(final VisitorsTaxClass object) {
-	if (visitorsTaxClasss.containsValue(object)) {
-	    return object.getId();
-	}
-	return 0;
+    @Override
+    protected CampingLogger getLogger() {
+	return CampingLogger.getLogger(getClass());
     }
 
     /**
-     * Checks if the object is still in use.
+     * {@inheritDoc}.
      * 
-     * @param object
-     *            the {@link VisitorsTaxClass} object
-     * @return true if object is still in use
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
      */
-    private boolean isObjectInUse(final VisitorsTaxClass object) {
-	// TODO -- -1 weil es momentan noch benutzt wird
-	// Ask all parent manager classes if they use the object
-	return GuestMgr.getInstance().isSubObjectInUse(object);
+    @Override
+    protected String getTableName() {
+	return new VisitorsTaxClass().getTableName();
     }
 
-    /**
-     * Loads the objects from the database.
-     */
-    private void load() {
-	for (final HashMap<String, Object> entry : db.getAllEntriesOf(tableName)) {
-	    add(entry2object(entry));
-	}
-    }
-
-    /**
-     * Parses an object to a database entry.
-     * 
-     * @param id
-     *            the {@link VisitorsTaxClass} object id
-     * @param object
-     *            the {@link VisitorsTaxClass} object
-     * @return the prepared entry
-     */
-    private HashMap<String, Object> object2entry(final VisitorsTaxClass object) {
-	final HashMap<String, Object> entry = new HashMap<>();
-	entry.put("id", object.getId());
-	entry.put("labeling", object.getLabeling());
-	entry.put("price", object.getPrice());
-	return entry;
-    }
-
-    private final DatabaseMgr db;
-    private final CampingLogger logger;
-    private final String tableName;
-    private final HashMap<Integer, VisitorsTaxClass> visitorsTaxClasss;
 }

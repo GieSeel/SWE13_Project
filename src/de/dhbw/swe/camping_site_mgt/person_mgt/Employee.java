@@ -1,8 +1,10 @@
 package de.dhbw.swe.camping_site_mgt.person_mgt;
 
+import de.dhbw.swe.camping_site_mgt.common.BaseDataObject;
 import de.dhbw.swe.camping_site_mgt.common.ChipCard;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 
-public class Employee {
+public class Employee extends BaseDataObject {
 
     /**
      * Constructor.
@@ -42,7 +44,7 @@ public class Employee {
     public Employee(final int id, final boolean blocked, final ChipCard chipCard,
 	    final String password, final Person person, final EmployeeRole role,
 	    final String userName) {
-	this.id = id;
+	super(id);
 	this.blocked = blocked;
 	this.chipCard = chipCard;
 	this.password = password;
@@ -54,11 +56,11 @@ public class Employee {
     /**
      * {@inheritDoc}.
      * 
-     * @see java.lang.Object#equals(java.lang.Object)
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#equals(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
      */
     @Override
-    public boolean equals(final Object obj) {
-	final Employee object = (Employee) obj;
+    public boolean equals(final DataObject dataObject) {
+	final Employee object = (Employee) dataObject;
 	if (this.blocked == object.isBlocked()
 		&& this.chipCard.equals(object.getChipCard())
 		&& this.password.equals(object.getPassword())
@@ -78,15 +80,6 @@ public class Employee {
      */
     public ChipCard getChipCard() {
 	return chipCard;
-    }
-
-    /**
-     * Returns the id.
-     * 
-     * @return the id
-     */
-    public int getId() {
-	return id;
     }
 
     /**
@@ -117,6 +110,16 @@ public class Employee {
     }
 
     /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#getTableName()
+     */
+    @Override
+    public String getTableName() {
+	return "employee";
+    }
+
+    /**
      * Returns the userName.
      * 
      * @return the userName
@@ -134,19 +137,8 @@ public class Employee {
 	return blocked;
     }
 
-    /**
-     * Sets the id.
-     * 
-     * @param id
-     *            the id to set
-     */
-    public void setId(final int id) {
-	this.id = id;
-    }
-
     private final boolean blocked;
     private final ChipCard chipCard;
-    private int id;
     private final String password;
     private final Person person;
     private final EmployeeRole role;

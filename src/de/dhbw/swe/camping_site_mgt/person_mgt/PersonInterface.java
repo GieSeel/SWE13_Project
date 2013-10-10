@@ -2,7 +2,8 @@ package de.dhbw.swe.camping_site_mgt.person_mgt;
 
 import java.util.Date;
 
-import de.dhbw.swe.camping_site_mgt.common.*;
+import de.dhbw.swe.camping_site_mgt.common.Country;
+import de.dhbw.swe.camping_site_mgt.common.Town;
 
 public interface PersonInterface {
     /**
@@ -34,13 +35,6 @@ public interface PersonInterface {
     public String getHouseNumber();
 
     /**
-     * Returns the id.
-     * 
-     * @return the id
-     */
-    public int getId();
-
-    /**
      * Returns the identificationNumber.
      * 
      * @return the identificationNumber
@@ -67,18 +61,4 @@ public interface PersonInterface {
      * @return the town
      */
     public Town getTown();
-
-    /**
-     * Returns the usage.
-     * 
-     * @return the usage
-     */
-    public Usage getUsage();
-
-    /**
-     * Checks if the object is still in use.
-     * 
-     * @return true if it's still in use
-     */
-    public boolean isInUse();
 }
