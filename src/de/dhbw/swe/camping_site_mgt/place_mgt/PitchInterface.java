@@ -2,7 +2,6 @@ package de.dhbw.swe.camping_site_mgt.place_mgt;
 
 import java.awt.Polygon;
 
-import de.dhbw.swe.camping_site_mgt.common.Usage;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map.Area;
 
 /**
@@ -28,11 +27,6 @@ public interface PitchInterface {
     Site getDeliveryPoint();
 
     /**
-     * @return the ID of the {@link Pitch}.
-     */
-    int getId();
-
-    /**
      * @return the length of the Pitch in <code>dm</code>.
      */
     int getLength();
@@ -40,7 +34,7 @@ public interface PitchInterface {
     /**
      * @return the description for the {@link Pitch} nature of soil.
      */
-    String getNatureOfSoil();
+    Pitch_NatureOfSoil getNatureOfSoil();
 
     /**
      * Returns the shape.
@@ -50,16 +44,20 @@ public interface PitchInterface {
     Polygon getShape();
 
     /**
+     * Get the shifted shape.
+     * 
+     * @param xShift
+     *            the pixels count to shift in x direction
+     * @param yShift
+     *            the pixels count to shift in y direction
+     * @return the shifted {@link Polygon}
+     */
+    Polygon getShape(int xShift, int yShift);
+
+    /**
      * @return the {@link Pitch_Type} of the {@link Pitch}.
      */
     Pitch_Type getType();
-
-    /**
-     * Returns the usage.
-     * 
-     * @return the usage
-     */
-    Usage getUsage();
 
     /**
      * @return the width of the {@link Pitch}.
@@ -80,10 +78,4 @@ public interface PitchInterface {
      */
     String getyCoords();
 
-    /**
-     * Checks if the object is still in use.
-     * 
-     * @return <code>true</code> if it's still used
-     */
-    boolean isInUse();
 }

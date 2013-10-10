@@ -1,8 +1,9 @@
 package de.dhbw.swe.camping_site_mgt.place_mgt;
 
-import de.dhbw.swe.camping_site_mgt.common.Usage;
+import de.dhbw.swe.camping_site_mgt.common.BaseDataObject;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 
-public class Site {
+public class Site extends BaseDataObject {
 
     /**
      * Constructor.
@@ -23,12 +24,11 @@ public class Site {
      */
     public Site(final int id, final String description, final String labeling,
 	    final String openingHours, final String type) {
+	super(id);
 	this.description = description;
-	this.id = id;
 	this.labeling = labeling;
 	this.openingHours = openingHours;
 	this.type = type;
-	this.usage = new Usage();
     }
 
     /**
@@ -45,37 +45,13 @@ public class Site {
     }
 
     /**
-     * Adds entry to usage list.
-     * 
-     * @param parentTableName
-     *            the parents table name
-     * @param parentID
-     *            the id of the parent
-     */
-    public void addUsage(final String parentTableName, final int parentID) {
-	usage.addUsage(parentTableName, parentID);
-    }
-
-    /**
-     * Deletes entry from usage list.
-     * 
-     * @param parentTableName
-     *            the parents table name
-     * @param parentID
-     *            the id of the parent
-     */
-    public void delUsage(final String parentTableName, final int parentID) {
-	usage.delUsage(parentTableName, parentID);
-    }
-
-    /**
      * {@inheritDoc}.
      * 
-     * @see java.lang.Object#equals(java.lang.Object)
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#equals(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
      */
     @Override
-    public boolean equals(final Object obj) {
-	final Site object = (Site) obj;
+    public boolean equals(final DataObject dataObject) {
+	final Site object = (Site) dataObject;
 	if (this.description.equals(object.getDescription())
 		&& this.labeling.equals(object.getLabeling())
 		&& this.openingHours.equals(object.getOpeningHours())
@@ -92,15 +68,6 @@ public class Site {
      */
     public String getDescription() {
 	return description;
-    }
-
-    /**
-     * Returns the id.
-     * 
-     * @return the id
-     */
-    public int getId() {
-	return id;
     }
 
     /**
@@ -122,6 +89,16 @@ public class Site {
     }
 
     /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#getTableName()
+     */
+    @Override
+    public String getTableName() {
+	return "site";
+    }
+
+    /**
      * Returns the type.
      * 
      * @return the type
@@ -130,48 +107,8 @@ public class Site {
 	return type;
     }
 
-    /**
-     * Returns the usage.
-     * 
-     * @return the usage
-     */
-    public Usage getUsage() {
-	return usage;
-    }
-
-    /**
-     * Checks if the object is still in use.
-     * 
-     * @return true if it's still in use
-     */
-    public boolean isInUse() {
-	return usage.isInUse();
-    }
-
-    /**
-     * Sets the id.
-     * 
-     * @param id
-     *            the id to set
-     */
-    public void setId(final int id) {
-	this.id = id;
-    }
-
-    /**
-     * Sets the usage.
-     * 
-     * @param usage
-     *            the usage to set
-     */
-    public void setUsage(final Usage usage) {
-	this.usage = usage;
-    }
-
     private final String description;
-    private int id;
     private final String labeling;
     private final String openingHours;
     private final String type;
-    private Usage usage;
 }

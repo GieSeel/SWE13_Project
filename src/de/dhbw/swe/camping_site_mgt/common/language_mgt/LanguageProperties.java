@@ -67,6 +67,10 @@ public interface LanguageProperties {
     String JUST_A_COMMENT = "//";
     /** The map (word) property */
     String MAP = "Map";
+    String NATUREOFSOIL_PITCH_GRASS = "grass";
+    String NATUREOFSOIL_PITCH_GRAVEL = "gravel";
+    String NATUREOFSOIL_PITCH_SAND = "sand";
+    String NATUREOFSOIL_PITCH_SOIL = "soil";
     /** The no property. */
     String NO = "no";
     String PITCH = "Pitch";

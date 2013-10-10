@@ -2,12 +2,13 @@ package de.dhbw.swe.camping_site_mgt.service_mgt;
 
 import java.util.Date;
 
-import de.dhbw.swe.camping_site_mgt.common.Usage;
+import de.dhbw.swe.camping_site_mgt.common.BaseDataObject;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 import de.dhbw.swe.camping_site_mgt.person_mgt.EmployeeRole;
 import de.dhbw.swe.camping_site_mgt.place_mgt.Pitch;
 import de.dhbw.swe.camping_site_mgt.place_mgt.Site;
 
-public class Service {
+public class Service extends BaseDataObject {
 
     /**
      * Constructor.
@@ -55,7 +56,7 @@ public class Service {
 	    final Date doneDate, final EmployeeRole employeeRole,
 	    final Pitch pitch, final int priority, final int serviceNumber,
 	    final Site site) {
-	this.id = id;
+	super(id);
 	this.creationDate = creationDate;
 	this.description = description;
 	this.doneDate = doneDate;
@@ -64,31 +65,27 @@ public class Service {
 	this.priority = priority;
 	this.serviceNumber = serviceNumber;
 	this.site = site;
-	this.usage = new Usage();
     }
 
     /**
-     * Adds entry to usage list.
+     * {@inheritDoc}.
      * 
-     * @param parentTableName
-     *            the parents table name
-     * @param parentID
-     *            the id of the parent
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#equals(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
      */
-    public void addUsage(final String parentTableName, final int parentID) {
-	usage.addUsage(parentTableName, parentID);
-    }
-
-    /**
-     * Deletes entry from usage list.
-     * 
-     * @param parentTableName
-     *            the parents table name
-     * @param parentID
-     *            the id of the parent
-     */
-    public void delUsage(final String parentTableName, final int parentID) {
-	usage.delUsage(parentTableName, parentID);
+    @Override
+    public boolean equals(final DataObject dataObject) {
+	final Service object = (Service) dataObject;
+	if (this.creationDate.equals(object.getCreationDate())
+		&& this.description.equals(object.getDescription())
+		&& this.doneDate.equals(object.getDoneDate())
+		&& this.employeeRole.equals(object.getEmployeeRole())
+		&& this.pitch.equals(object.getPitch())
+		&& this.priority == object.getPriority()
+		&& this.serviceNumber == object.getServiceNumber()
+		&& this.site.equals(object.getSite())) {
+	    return true;
+	}
+	return false;
     }
 
     /**
@@ -128,15 +125,6 @@ public class Service {
     }
 
     /**
-     * Returns the id.
-     * 
-     * @return the id
-     */
-    public int getId() {
-	return id;
-    }
-
-    /**
      * Returns the pitch.
      * 
      * @return the pitch
@@ -173,51 +161,21 @@ public class Service {
     }
 
     /**
-     * Returns the usage.
+     * {@inheritDoc}.
      * 
-     * @return the usage
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#getTableName()
      */
-    public Usage getUsage() {
-	return usage;
-    }
-
-    /**
-     * Checks if the object is still in use.
-     * 
-     * @return true if it's still in use
-     */
-    public boolean isInUse() {
-	return usage.isInUse();
-    }
-
-    /**
-     * Sets the id.
-     * 
-     * @param id
-     *            the id to set
-     */
-    public void setId(final int id) {
-	this.id = id;
-    }
-
-    /**
-     * Sets the usage.
-     * 
-     * @param usage
-     *            the usage to set
-     */
-    public void setUsage(final Usage usage) {
-	this.usage = usage;
+    @Override
+    public String getTableName() {
+	return "service";
     }
 
     private final Date creationDate;
     private final String description;
     private final Date doneDate;
     private final EmployeeRole employeeRole;
-    private int id;
     private final Pitch pitch;
     private final int priority;
     private final int serviceNumber;
     private final Site site;
-    private Usage usage;
 }
