@@ -1,29 +1,47 @@
-package de.dhbw.swe.camping_site_mgt.person_mgt;
+/**
+ * Comments for file BillMgr.java
+ *
+ * @author   GieSeel
+ *
+ * Project:    Campingplatz Verwaltung
+ * Company:    GieSeel
+ * $Revision:  $
+ *
+ * Unclassified
+ *
+ * Copyright © since 2013 - Pforzheim - GieSeel GmbH
+ * All rights especially the right for copying and distribution as
+ * well as translation reserved.
+ * No part of the product shall be reproduced or stored processed
+ * copied or distributed with electronic tools or by paper copy or 
+ * any other process without written authorization of GieSeel.
+ */
+package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
 import java.util.HashMap;
 
-import de.dhbw.swe.camping_site_mgt.common.*;
+import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
- * The manager class for the {@link Employee} objects.
+ * The manager class for the {@link Bill} objects.
  * 
  * @author GieSeel
  * @version 1.0
  */
-public class EmployeeMgr extends BaseDataObjectMgr {
+public class BillMgr extends BaseDataObjectMgr {
     /** The singleton instance. */
-    private static EmployeeMgr instance;
+    private static BillMgr instance;
 
     /**
      * Returns the instance.
      * 
      * @return the singleton instance.
      */
-    public static synchronized EmployeeMgr getInstance() {
+    public static synchronized BillMgr getInstance() {
 	if (instance == null) {
-	    instance = new EmployeeMgr();
+	    instance = new BillMgr();
 	}
 	return instance;
     }
@@ -31,35 +49,32 @@ public class EmployeeMgr extends BaseDataObjectMgr {
     /**
      * Private constructor. Singleton.
      */
-    private EmployeeMgr() {
+    private BillMgr() {
+	super();
     }
 
     /**
-     * {@inheritDoc}.
+     * Parses a database entry to an object.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#entry2object(java.util.HashMap)
+     * @param entry
+     *            the entry
+     * @return the prepared {@link Bill} object
      */
     @Override
     protected DataObject entry2object(final HashMap<String, Object> entry) {
+	final String tableName = getTableName();
 	int id;
-	boolean blocked;
-	ChipCard chipCard;
-	String password;
-	Person person;
-	EmployeeRole role;
-	String userName;
+	BillItem billItem;
+	int multiplier;
+	int number;
 
 	id = (int) entry.get("id");
-	blocked = ((int) entry.get("blocked") == 1 ? true : false);
-	chipCard = (ChipCard) ChipCardMgr.getInstance().get(
-		(int) entry.get("chipCard"));
-	password = (String) entry.get("password");
-	person = (Person) PersonMgr.getInstance().get((int) entry.get("person"));
-	role = (EmployeeRole) EmployeeRoleMgr.getInstance().get(
-		(int) entry.get("role"));
-	userName = (String) entry.get("userName");
+	billItem = (BillItem) BillItemMgr.getInstance().objectGet(
+		(int) entry.get("billItem"), tableName, id);
+	multiplier = (int) entry.get("multiplier");
+	number = (int) entry.get("number");
 
-	return new Employee(id, blocked, chipCard, password, person, role, userName);
+	return new Bill(id, number, billItem, multiplier);
     }
 
     /**
@@ -89,7 +104,7 @@ public class EmployeeMgr extends BaseDataObjectMgr {
      */
     @Override
     protected String getTableName() {
-	return new Employee().getTableName();
+	return new Bill().getTableName();
     }
 
     /**
@@ -100,12 +115,10 @@ public class EmployeeMgr extends BaseDataObjectMgr {
      */
     @Override
     protected void subObjectAdd(final int id, final DataObject dataObject) {
-	final Employee object = castObject(dataObject);
+	final Bill object = castObject(dataObject);
 	final String tableName = object.getTableName();
 
-	object.getChipCard().addUsage(tableName, id);
-	object.getPerson().addUsage(tableName, id);
-	object.getRole().addUsage(tableName, id);
+	object.getBillItem().addUsage(tableName, id);
     }
 
     /**
@@ -115,11 +128,9 @@ public class EmployeeMgr extends BaseDataObjectMgr {
      */
     @Override
     protected void subObjectInsert(final DataObject dataObject) {
-	final Employee object = castObject(dataObject);
+	final Bill object = castObject(dataObject);
 
-	ChipCardMgr.getInstance().objectInsert(object.getChipCard());
-	PersonMgr.getInstance().objectInsert(object.getPerson());
-	EmployeeRoleMgr.getInstance().objectInsert(object.getRole());
+	BillItemMgr.getInstance().objectInsert(object.getBillItem());
     }
 
     /**
@@ -129,19 +140,13 @@ public class EmployeeMgr extends BaseDataObjectMgr {
      */
     @Override
     protected void subObjectRemove(final DataObject dataObject) {
-	final Employee object = castObject(dataObject);
+	final Bill object = castObject(dataObject);
 	final int id = object.getId();
 	final String tableName = object.getTableName();
 
-	final ChipCard chipCard = object.getChipCard();
-	final Person person = object.getPerson();
-	final EmployeeRole employeeRole = object.getRole();
-	chipCard.delUsage(tableName, id);
-	person.delUsage(tableName, id);
-	employeeRole.delUsage(tableName, id);
-	ChipCardMgr.getInstance().objectRemove(chipCard);
-	PersonMgr.getInstance().objectRemove(person);
-	EmployeeRoleMgr.getInstance().objectRemove(employeeRole);
+	final BillItem billItem = object.getBillItem();
+	billItem.delUsage(tableName, id);
+	BillItemMgr.getInstance().objectRemove(billItem);
     }
 
     /**
@@ -153,31 +158,24 @@ public class EmployeeMgr extends BaseDataObjectMgr {
     @Override
     protected void subObjectUpdate(final DataObject dataObject,
 	    final DataObject newDataObject) {
-	final Employee object = castObject(dataObject);
-	final Employee newObject = castObject(newDataObject);
+	final Bill object = castObject(dataObject);
+	final Bill newObject = castObject(newDataObject);
 	final int id = object.getId();
 	final String tableName = object.getTableName();
 
-	final ChipCard chipCard = object.getChipCard();
-	final Person person = object.getPerson();
-	final EmployeeRole employeeRole = object.getRole();
-	chipCard.delUsage(tableName, id);
-	person.delUsage(tableName, id);
-	employeeRole.delUsage(tableName, id);
-	ChipCardMgr.getInstance().objectUpdate(chipCard, newObject.getChipCard());
-	PersonMgr.getInstance().objectUpdate(person, newObject.getPerson());
-	EmployeeRoleMgr.getInstance().objectUpdate(employeeRole,
-		newObject.getRole());
+	final BillItem billItem = object.getBillItem();
+	billItem.delUsage(tableName, id);
+	BillItemMgr.getInstance().objectUpdate(billItem, newObject.getBillItem());
     }
 
     /**
-     * Cast {@link DataObject} to {@link Employee} object.
+     * Cast {@link DataObject} to {@link Bill} object.
      * 
      * @param dataObject
      *            the {@link DataObject}
-     * @return the {@link Employee} object
+     * @return the {@link Bill} object
      */
-    private Employee castObject(final DataObject dataObject) {
-	return (Employee) dataObject;
+    private Bill castObject(final DataObject dataObject) {
+	return (Bill) dataObject;
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Comments for file VisitorsTaxClassMgr.java
+ * Comments for file EquipmentMgr.java
  *
  * @author   GieSeel
  *
@@ -16,33 +16,32 @@
  * copied or distributed with electronic tools or by paper copy or 
  * any other process without written authorization of GieSeel.
  */
-package de.dhbw.swe.camping_site_mgt.person_mgt;
+package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
 import java.util.HashMap;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
-import de.dhbw.swe.camping_site_mgt.common.Euro;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
- * The manager class for the {@link VisitorsTaxClass} objects.
+ * The manager class for the {@link Equipment} objects.
  * 
  * @author GieSeel
  * @version 1.0
  */
-public class VisitorsTaxClassMgr extends BaseDataObjectMgr {
+public class EquipmentMgr extends BaseDataObjectMgr {
     /** The singleton instance. */
-    private static VisitorsTaxClassMgr instance;
+    private static EquipmentMgr instance;
 
     /**
      * Returns the instance.
      * 
      * @return the singleton instance.
      */
-    public static synchronized VisitorsTaxClassMgr getInstance() {
+    public static synchronized EquipmentMgr getInstance() {
 	if (instance == null) {
-	    instance = new VisitorsTaxClassMgr();
+	    instance = new EquipmentMgr();
 	}
 	return instance;
     }
@@ -50,26 +49,30 @@ public class VisitorsTaxClassMgr extends BaseDataObjectMgr {
     /**
      * Private constructor. Singleton.
      */
-    private VisitorsTaxClassMgr() {
+    private EquipmentMgr() {
 	super();
     }
 
     /**
-     * {@inheritDoc}.
+     * Parses a database entry to an object.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#entry2object(java.util.HashMap)
+     * @param entry
+     *            the entry
+     * @return the prepared {@link Equipment} object
      */
     @Override
     protected DataObject entry2object(final HashMap<String, Object> entry) {
 	int id;
-	String labeling;
-	Euro price;
+	String identification;
+	String size;
+	Equipment_Type type;
 
 	id = (int) entry.get("id");
-	labeling = (String) entry.get("labeling");
-	price = (Euro) entry.get("price");
+	identification = (String) entry.get("identification");
+	size = (String) entry.get("size");
+	type = (Equipment_Type) entry.get("type");
 
-	return new VisitorsTaxClass(id, labeling, price);
+	return new Equipment(id, identification, size, type);
     }
 
     /**
@@ -99,7 +102,6 @@ public class VisitorsTaxClassMgr extends BaseDataObjectMgr {
      */
     @Override
     protected String getTableName() {
-	return new VisitorsTaxClass().getTableName();
+	return new Equipment().getTableName();
     }
-
 }

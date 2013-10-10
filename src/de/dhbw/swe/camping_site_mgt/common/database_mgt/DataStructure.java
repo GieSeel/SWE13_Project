@@ -1,12 +1,15 @@
 package de.dhbw.swe.camping_site_mgt.common.database_mgt;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
 
 import de.dhbw.swe.camping_site_mgt.booking_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.*;
-import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
+import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageMgr;
+import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageProperties;
 import de.dhbw.swe.camping_site_mgt.person_mgt.*;
-import de.dhbw.swe.camping_site_mgt.place_mgt.*;
+import de.dhbw.swe.camping_site_mgt.place_mgt.Pitch;
+import de.dhbw.swe.camping_site_mgt.place_mgt.Site;
 import de.dhbw.swe.camping_site_mgt.service_mgt.Service;
 
 /**
@@ -65,7 +68,7 @@ public class DataStructure {
 		"billitem",
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
-			new ColumnInfo("labeling", String.class,
+			new ColumnInfo("labeling", Enum.class,
 				lm.get(lp.DM_LABELING)),
 			new ColumnInfo("priceBusySeason", Float.class,
 				lm.get(lp.DM_PRICE_BUSY_SEASON)),
@@ -140,9 +143,9 @@ public class DataStructure {
 		"employeerole",
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
-			new ColumnInfo("labeling", String.class,
+			new ColumnInfo("labeling", Enum.class,
 				lm.get(lp.DM_LABELING)),
-			new ColumnInfo("arrangement", String.class,
+			new ColumnInfo("arrangement", Enum.class,
 				lm.get(lp.DM_ARRANGEMENT)) });
 
 	// "equipment"
@@ -150,7 +153,7 @@ public class DataStructure {
 		"equipment",
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
-			new ColumnInfo("type", String.class, lm.get(lp.DM_TYPE)),
+			new ColumnInfo("type", Enum.class, lm.get(lp.DM_TYPE)),
 			new ColumnInfo("size", String.class, lm.get(lp.DM_SIZE)),
 			new ColumnInfo("identification", String.class,
 				lm.get(lp.DM_IDENTIFICATION)) });
@@ -211,11 +214,11 @@ public class DataStructure {
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
 			new ColumnInfo("area", String.class, lm.get(lp.DM_AREA)),
-			new ColumnInfo("type", String.class, lm.get(lp.DM_TYPE)),
+			new ColumnInfo("type", Enum.class, lm.get(lp.DM_TYPE)),
 			new ColumnInfo("length", Integer.class,
 				lm.get(lp.DM_LENGTH)),
 			new ColumnInfo("width", Integer.class, lm.get(lp.DM_WIDTH)),
-			new ColumnInfo("natureOfSoil", String.class,
+			new ColumnInfo("natureOfSoil", Enum.class,
 				lm.get(lp.DM_NATURE_OF_SOIL)),
 			new ColumnInfo("deliveryPoint_ID", Integer.class, null,
 				"deliveryPoint", Site.class),

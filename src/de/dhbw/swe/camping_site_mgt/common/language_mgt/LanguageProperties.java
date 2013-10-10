@@ -11,6 +11,9 @@ public interface LanguageProperties {
     String ADDITIONAL_INFO = "for additional information";
     /** The area property. */
     String AREA = "Area";
+    String ARRANGEMENT_EMPLOYEEROLE_ADMINISTRATOR = "Administrator";
+    String ARRANGEMENT_EMPLOYEEROLE_LABORATORYASSISTANT = "Laboratory Assistant";
+    String ARRANGEMENT_EMPLOYEEROLE_RECEPTIONSTAFF = "Reception Staff";
     /** The click to select property. */
     String CLICK_TO_SELECT = "click to select";
     String COLUMN_HOUSENR = "House Number";
@@ -65,6 +68,18 @@ public interface LanguageProperties {
     String HOW_TO_ZOOM_OUT = "double click to zoom out";
     /** The comment marker. */
     String JUST_A_COMMENT = "//";
+    String LABELING_BILLITEM_ADULT = "Adult";
+    String LABELING_BILLITEM_CAMPERPITCH = "Camperpitch";
+    String LABELING_BILLITEM_CHILD = "Child";
+    String LABELING_BILLITEM_ELECTRICITY = "Electricity";
+    String LABELING_BILLITEM_ICEBOX = "Icebox";
+    String LABELING_BILLITEM_PARKINGPLACE = "Parkingplace";
+    String LABELING_BILLITEM_TENTPITCH = "Tentpitch";
+    String LABELING_EMPLOYEEROLE_CARETAKER = "Caretaker";
+    String LABELING_EMPLOYEEROLE_CLEANER = "Cleaner";
+    String LABELING_EMPLOYEEROLE_CONDUCTOR = "Conductor";
+    String LABELING_EMPLOYEEROLE_GROUNDKEEPER = "Groundkeeper";
+    String LABELING_EMPLOYEEROLE_RECEPTION = "Reception";
     /** The map (word) property */
     String MAP = "Map";
     String NATUREOFSOIL_PITCH_GRASS = "grass";
@@ -78,9 +93,18 @@ public interface LanguageProperties {
     String QUESTION_CLOSE_APPLICATION = "Do you like to close the application?";
     /** The selected property. */
     String SELECTED = "selected";
+    String TYPE_EQUIPMENT_BIKE = "Bike";
+    String TYPE_EQUIPMENT_BOAT = "Boat";
+    String TYPE_EQUIPMENT_CAMPER = "Camper";
+    String TYPE_EQUIPMENT_CAR = "Car";
+    String TYPE_EQUIPMENT_CARAVAN = "Caravan";
+    String TYPE_EQUIPMENT_MOTORBIKE = "Motorbike";
+    String TYPE_EQUIPMENT_OTHER = "Other";
+    String TYPE_EQUIPMENT_TENT = "Tent";
     String TYPE_PITCH_CAMPER = "camper pitch";
     String TYPE_PITCH_PARKING = "place to park";
     String TYPE_PITCH_TENT = "tent pitch";
+
     /** The yes property. */
     String YES = "yes";
 }

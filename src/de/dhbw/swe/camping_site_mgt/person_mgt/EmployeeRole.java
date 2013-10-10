@@ -17,24 +17,25 @@ public class EmployeeRole extends BaseDataObject {
      * Constructor.
      * 
      * @param arrangement
-     * @param id
      * @param labeling
      */
-    public EmployeeRole(final int id, final String arrangement,
-	    final String labeling) {
-	super(id);
-	this.arrangement = arrangement;
-	this.labeling = labeling;
+    public EmployeeRole(final EmployeeRole_Arrangement arrangement,
+	    final EmployeeRole_Labeling labeling) {
+	this(0, arrangement, labeling);
     }
 
     /**
      * Constructor.
      * 
      * @param arrangement
+     * @param id
      * @param labeling
      */
-    public EmployeeRole(final String arrangement, final String labeling) {
-	this(0, arrangement, labeling);
+    public EmployeeRole(final int id, final EmployeeRole_Arrangement arrangement,
+	    final EmployeeRole_Labeling labeling) {
+	super(id);
+	this.arrangement = arrangement;
+	this.labeling = labeling;
     }
 
     /**
@@ -58,7 +59,7 @@ public class EmployeeRole extends BaseDataObject {
      * 
      * @return the arrangement
      */
-    public String getArrangement() {
+    public EmployeeRole_Arrangement getArrangement() {
 	return arrangement;
     }
 
@@ -67,7 +68,7 @@ public class EmployeeRole extends BaseDataObject {
      * 
      * @return the labeling
      */
-    public String getLabeling() {
+    public EmployeeRole_Labeling getLabeling() {
 	return labeling;
     }
 
@@ -81,6 +82,6 @@ public class EmployeeRole extends BaseDataObject {
 	return "employeerole";
     }
 
-    private final String arrangement;
-    private final String labeling;
+    private final EmployeeRole_Arrangement arrangement;
+    private final EmployeeRole_Labeling labeling;
 }

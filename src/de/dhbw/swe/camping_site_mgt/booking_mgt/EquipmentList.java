@@ -1,9 +1,11 @@
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Set;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
 
+@Deprecated
 public class EquipmentList {
     public EquipmentList() {
 	super();
@@ -56,7 +58,7 @@ public class EquipmentList {
 	objects.put(className + "id", new Integer(this.id));
 	objects.put(className + "number", new Integer(this.id));
 
-	objects.putAll(this.equipment.getTableData(className));
+	// objects.putAll(this.equipment.getTableData(className));
 
 	return objects;
     }
@@ -84,7 +86,7 @@ public class EquipmentList {
 		thisMap.put(key, val);
 	    }
 	}
-	this.equipment = new Equipment().setTableData(equipmentMap);
+	// this.equipment = new Equipment().setTableData(equipmentMap);
 	setData(thisMap);
 	return this;
     }

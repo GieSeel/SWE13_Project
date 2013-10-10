@@ -1,10 +1,12 @@
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Set;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
 import de.dhbw.swe.camping_site_mgt.place_mgt.Site;
 
+@Deprecated
 public class ExtraBookingList {
     public ExtraBookingList() {
 	super();
@@ -55,7 +57,7 @@ public class ExtraBookingList {
 	objects.put(className + "id", new Integer(this.id));
 	objects.put(className + "number", new Integer(this.number));
 
-	objects.putAll(this.site.getTableData(className));
+	// objects.putAll(this.site.getTableData(className));
 
 	return objects;
     }
@@ -83,7 +85,7 @@ public class ExtraBookingList {
 		thisMap.put(key, val);
 	    }
 	}
-	this.site = new Site().setTableData(extrabookingMap);
+	// this.site = new Site().setTableData(extrabookingMap);
 	setData(thisMap);
 	return this;
     }

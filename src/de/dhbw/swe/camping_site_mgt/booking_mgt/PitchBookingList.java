@@ -1,9 +1,11 @@
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Set;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
 
+@Deprecated
 public class PitchBookingList {
     public PitchBookingList() {
 	super();
@@ -57,7 +59,7 @@ public class PitchBookingList {
 	objects.put(className + "id", new Integer(this.id));
 	objects.put(className + "number", new Integer(this.number));
 
-	objects.putAll(this.pitchBooking.getTableData(className));
+	// objects.putAll(this.pitchBooking.getTableData(className));
 
 	return objects;
     }
@@ -85,7 +87,7 @@ public class PitchBookingList {
 		thisMap.put(key, val);
 	    }
 	}
-	this.pitchBooking = new PitchBooking().setTableData(pitchbookingMap);
+	// this.pitchBooking = new PitchBooking().setTableData(pitchbookingMap);
 	setData(thisMap);
 	return this;
     }

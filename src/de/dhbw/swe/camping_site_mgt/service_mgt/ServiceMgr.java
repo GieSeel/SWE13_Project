@@ -81,7 +81,7 @@ public class ServiceMgr extends BaseDataObjectMgr {
      */
     @Override
     protected boolean evenUpdateInUse() {
-	return true;
+	return false;
     }
 
     /**

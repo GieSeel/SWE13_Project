@@ -1,106 +1,81 @@
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
-import java.util.*;
-
+import de.dhbw.swe.camping_site_mgt.common.BaseDataObject;
 import de.dhbw.swe.camping_site_mgt.common.Euro;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 
-public class BillItem {
+public class BillItem extends BaseDataObject {
     public BillItem() {
-	super();
-	this.id = 0;
-	this.labeling = null;
-	this.priceBusySeason = null;
-	this.priceLowSeason = null;
+	this(null, null, null);
     }
 
-    public BillItem(final int id, final String labeling,
-	    final Euro priceBusySeason, final Euro priceLowSeason) {
-	super();
-	this.id = id;
-	this.labeling = labeling;
-	this.priceBusySeason = priceBusySeason;
-	this.priceLowSeason = priceLowSeason;
-    }
-
-    public BillItem(final String labeling, final Euro priceBusySeason,
+    public BillItem(final BillItem_Labeling labeling, final Euro priceBusySeason,
 	    final Euro priceLowSeason) {
-	super();
-	this.id = 0;
+	this(0, labeling, priceBusySeason, priceLowSeason);
+    }
+
+    public BillItem(final int id, final BillItem_Labeling labeling,
+	    final Euro priceBusySeason, final Euro priceLowSeason) {
+	super(id);
 	this.labeling = labeling;
 	this.priceBusySeason = priceBusySeason;
 	this.priceLowSeason = priceLowSeason;
     }
 
-    public HashMap<String, Object> getDatabaseData() {
-	final HashMap<String, Object> objects = new HashMap<String, Object>();
-	objects.put("id", this.id);
-	objects.put("labeling", this.labeling);
-	objects.put("priceBusySeason", this.priceBusySeason.returnValue());
-	objects.put("priceLowSeason", this.priceLowSeason.returnValue());
-	return objects;
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#equals(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
+     */
+    @Override
+    public boolean equals(final DataObject dataObject) {
+	final BillItem object = (BillItem) dataObject;
+	if (this.labeling.equals(object.getLabeling())
+		&& this.priceBusySeason.equals(object.getPriceBusySeason())
+		&& this.priceLowSeason.equals(object.getPriceLowSeason())) {
+	    return true;
+	}
+	return false;
     }
 
-    public int getId() {
-	return id;
-    }
-
-    public String getLabeling() {
+    /**
+     * Returns the labeling.
+     * 
+     * @return the labeling
+     */
+    public BillItem_Labeling getLabeling() {
 	return labeling;
     }
 
+    /**
+     * Returns the priceBusySeason.
+     * 
+     * @return the priceBusySeason
+     */
     public Euro getPriceBusySeason() {
 	return priceBusySeason;
     }
 
+    /**
+     * Returns the priceLowSeason.
+     * 
+     * @return the priceLowSeason
+     */
     public Euro getPriceLowSeason() {
 	return priceLowSeason;
     }
 
-    public HashMap<String, Object> getTableData(final String parentClass) {
-	final HashMap<String, Object> objects = new HashMap<String, Object>();
-	final String className = parentClass + "billitem_";
-
-	objects.put(className + "id", new Integer(this.id));
-	objects.put(className + "labeling", new String(this.labeling));
-	objects.put(className + "priceBusySeason",
-		new Float(this.priceBusySeason.returnValue()));
-	objects.put(className + "priceLowSeason",
-		new Float(this.priceLowSeason.returnValue()));
-
-	return objects;
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#getTableName()
+     */
+    @Override
+    public String getTableName() {
+	return "billitem";
     }
 
-    public BillItem setDatabaseData(final HashMap<String, Object> objects) {
-	setData(objects);
-	return this;
-    }
-
-    public BillItem setTableData(final HashMap<String, Object> objects) {
-	final String className = "billitem_";
-	final int classNameLength = className.length();
-	final HashMap<String, Object> thisMap = new HashMap<String, Object>();
-
-	Object val;
-	final Set<String> keys = objects.keySet();
-	for (String key : keys) {
-	    val = objects.get(key);
-	    key = key.substring(classNameLength);
-	    thisMap.put(key, val);
-	}
-	setData(thisMap);
-	return this;
-    }
-
-    private void setData(final HashMap<String, Object> objects) {
-	this.id = (int) objects.get("id");
-	this.labeling = (String) objects.get("labeling");
-	this.priceBusySeason = new Euro((float) objects.get("priceBusySeason"));
-	this.priceLowSeason = new Euro((float) objects.get("priceLowSeason"));
-    }
-
-    private int id;
-    // private final BillItem_Labeling labeling;
-    private String labeling;
-    private Euro priceBusySeason;
-    private Euro priceLowSeason;
+    private final BillItem_Labeling labeling;
+    private final Euro priceBusySeason;
+    private final Euro priceLowSeason;
 }

@@ -1,104 +1,81 @@
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
-import java.util.*;
+import de.dhbw.swe.camping_site_mgt.common.BaseDataObject;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 
-public class Equipment {
+public class Equipment extends BaseDataObject {
 
     public Equipment() {
-	super();
-	this.id = 0;
-	this.identification = null;
-	this.size = null;
-	this.type = null;
+	this(null, null, null);
     }
 
     public Equipment(final int id, final String identification, final String size,
-	    final String type) {
-	super();
-	this.id = id;
+	    final Equipment_Type type) {
+	super(id);
 	this.identification = identification;
 	this.size = size;
 	this.type = type;
     }
 
     public Equipment(final String identification, final String size,
-	    final String type) {
-	super();
-	this.id = 0;
-	this.identification = identification;
-	this.size = size;
-	this.type = type;
+	    final Equipment_Type type) {
+	this(0, identification, size, type);
     }
 
-    public HashMap<String, Object> getDatabaseData() {
-	final HashMap<String, Object> objects = new HashMap<String, Object>();
-	objects.put("id", this.id);
-	objects.put("identification", this.identification);
-	objects.put("size", this.size);
-	objects.put("type", this.type);
-	return objects;
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#equals(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
+     */
+    @Override
+    public boolean equals(final DataObject dataObject) {
+	final Equipment object = (Equipment) dataObject;
+	if (this.identification.equals(object.getIdentification())
+		&& this.size.equals(object.getSize())
+		&& this.type.equals(object.getType())) {
+	    return true;
+	}
+	return false;
     }
 
-    public int getId() {
-	return id;
-    }
-
+    /**
+     * Returns the identification.
+     * 
+     * @return the identification
+     */
     public String getIdentification() {
 	return identification;
     }
 
+    /**
+     * Returns the size.
+     * 
+     * @return the size
+     */
     public String getSize() {
 	return size;
     }
 
-    public HashMap<String, Object> getTableData(final String parentClass) {
-	final HashMap<String, Object> objects = new HashMap<String, Object>();
-	final String className = parentClass + "equipment_";
-
-	objects.put(className + "id", new Integer(this.id));
-	objects.put(className + "identification", new String(this.identification));
-	objects.put(className + "size", new String(this.size));
-	objects.put(className + "type", new String(this.type));
-
-	return objects;
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#getTableName()
+     */
+    @Override
+    public String getTableName() {
+	return "equipment";
     }
 
-    public String getType() {
+    /**
+     * Returns the type.
+     * 
+     * @return the type
+     */
+    public Equipment_Type getType() {
 	return type;
     }
 
-    public Equipment setDatabaseData(final HashMap<String, Object> objects) {
-	setData(objects);
-	return this;
-    }
-
-    public Equipment setTableData(final HashMap<String, Object> objects) {
-	final String className = "equipment_";
-	final int classNameLength = className.length();
-	final HashMap<String, Object> thisMap = new HashMap<String, Object>();
-
-	Object val;
-	final Set<String> keys = objects.keySet();
-	for (String key : keys) {
-	    val = objects.get(key);
-	    key = key.substring(classNameLength);
-	    thisMap.put(key, val);
-	}
-	setData(thisMap);
-	return this;
-    }
-
-    private void setData(final HashMap<String, Object> objects) {
-	this.id = (int) objects.get("id");
-	this.identification = (String) objects.get("identification");
-	this.size = (String) objects.get("size");
-	this.type = (String) objects.get("type");
-
-    }
-
-    private int id;
-    private String identification;
-    private String size;
-    private String type;
-    // private final Equipment_Type type;
+    private final String identification;
+    private final String size;
+    private final Equipment_Type type;
 }

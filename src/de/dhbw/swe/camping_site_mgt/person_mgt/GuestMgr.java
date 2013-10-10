@@ -61,7 +61,7 @@ public class GuestMgr extends BaseDataObjectMgr {
      */
     @Override
     protected boolean evenUpdateInUse() {
-	return true;
+	return false;
     }
 
     /**

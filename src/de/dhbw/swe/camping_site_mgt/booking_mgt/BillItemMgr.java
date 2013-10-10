@@ -1,5 +1,5 @@
 /**
- * Comments for file VisitorsTaxClassMgr.java
+ * Comments for file BillItemMgr.java
  *
  * @author   GieSeel
  *
@@ -16,7 +16,7 @@
  * copied or distributed with electronic tools or by paper copy or 
  * any other process without written authorization of GieSeel.
  */
-package de.dhbw.swe.camping_site_mgt.person_mgt;
+package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
 import java.util.HashMap;
 
@@ -26,23 +26,23 @@ import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
- * The manager class for the {@link VisitorsTaxClass} objects.
+ * The manager class for the {@link BillItem} objects.
  * 
  * @author GieSeel
  * @version 1.0
  */
-public class VisitorsTaxClassMgr extends BaseDataObjectMgr {
+public class BillItemMgr extends BaseDataObjectMgr {
     /** The singleton instance. */
-    private static VisitorsTaxClassMgr instance;
+    private static BillItemMgr instance;
 
     /**
      * Returns the instance.
      * 
      * @return the singleton instance.
      */
-    public static synchronized VisitorsTaxClassMgr getInstance() {
+    public static synchronized BillItemMgr getInstance() {
 	if (instance == null) {
-	    instance = new VisitorsTaxClassMgr();
+	    instance = new BillItemMgr();
 	}
 	return instance;
     }
@@ -50,26 +50,30 @@ public class VisitorsTaxClassMgr extends BaseDataObjectMgr {
     /**
      * Private constructor. Singleton.
      */
-    private VisitorsTaxClassMgr() {
+    private BillItemMgr() {
 	super();
     }
 
     /**
-     * {@inheritDoc}.
+     * Parses a database entry to an object.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#entry2object(java.util.HashMap)
+     * @param entry
+     *            the entry
+     * @return the prepared {@link BillItem} object
      */
     @Override
     protected DataObject entry2object(final HashMap<String, Object> entry) {
 	int id;
-	String labeling;
-	Euro price;
+	BillItem_Labeling labeling;
+	Euro priceBusySeason;
+	Euro priceLowSeason;
 
 	id = (int) entry.get("id");
-	labeling = (String) entry.get("labeling");
-	price = (Euro) entry.get("price");
+	labeling = (BillItem_Labeling) entry.get("labeling");
+	priceBusySeason = (Euro) entry.get("priceBusySeason");
+	priceLowSeason = (Euro) entry.get("priceLowSeason");
 
-	return new VisitorsTaxClass(id, labeling, price);
+	return new BillItem(id, labeling, priceBusySeason, priceLowSeason);
     }
 
     /**
@@ -99,7 +103,6 @@ public class VisitorsTaxClassMgr extends BaseDataObjectMgr {
      */
     @Override
     protected String getTableName() {
-	return new VisitorsTaxClass().getTableName();
+	return new BillItem().getTableName();
     }
-
 }

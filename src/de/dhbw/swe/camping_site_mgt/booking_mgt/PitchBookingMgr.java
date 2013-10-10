@@ -1,29 +1,49 @@
-package de.dhbw.swe.camping_site_mgt.person_mgt;
+/**
+ * Comments for file PitchBookingMgr.java
+ *
+ * @author   GieSeel
+ *
+ * Project:    Campingplatz Verwaltung
+ * Company:    GieSeel
+ * $Revision:  $
+ *
+ * Unclassified
+ *
+ * Copyright © since 2013 - Pforzheim - GieSeel GmbH
+ * All rights especially the right for copying and distribution as
+ * well as translation reserved.
+ * No part of the product shall be reproduced or stored processed
+ * copied or distributed with electronic tools or by paper copy or 
+ * any other process without written authorization of GieSeel.
+ */
+package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
 import java.util.HashMap;
 
-import de.dhbw.swe.camping_site_mgt.common.*;
+import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
+import de.dhbw.swe.camping_site_mgt.place_mgt.Pitch;
+import de.dhbw.swe.camping_site_mgt.place_mgt.PitchMgr;
 
 /**
- * The manager class for the {@link Employee} objects.
+ * The manager class for the {@link PitchBooking} objects.
  * 
  * @author GieSeel
  * @version 1.0
  */
-public class EmployeeMgr extends BaseDataObjectMgr {
+public class PitchBookingMgr extends BaseDataObjectMgr {
     /** The singleton instance. */
-    private static EmployeeMgr instance;
+    private static PitchBookingMgr instance;
 
     /**
      * Returns the instance.
      * 
      * @return the singleton instance.
      */
-    public static synchronized EmployeeMgr getInstance() {
+    public static synchronized PitchBookingMgr getInstance() {
 	if (instance == null) {
-	    instance = new EmployeeMgr();
+	    instance = new PitchBookingMgr();
 	}
 	return instance;
     }
@@ -31,35 +51,30 @@ public class EmployeeMgr extends BaseDataObjectMgr {
     /**
      * Private constructor. Singleton.
      */
-    private EmployeeMgr() {
+    private PitchBookingMgr() {
+	super();
     }
 
     /**
-     * {@inheritDoc}.
+     * Parses a database entry to an object.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#entry2object(java.util.HashMap)
+     * @param entry
+     *            the entry
+     * @return the prepared {@link PitchBooking} object
      */
     @Override
     protected DataObject entry2object(final HashMap<String, Object> entry) {
+	final String tableName = getTableName();
 	int id;
-	boolean blocked;
-	ChipCard chipCard;
-	String password;
-	Person person;
-	EmployeeRole role;
-	String userName;
+	boolean electricity;
+	Pitch pitch;
 
 	id = (int) entry.get("id");
-	blocked = ((int) entry.get("blocked") == 1 ? true : false);
-	chipCard = (ChipCard) ChipCardMgr.getInstance().get(
-		(int) entry.get("chipCard"));
-	password = (String) entry.get("password");
-	person = (Person) PersonMgr.getInstance().get((int) entry.get("person"));
-	role = (EmployeeRole) EmployeeRoleMgr.getInstance().get(
-		(int) entry.get("role"));
-	userName = (String) entry.get("userName");
+	electricity = (boolean) entry.get("electricity");
+	pitch = (Pitch) PitchMgr.getInstance().objectGet((int) entry.get("pitch"),
+		tableName, id);
 
-	return new Employee(id, blocked, chipCard, password, person, role, userName);
+	return new PitchBooking(id, electricity, pitch);
     }
 
     /**
@@ -89,7 +104,7 @@ public class EmployeeMgr extends BaseDataObjectMgr {
      */
     @Override
     protected String getTableName() {
-	return new Employee().getTableName();
+	return new PitchBooking().getTableName();
     }
 
     /**
@@ -100,12 +115,10 @@ public class EmployeeMgr extends BaseDataObjectMgr {
      */
     @Override
     protected void subObjectAdd(final int id, final DataObject dataObject) {
-	final Employee object = castObject(dataObject);
+	final PitchBooking object = castObject(dataObject);
 	final String tableName = object.getTableName();
 
-	object.getChipCard().addUsage(tableName, id);
-	object.getPerson().addUsage(tableName, id);
-	object.getRole().addUsage(tableName, id);
+	object.getPitch().addUsage(tableName, id);
     }
 
     /**
@@ -115,11 +128,9 @@ public class EmployeeMgr extends BaseDataObjectMgr {
      */
     @Override
     protected void subObjectInsert(final DataObject dataObject) {
-	final Employee object = castObject(dataObject);
+	final PitchBooking object = castObject(dataObject);
 
-	ChipCardMgr.getInstance().objectInsert(object.getChipCard());
-	PersonMgr.getInstance().objectInsert(object.getPerson());
-	EmployeeRoleMgr.getInstance().objectInsert(object.getRole());
+	PitchMgr.getInstance().objectInsert(object.getPitch());
     }
 
     /**
@@ -129,19 +140,13 @@ public class EmployeeMgr extends BaseDataObjectMgr {
      */
     @Override
     protected void subObjectRemove(final DataObject dataObject) {
-	final Employee object = castObject(dataObject);
+	final PitchBooking object = castObject(dataObject);
 	final int id = object.getId();
 	final String tableName = object.getTableName();
 
-	final ChipCard chipCard = object.getChipCard();
-	final Person person = object.getPerson();
-	final EmployeeRole employeeRole = object.getRole();
-	chipCard.delUsage(tableName, id);
-	person.delUsage(tableName, id);
-	employeeRole.delUsage(tableName, id);
-	ChipCardMgr.getInstance().objectRemove(chipCard);
-	PersonMgr.getInstance().objectRemove(person);
-	EmployeeRoleMgr.getInstance().objectRemove(employeeRole);
+	final Pitch pitch = object.getPitch();
+	pitch.delUsage(tableName, id);
+	PitchMgr.getInstance().objectRemove(pitch);
     }
 
     /**
@@ -153,31 +158,24 @@ public class EmployeeMgr extends BaseDataObjectMgr {
     @Override
     protected void subObjectUpdate(final DataObject dataObject,
 	    final DataObject newDataObject) {
-	final Employee object = castObject(dataObject);
-	final Employee newObject = castObject(newDataObject);
+	final PitchBooking object = castObject(dataObject);
+	final PitchBooking newObject = castObject(newDataObject);
 	final int id = object.getId();
 	final String tableName = object.getTableName();
 
-	final ChipCard chipCard = object.getChipCard();
-	final Person person = object.getPerson();
-	final EmployeeRole employeeRole = object.getRole();
-	chipCard.delUsage(tableName, id);
-	person.delUsage(tableName, id);
-	employeeRole.delUsage(tableName, id);
-	ChipCardMgr.getInstance().objectUpdate(chipCard, newObject.getChipCard());
-	PersonMgr.getInstance().objectUpdate(person, newObject.getPerson());
-	EmployeeRoleMgr.getInstance().objectUpdate(employeeRole,
-		newObject.getRole());
+	final Pitch pitch = object.getPitch();
+	pitch.delUsage(tableName, id);
+	PitchMgr.getInstance().objectUpdate(pitch, newObject.getPitch());
     }
 
     /**
-     * Cast {@link DataObject} to {@link Employee} object.
+     * Cast {@link DataObject} to {@link PitchBooking} object.
      * 
      * @param dataObject
      *            the {@link DataObject}
-     * @return the {@link Employee} object
+     * @return the {@link PitchBooking} object
      */
-    private Employee castObject(final DataObject dataObject) {
-	return (Employee) dataObject;
+    private PitchBooking castObject(final DataObject dataObject) {
+	return (PitchBooking) dataObject;
     }
 }

@@ -61,12 +61,12 @@ public class EmployeeRoleMgr extends BaseDataObjectMgr {
     @Override
     protected DataObject entry2object(final HashMap<String, Object> entry) {
 	int id;
-	String arrangement;
-	String labeling;
+	EmployeeRole_Arrangement arrangement;
+	EmployeeRole_Labeling labeling;
 
 	id = (int) entry.get("id");
-	arrangement = (String) entry.get("arrangement");
-	labeling = (String) entry.get("labeling");
+	arrangement = (EmployeeRole_Arrangement) entry.get("arrangement");
+	labeling = (EmployeeRole_Labeling) entry.get("labeling");
 
 	return new EmployeeRole(id, arrangement, labeling);
     }
@@ -78,7 +78,7 @@ public class EmployeeRoleMgr extends BaseDataObjectMgr {
      */
     @Override
     protected boolean evenUpdateInUse() {
-	return true;
+	return false;
     }
 
     /**
