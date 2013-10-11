@@ -1,8 +1,12 @@
-package de.dhbw.swe.camping_site_mgt.gui_mgt.map;
+package de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt;
 
 import javax.swing.JComponent;
 
 import de.dhbw.swe.camping_site_mgt.gui_mgt.Displayable;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.area.AreaInterface;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.*;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.view.MapPanel;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map_info.MapInformationController;
 import de.dhbw.swe.camping_site_mgt.place_mgt.PitchInterface;
 
 public class MapPanelController implements Displayable {
@@ -25,7 +29,7 @@ public class MapPanelController implements Displayable {
 	mapCtrl.register(new MapListener() {
 
 	    @Override
-	    public void areaSelected(final Area area) {
+	    public void areaSelected(final AreaInterface area) {
 		mapInfoCtrl.selectedArea(area);
 	    }
 

@@ -1,7 +1,9 @@
 package de.dhbw.swe.camping_site_mgt.gui_mgt;
 
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.map.*;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.*;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.MapController;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map_info.MapInformationController;
 
 public class GuiController {
     /** The scale factor especially for map components. */

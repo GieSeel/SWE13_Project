@@ -3,7 +3,7 @@ package de.dhbw.swe.camping_site_mgt.place_mgt;
 import java.awt.Polygon;
 
 import de.dhbw.swe.camping_site_mgt.common.Usage;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.map.Area;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.area.Area;
 
 /**
  * The interface for {@link Pitch}.

@@ -1,4 +1,4 @@
-package de.dhbw.swe.camping_site_mgt.gui_mgt.map;
+package de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map;
 
 import java.awt.Polygon;
 import java.util.HashMap;
@@ -7,6 +7,7 @@ import javax.swing.JComponent;
 
 import de.dhbw.swe.camping_site_mgt.common.Delegate;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.Displayable;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.area.*;
 import de.dhbw.swe.camping_site_mgt.place_mgt.*;
 
 public class MapController implements Displayable {

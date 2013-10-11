@@ -3,7 +3,7 @@ package de.dhbw.swe.camping_site_mgt.gui_mgt;
 import javax.swing.JTabbedPane;
 
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.map.MapPanel;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.view.MapPanel;
 
 public class CampingplaceAdministrationTabbedPane extends JTabbedPane {
 

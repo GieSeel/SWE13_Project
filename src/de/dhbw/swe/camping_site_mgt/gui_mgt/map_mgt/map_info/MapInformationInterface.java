@@ -1,4 +1,4 @@
-package de.dhbw.swe.camping_site_mgt.gui_mgt.map;
+package de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map_info;
 
 import de.dhbw.swe.camping_site_mgt.gui_mgt.Displayable;
 

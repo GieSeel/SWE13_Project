@@ -1,8 +1,9 @@
-package de.dhbw.swe.camping_site_mgt.gui_mgt.map;
+package de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map_info.view;
 
 import javax.swing.*;
 
 import de.dhbw.swe.camping_site_mgt.gui_mgt.BaseFormularPanel;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map_info.MapInformationInterface;
 
 public class MapInformationPanel extends BaseFormularPanel implements
 	MapInformationInterface {
