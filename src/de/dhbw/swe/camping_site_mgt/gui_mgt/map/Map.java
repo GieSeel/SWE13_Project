@@ -9,7 +9,7 @@ import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import de.dhbw.swe.camping_site_mgt.common.ResourceLoader;
+import de.dhbw.swe.camping_site_mgt.common.*;
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.GuiController;
@@ -55,6 +55,7 @@ public class Map extends JPanel implements AccessableMap {
 		if ((e.getKeyChar() + "").equalsIgnoreCase((key + ""))) {
 		    if (areas.containsKey(key + "")) {
 			selectedArea = areas.get(key + "");
+			handleAreaSelected(selectedArea);
 			statusBar.setStatus(buildAreaSelectedInfo());
 			zoomIn();
 			return;
@@ -94,10 +95,11 @@ public class Map extends JPanel implements AccessableMap {
 		if (area.getPoly().contains(e.getX(), e.getY())) {
 		    if (selectedArea == area && !wasDoubleClick) {
 			selectedArea = null;
-			break;
+		    } else {
+			selectedArea = area;
+			statusBar.setStatus(buildAreaSelectedInfo());
 		    }
-		    selectedArea = area;
-		    statusBar.setStatus(buildAreaSelectedInfo());
+		    handleAreaSelected(selectedArea);
 		    break;
 		}
 
@@ -117,10 +119,11 @@ public class Map extends JPanel implements AccessableMap {
 			e.getY() + frame.y)) {
 		    if (selectedPitch == pitch && !wasDoubleClick) {
 			selectedPitch = null;
-			break;
+		    } else {
+			selectedPitch = pitch;
+			statusBar.setStatus(buildPitchSelectedInfo());
 		    }
-		    selectedPitch = pitch;
-		    statusBar.setStatus(buildPitchSelectedInfo());
+		    handlePitchSelected(pitch);
 		    break;
 		}
 
@@ -279,6 +282,26 @@ public class Map extends JPanel implements AccessableMap {
 	}
     }
 
+    /**
+     * Register a {@link MapListener} at {@link Delegate}.
+     * 
+     * @param listener
+     *            the {@link MapListener}
+     */
+    public void register(final MapListener listener) {
+	delegate.register(listener);
+    }
+
+    /**
+     * Unregister a {@link MapListener} from {@link Delegate}.
+     * 
+     * @param listener
+     *            the {@link MapListener}
+     */
+    public void unregister(final MapListener listener) {
+	delegate.unregister(listener);
+    }
+
     private String buildAreaSelectedInfo() {
 	final StringBuilder info = new StringBuilder();
 	info.append(lm.get(lp.AREA));
@@ -346,6 +369,26 @@ public class Map extends JPanel implements AccessableMap {
 
 	new Rectangle(base, mapSize);
 	return new Rectangle(base, mapSize);
+    }
+
+    /**
+     * Handles {@link Area} selected.
+     * 
+     * @param area
+     *            the area
+     */
+    private void handleAreaSelected(final Area area) {
+	delegate.getDelegator().areaSelected(area);
+    }
+
+    /**
+     * Handles {@link Pitch} selected.
+     * 
+     * @param pitch
+     *            the {@link PitchInterface}
+     */
+    private void handlePitchSelected(final PitchInterface pitch) {
+	delegate.getDelegator().pitchSelected(pitch);
     }
 
     private void paintDisablePart(final Graphics2D g2) {
@@ -496,6 +539,8 @@ public class Map extends JPanel implements AccessableMap {
 
     /** The available areas. */
     private final HashMap<String, Area> areas;
+
+    private final Delegate<MapListener> delegate = new Delegate<>(MapListener.class);
 
     /** The zoom frame. */
     private Rectangle frame;

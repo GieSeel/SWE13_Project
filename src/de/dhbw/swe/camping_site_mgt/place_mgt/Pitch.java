@@ -2,7 +2,7 @@ package de.dhbw.swe.camping_site_mgt.place_mgt;
 
 import java.awt.Polygon;
 
-import de.dhbw.swe.camping_site_mgt.common.BaseDataObject;
+import de.dhbw.swe.camping_site_mgt.common.*;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 
 public class Pitch extends BaseDataObject implements PitchInterface {
@@ -17,23 +17,11 @@ public class Pitch extends BaseDataObject implements PitchInterface {
      * @return the shape {@link Polygon}
      */
     private static Polygon buildShape(final String xCoords, final String yCoords) {
-	String trimedXCords = xCoords.replaceAll(" ", "");
-	String trimedYCords = yCoords.replaceAll(" ", "");
-	trimedXCords = trimedXCords.substring(1, trimedXCords.length() - 1);
-	trimedYCords = trimedYCords.substring(1, trimedYCords.length() - 1);
+	final int[] xPoints = IntArrayParser.parseArray(xCoords);
+	final int[] yPoints = IntArrayParser.parseArray(yCoords);
 
-	final String[] xPointStr = trimedXCords.split(",");
-	final int[] xPoints = new int[xPointStr.length];
-	for (int i = 0; i < xPointStr.length; i++) {
-	    xPoints[i] = Integer.parseInt(xPointStr[i]);
-	}
-
-	final String[] yPointStr = trimedYCords.split(",");
-	final int[] yPoints = new int[yPointStr.length];
-	for (int i = 0; i < yPointStr.length; i++) {
-	    yPoints[i] = Integer.parseInt(yPointStr[i]);
-	}
 	final Polygon polygon = new Polygon(xPoints, yPoints, xPoints.length);
+
 	return polygon;
     }
 

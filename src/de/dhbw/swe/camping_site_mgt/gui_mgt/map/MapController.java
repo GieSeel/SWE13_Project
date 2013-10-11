@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import javax.swing.JComponent;
 
+import de.dhbw.swe.camping_site_mgt.common.Delegate;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.Displayable;
 import de.dhbw.swe.camping_site_mgt.place_mgt.*;
 
@@ -33,6 +34,26 @@ public class MapController implements Displayable {
 	return view;
     }
 
+    /**
+     * Register a {@link MapListener} at {@link Delegate}.
+     * 
+     * @param listener
+     *            the {@link MapListener}
+     */
+    public void register(final MapListener listener) {
+	view.register(listener);
+    }
+
+    /**
+     * Unregister a {@link MapListener} from {@link Delegate}.
+     * 
+     * @param listener
+     *            the {@link MapListener}
+     */
+    public void unregister(final MapListener listener) {
+	view.unregister(listener);
+    }
+
     /** The view. */
-    private final JComponent view;
+    private final Map view;
 }

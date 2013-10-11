@@ -4,22 +4,46 @@ import javax.swing.*;
 
 import de.dhbw.swe.camping_site_mgt.gui_mgt.BaseFormularPanel;
 
-public class MapInformationPanel extends BaseFormularPanel {
+public class MapInformationPanel extends BaseFormularPanel implements
+	MapInformationInterface {
 
     /** The default serial version UID. */
     private static final long serialVersionUID = 1L;
 
     public MapInformationPanel() {
 	super();
-
-	final JTextField areaTf = new JTextField("anything");
-	areaTf.setEnabled(false);
-	add("Area", areaTf);
-
-	final JComboBox<Integer> pichesCount = new JComboBox<>();
-	for (int i = 10; i <= 200; i++) {
-	    pichesCount.addItem(i);
-	}
-	add("Ptiches", pichesCount);
+	initTFArea();
+	initTFPichID();
     }
+
+    @Override
+    public JComponent getGuiSnippet() {
+	return this;
+    }
+
+    @Override
+    public void setAreaName(final String name) {
+	areaTf.setText(name);
+    }
+
+    @Override
+    public void setPitchName(final String name) {
+	pitchIdTF.setText(name);
+    }
+
+    private void initTFArea() {
+	areaTf = new JTextField();
+	areaTf.setEnabled(false);
+	add("Area:", areaTf);
+    }
+
+    private void initTFPichID() {
+	pitchIdTF = new JTextField();
+	pitchIdTF.setEnabled(false);
+	add("Pitch:", pitchIdTF);
+    }
+
+    private JTextField areaTf;
+
+    private JTextField pitchIdTF;
 }
