@@ -5,38 +5,65 @@ import java.util.Date;
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObject;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 import de.dhbw.swe.camping_site_mgt.person_mgt.Guest;
-import de.dhbw.swe.camping_site_mgt.person_mgt.GuestList;
 
 public class Booking extends BaseDataObject {
+
+    /**
+     * Constructor.
+     * 
+     */
     public Booking() {
-	this(new Bill(), new ChipCardList(), new EquipmentList(),
-		new ExtraBookingList(), new GuestList(), null,
-		new PitchBookingList(), new Guest(), null);
+	this(new Bill(), null, null, null, null, null, null, new Guest(), null);
     }
 
-    public Booking(final Bill bill, final ChipCardList list,
-	    final EquipmentList equipment, final ExtraBookingList extraBooking,
-	    final GuestList fellowTravelers, final Date from,
-	    final PitchBookingList pitchBooking, final Guest responsiblePerson,
+    /**
+     * Constructor.
+     * 
+     * @param bill
+     * @param chipCards
+     * @param equipments
+     * @param extraBookings
+     * @param fellowGuests
+     * @param from
+     * @param pitchBookings
+     * @param responsibleGuest
+     * @param until
+     */
+    public Booking(final Bill bill, final int[] chipCards, final int[] equipments,
+	    final int[] extraBookings, final int[] fellowGuests, final Date from,
+	    final int[] pitchBookings, final Guest responsibleGuest,
 	    final Date until) {
-	this(0, bill, list, equipment, extraBooking, fellowTravelers, from,
-		pitchBooking, responsiblePerson, until);
+	this(0, bill, chipCards, equipments, extraBookings, fellowGuests, from,
+		pitchBookings, responsibleGuest, until);
     }
 
-    public Booking(final int id, final Bill bill, final ChipCardList list,
-	    final EquipmentList equipment, final ExtraBookingList extraBooking,
-	    final GuestList fellowTravelers, final Date from,
-	    final PitchBookingList pitchBooking, final Guest responsiblePerson,
-	    final Date until) {
+    /**
+     * Constructor.
+     * 
+     * @param id
+     * @param bill
+     * @param chipCards
+     * @param equipments
+     * @param extraBookings
+     * @param fellowGuests
+     * @param from
+     * @param pitchBookings
+     * @param responsibleGuest
+     * @param until
+     */
+    public Booking(final int id, final Bill bill, final int[] chipCards,
+	    final int[] equipments, final int[] extraBookings,
+	    final int[] fellowGuests, final Date from, final int[] pitchBookings,
+	    final Guest responsibleGuest, final Date until) {
 	super(id);
 	this.bill = bill;
-	this.chipCard = list;
-	this.equipment = equipment;
-	this.extraBooking = extraBooking;
-	this.fellowTravelers = fellowTravelers;
+	this.chipCards = chipCards;
+	this.equipments = equipments;
+	this.extraBookings = extraBookings;
+	this.fellowGuests = fellowGuests;
 	this.from = from;
-	this.pitchBooking = pitchBooking;
-	this.responsiblePerson = responsiblePerson;
+	this.pitchBookings = pitchBookings;
+	this.responsibleGuest = responsibleGuest;
 	this.until = until;
     }
 
@@ -48,15 +75,15 @@ public class Booking extends BaseDataObject {
     @Override
     public boolean equals(final DataObject dataObject) {
 	final Booking object = (Booking) dataObject;
-	if (this.bill.equals(object.getBill())
-		&& this.chipCard.equals(object.getChipCard())
-		&& this.equipment.equals(object.getEquipment())
-		&& this.extraBooking.equals(object.getExtraBooking())
-		&& this.fellowTravelers.equals(object.getFellowTravelers())
+	if (this.responsibleGuest.equals(object.getResponsibleGuest())
+		&& this.fellowGuests.equals(object.getFellowGuests())
 		&& this.from.equals(object.getFrom())
-		&& this.pitchBooking.equals(object.getPitchBooking())
-		&& this.responsiblePerson.equals(object.getResponsiblePerson())
-		&& this.until.equals(object.getUntil())) {
+		&& this.until.equals(object.getUntil())
+		&& this.equipments.equals(object.getEquipments())
+		&& this.pitchBookings.equals(object.getPitchBookings())
+		&& this.extraBookings.equals(object.getExtraBookings())
+		&& this.bill.equals(object.getBill())
+		&& this.chipCards.equals(object.getChipCards())) {
 	    return true;
 	}
 	return false;
@@ -72,39 +99,39 @@ public class Booking extends BaseDataObject {
     }
 
     /**
-     * Returns the chipCard.
+     * Returns the chipCards.
      * 
-     * @return the chipCard
+     * @return the chipCards
      */
-    public ChipCardList getChipCard() {
-	return chipCard;
+    public int[] getChipCards() {
+	return chipCards;
     }
 
     /**
-     * Returns the equipment.
+     * Returns the equipments.
      * 
-     * @return the equipment
+     * @return the equipments
      */
-    public EquipmentList getEquipment() {
-	return equipment;
+    public int[] getEquipments() {
+	return equipments;
     }
 
     /**
-     * Returns the extraBooking.
+     * Returns the extraBookings.
      * 
-     * @return the extraBooking
+     * @return the extraBookings
      */
-    public ExtraBookingList getExtraBooking() {
-	return extraBooking;
+    public int[] getExtraBookings() {
+	return extraBookings;
     }
 
     /**
-     * Returns the fellowTravelers.
+     * Returns the fellowGuests.
      * 
-     * @return the fellowTravelers
+     * @return the fellowGuests
      */
-    public GuestList getFellowTravelers() {
-	return fellowTravelers;
+    public int[] getFellowGuests() {
+	return fellowGuests;
     }
 
     /**
@@ -117,21 +144,21 @@ public class Booking extends BaseDataObject {
     }
 
     /**
-     * Returns the pitchBooking.
+     * Returns the pitchBookings.
      * 
-     * @return the pitchBooking
+     * @return the pitchBookings
      */
-    public PitchBookingList getPitchBooking() {
-	return pitchBooking;
+    public int[] getPitchBookings() {
+	return pitchBookings;
     }
 
     /**
-     * Returns the responsiblePerson.
+     * Returns the responsibleGuest.
      * 
-     * @return the responsiblePerson
+     * @return the responsibleGuest
      */
-    public Guest getResponsiblePerson() {
-	return responsiblePerson;
+    public Guest getResponsibleGuest() {
+	return responsibleGuest;
     }
 
     /**
@@ -153,13 +180,13 @@ public class Booking extends BaseDataObject {
 	return until;
     }
 
-    private final Bill bill;
-    private final ChipCardList chipCard;
-    private final EquipmentList equipment;
-    private final ExtraBookingList extraBooking;
-    private final GuestList fellowTravelers;
-    private final Date from;
-    private final PitchBookingList pitchBooking;
-    private final Guest responsiblePerson;
-    private final Date until;
+    Bill bill;
+    int[] chipCards;
+    int[] equipments;
+    int[] extraBookings;
+    int[] fellowGuests;
+    Date from;
+    int[] pitchBookings;
+    Guest responsibleGuest;
+    Date until;
 }

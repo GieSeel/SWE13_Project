@@ -22,8 +22,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
-import de.dhbw.swe.camping_site_mgt.common.Country;
-import de.dhbw.swe.camping_site_mgt.common.Town;
+import de.dhbw.swe.camping_site_mgt.common.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 import de.dhbw.swe.camping_site_mgt.person_mgt.Person;
 import de.dhbw.swe.camping_site_mgt.person_mgt.PersonMgr;
@@ -160,6 +159,10 @@ public class DatabaseMgr {
 		    } else if (column.getDbType().equals(Date.class)) {
 			entry.put(column.getFieldName(), new Date(
 				result.getTimestamp(column.getDbName()).getTime()));
+		    } else if (column.getDbType().equals(Array.class)) {
+			entry.put(
+				column.getFieldName(),
+				IntArrayParser.parseArray(result.getString(column.getDbName())));
 		    } else {
 			logger.error("Unexpected typ in database result analysis!");
 		    }
@@ -219,6 +222,10 @@ public class DatabaseMgr {
 			    i,
 			    new Timestamp(
 				    ((Date) dbObject.get(columnInfos[i].getFieldName())).getTime()));
+		} else if (columnInfos[i].getDbType().equals(Array.class)) {
+		    statement.setString(
+			    i,
+			    IntArrayParser.parseArray((int[]) dbObject.get(columnInfos[i].getFieldName())));
 		} else {
 		    logger.error("Unexpected typ in database INSERT!");
 		}
@@ -299,6 +306,10 @@ public class DatabaseMgr {
 			    i,
 			    new Timestamp(
 				    ((Date) dbObject.get(columnInfos[i].getFieldName())).getTime()));
+		} else if (columnInfos[i].getDbType().equals(Array.class)) {
+		    statement.setString(
+			    i,
+			    IntArrayParser.parseArray((int[]) dbObject.get(columnInfos[i].getFieldName())));
 		} else {
 		    logger.error("Unexpected typ in database INSERT!");
 		}
