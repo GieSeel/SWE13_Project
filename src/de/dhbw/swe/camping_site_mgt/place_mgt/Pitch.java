@@ -2,7 +2,7 @@ package de.dhbw.swe.camping_site_mgt.place_mgt;
 
 import java.awt.Polygon;
 
-import de.dhbw.swe.camping_site_mgt.common.*;
+import de.dhbw.swe.camping_site_mgt.common.BaseDataObject;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 
 public class Pitch extends BaseDataObject implements PitchInterface {
@@ -11,22 +11,26 @@ public class Pitch extends BaseDataObject implements PitchInterface {
      * Builds the {@link Pitch} shape.
      * 
      * @param xCoords
-     *            the x coordinates in pattern: <code>[x1, x2, x3]</code>
+     *            the x coordinates
      * @param yCoords
-     *            the y coordinates in pattern: <code>[y1, y2, y3]</code>
+     *            the y coordinates
      * @return the shape {@link Polygon}
      */
-    private static Polygon buildShape(final String xCoords, final String yCoords) {
-	final int[] xPoints = IntArrayParser.parseArray(xCoords);
-	final int[] yPoints = IntArrayParser.parseArray(yCoords);
-
-	final Polygon polygon = new Polygon(xPoints, yPoints, xPoints.length);
-
+    private static Polygon buildShape(final int[] xCoords, final int[] yCoords) {
+	final Polygon polygon = new Polygon(xCoords, yCoords, xCoords.length);
 	return polygon;
     }
 
     public Pitch() {
 	this(0, null, null, null, 0, null, null, 0, null, null);
+    }
+
+    public Pitch(final int id, final String characteristics,
+	    final Site deliveryPoint, final String area, final int length,
+	    final Pitch_NatureOfSoil natureOfSoil, final Pitch_Type type,
+	    final int width, final int[] xCoords, final int[] yCoords) {
+	this(id, characteristics, deliveryPoint, area, length, natureOfSoil, type,
+		width, buildShape(xCoords, yCoords));
     }
 
     public Pitch(final int id, final String characteristics,
@@ -44,18 +48,10 @@ public class Pitch extends BaseDataObject implements PitchInterface {
 	this.shape = shape;
     }
 
-    public Pitch(final int id, final String characteristics,
-	    final Site deliveryPoint, final String area, final int length,
-	    final Pitch_NatureOfSoil natureOfSoil, final Pitch_Type type,
-	    final int width, final String xCoords, final String yCoords) {
-	this(id, characteristics, deliveryPoint, area, length, natureOfSoil, type,
-		width, buildShape(xCoords, yCoords));
-    }
-
     public Pitch(final String characteristics, final Site deliveryPoint,
 	    final String area, final int length,
 	    final Pitch_NatureOfSoil natureOfSoil, final Pitch_Type type,
-	    final int width, final String xCoords, final String yCoords) {
+	    final int width, final int[] xCoords, final int[] yCoords) {
 	this(0, characteristics, deliveryPoint, area, length, natureOfSoil, type,
 		width, xCoords, yCoords);
     }

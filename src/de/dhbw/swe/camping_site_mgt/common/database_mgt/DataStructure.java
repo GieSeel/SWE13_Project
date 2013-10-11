@@ -1,5 +1,6 @@
 package de.dhbw.swe.camping_site_mgt.common.database_mgt;
 
+import java.lang.reflect.Array;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -78,22 +79,17 @@ public class DataStructure {
 	// "booking"
 	sqlObjects.put("booking", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("responsiblePerson_ID", Integer.class, null,
-			"responsiblePerson", Guest.class),
-		new ColumnInfo("fellowTravelersList_number", Integer.class, null,
-			"fellowTravelers", GuestList.class),
+		new ColumnInfo("responsibleGuest_ID", Integer.class, null,
+			"responsibleGuest", Guest.class),
+		new ColumnInfo("fellowGuests", Array.class, "Fellow Guests"),
 		new ColumnInfo("from", Date.class, "From"),
 		new ColumnInfo("until", Date.class, "Until"),
-		new ColumnInfo("equipmentList_number", Integer.class, null,
-			"equipment", EquipmentList.class),
-		new ColumnInfo("pitchBookingList_number", Integer.class, null,
-			"pitchBooking", PitchBookingList.class),
-		new ColumnInfo("extraBookingList_number", Integer.class, null,
-			"extraBooking", ExtraBookingList.class),
+		new ColumnInfo("equipments", Array.class, "Equipments"),
+		new ColumnInfo("pitchBookings", Array.class, "Pitch Bookings"),
+		new ColumnInfo("extraBookings", Array.class, "Extra Bookings"),
 		new ColumnInfo("bill_number", Integer.class, Bill.class),
-		new ColumnInfo("chipCardList_number", Integer.class, null,
-			"chipCard", ChipCardList.class) });
-	// TODO BOOKING NAMEN ANPASSEN!!
+		new ColumnInfo("chipCards", Array.class, "Chip Cards") });
+	// TODO BILL??
 
 	// "bookinglist"
 	sqlObjects.put("bookinglist", new ColumnInfo[] {
@@ -224,8 +220,8 @@ public class DataStructure {
 				"deliveryPoint", Site.class),
 			new ColumnInfo("characteristics", String.class,
 				lm.get(lp.DM_CHARACTERISTICS)),
-			new ColumnInfo("xCoords", String.class),
-			new ColumnInfo("yCoords", String.class) });
+			new ColumnInfo("xCoords", Array.class),
+			new ColumnInfo("yCoords", Array.class) });
 
 	// "pitchbooking"
 	sqlObjects.put(

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 01. Okt 2013 um 17:24
+-- Erstellungszeit: 11. Okt 2013 um 02:22
 -- Server Version: 5.5.32
 -- PHP-Version: 5.4.16
 
@@ -34,14 +34,15 @@ CREATE TABLE IF NOT EXISTS `address` (
   `houseNumber` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `town_ID` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=4 ;
 
 --
 -- Daten für Tabelle `address`
 --
 
 INSERT INTO `address` (`id`, `street`, `houseNumber`, `town_ID`) VALUES
-(1, 'Schlehenweg', '3', 1);
+(1, 'Schlehenweg', '3', 1),
+(3, 'Neue Straße', '5', 2);
 
 -- --------------------------------------------------------
 
@@ -92,28 +93,15 @@ INSERT INTO `billitem` (`id`, `labeling`, `priceBusySeason`, `priceLowSeason`) V
 
 CREATE TABLE IF NOT EXISTS `booking` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `responsiblePerson_ID` int(11) NOT NULL,
-  `fellowTravelersList_number` int(11) NOT NULL,
+  `responsibleGuest_ID` int(11) NOT NULL,
+  `fellowGuests` text COLLATE latin1_german1_ci NOT NULL,
   `from` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `until` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `equipmentList_number` int(11) NOT NULL,
-  `pitchBookingList_number` int(11) NOT NULL,
-  `extraBookingList_number` int(11) NOT NULL,
+  `equipments` text COLLATE latin1_german1_ci NOT NULL,
+  `pitchBookings` text COLLATE latin1_german1_ci NOT NULL,
+  `extraBookings` text COLLATE latin1_german1_ci NOT NULL,
   `bill_number` int(11) NOT NULL,
-  `chipCardList_number` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `bookinglist`
---
-
-CREATE TABLE IF NOT EXISTS `bookinglist` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `number` int(11) NOT NULL,
-  `booking_ID` int(11) NOT NULL,
+  `chipCards` text COLLATE latin1_german1_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1 ;
 
@@ -127,19 +115,6 @@ CREATE TABLE IF NOT EXISTS `chipcard` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `validFrom` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `validTo` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `chipcardlist`
---
-
-CREATE TABLE IF NOT EXISTS `chipcardlist` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `number` int(11) NOT NULL,
-  `chipCard_ID` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1 ;
 
@@ -183,19 +158,6 @@ CREATE TABLE IF NOT EXISTS `employee` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `employeelist`
---
-
-CREATE TABLE IF NOT EXISTS `employeelist` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `number` int(11) NOT NULL,
-  `employee_ID` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Tabellenstruktur für Tabelle `employeerole`
 --
 
@@ -223,19 +185,6 @@ CREATE TABLE IF NOT EXISTS `equipment` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `equipmentlist`
---
-
-CREATE TABLE IF NOT EXISTS `equipmentlist` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `number` int(11) NOT NULL,
-  `equipment_ID` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Tabellenstruktur für Tabelle `extrabooking`
 --
 
@@ -243,19 +192,6 @@ CREATE TABLE IF NOT EXISTS `extrabooking` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `labeling` varchar(255) COLLATE latin1_german1_ci NOT NULL,
-  `site_ID` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `extrabookinglist`
---
-
-CREATE TABLE IF NOT EXISTS `extrabookinglist` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `number` int(11) NOT NULL,
   `site_ID` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1 ;
@@ -283,19 +219,6 @@ INSERT INTO `guest` (`id`, `person_ID`, `visitorsTaxClass_ID`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `guestlist`
---
-
-CREATE TABLE IF NOT EXISTS `guestlist` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `number` int(11) NOT NULL,
-  `guest_ID` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Tabellenstruktur für Tabelle `person`
 --
 
@@ -304,17 +227,21 @@ CREATE TABLE IF NOT EXISTS `person` (
   `identificationNumber` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `name` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `firstName` varchar(255) COLLATE latin1_german1_ci NOT NULL,
-  `address_ID` int(11) NOT NULL,
+  `street` varchar(255) COLLATE latin1_german1_ci NOT NULL,
+  `houseNumber` varchar(255) COLLATE latin1_german1_ci NOT NULL,
+  `town_ID` int(11) NOT NULL DEFAULT '0',
+  `country_ID` int(11) NOT NULL DEFAULT '0',
   `dateOfBirth` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=46 ;
 
 --
 -- Daten für Tabelle `person`
 --
 
-INSERT INTO `person` (`id`, `identificationNumber`, `name`, `firstName`, `address_ID`, `dateOfBirth`) VALUES
-(1, '123456789', 'Giesel', 'Benedikt', 1, '1992-02-23 23:00:00');
+INSERT INTO `person` (`id`, `identificationNumber`, `name`, `firstName`, `street`, `houseNumber`, `town_ID`, `country_ID`, `dateOfBirth`) VALUES
+(1, '123456789', 'Giesel', 'Benedikt', 'Schlehenweg', '3', 1, 1, '1992-02-23 23:00:00'),
+(43, '0123456789D', 'Seel', 'Florian', 'Buchenweg', '22/2', 9, 1, '1992-06-26 23:00:00');
 
 -- --------------------------------------------------------
 
@@ -324,7 +251,7 @@ INSERT INTO `person` (`id`, `identificationNumber`, `name`, `firstName`, `addres
 
 CREATE TABLE IF NOT EXISTS `pitch` (
   `id` int(11) NOT NULL,
-  `district` varchar(255) COLLATE latin1_german1_ci NOT NULL,
+  `area` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `type` enum('camper pitch','parking place','tent pitch','') COLLATE latin1_german1_ci NOT NULL,
   `length` int(11) NOT NULL,
   `width` int(11) NOT NULL,
@@ -352,32 +279,6 @@ CREATE TABLE IF NOT EXISTS `pitchbooking` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `pitchbookinglist`
---
-
-CREATE TABLE IF NOT EXISTS `pitchbookinglist` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `number` int(11) NOT NULL,
-  `pitchBooking_ID` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `pitchlist`
---
-
-CREATE TABLE IF NOT EXISTS `pitchlist` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `number` int(11) NOT NULL,
-  `pitch_ID` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Tabellenstruktur für Tabelle `service`
 --
 
@@ -390,19 +291,6 @@ CREATE TABLE IF NOT EXISTS `service` (
   `creationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `priority` int(11) NOT NULL,
   `doneDate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `servicelist`
---
-
-CREATE TABLE IF NOT EXISTS `servicelist` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `number` int(11) NOT NULL,
-  `service_ID` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1 ;
 
@@ -424,19 +312,6 @@ CREATE TABLE IF NOT EXISTS `site` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `sitelist`
---
-
-CREATE TABLE IF NOT EXISTS `sitelist` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `number` int(11) NOT NULL,
-  `site_ID` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Tabellenstruktur für Tabelle `town`
 --
 
@@ -444,16 +319,17 @@ CREATE TABLE IF NOT EXISTS `town` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `postalCode` varchar(255) COLLATE latin1_german1_ci NOT NULL,
-  `country_ID` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=17 ;
 
 --
 -- Daten für Tabelle `town`
 --
 
-INSERT INTO `town` (`id`, `name`, `postalCode`, `country_ID`) VALUES
-(1, 'Öhringen', '74613', 1);
+INSERT INTO `town` (`id`, `name`, `postalCode`) VALUES
+(1, 'Öhringen', '74613'),
+(2, 'Karlsruhe', '76131'),
+(9, 'Haigerloch', '72401');
 
 -- --------------------------------------------------------
 
