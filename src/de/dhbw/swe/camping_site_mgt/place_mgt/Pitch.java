@@ -4,6 +4,7 @@ import java.awt.Polygon;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObject;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.area.Area;
 
 public class Pitch extends BaseDataObject implements PitchInterface {
 
@@ -17,57 +18,56 @@ public class Pitch extends BaseDataObject implements PitchInterface {
      * @return the shape {@link Polygon}
      */
     private static Polygon buildShape(final int[] xCoords, final int[] yCoords) {
+	if (xCoords == null || yCoords == null) {
+	    return new Polygon();
+	}
+
 	final Polygon polygon = new Polygon(xCoords, yCoords, xCoords.length);
 	return polygon;
     }
 
     public Pitch() {
-	this(0, null, null, null, 0, null, null, 0, null, null);
+	this(0, null, null, null, null, null, 0, 0, null, null);
     }
 
-    public Pitch(final int id, final String characteristics,
-	    final Site deliveryPoint, final String area, final int length,
-	    final Pitch_NatureOfSoil natureOfSoil, final Pitch_Type type,
-	    final int width, final int[] xCoords, final int[] yCoords) {
-	this(id, characteristics, deliveryPoint, area, length, natureOfSoil, type,
-		width, buildShape(xCoords, yCoords));
+    public Pitch(final int id, final Pitch_Type type, final String area,
+	    final Site deliveryPoint, final String characteristics,
+	    final Pitch_NatureOfSoil natureOfSoil, final int width,
+	    final int height, final int[] xCoords, final int[] yCoords) {
+	this(id, type, area, deliveryPoint, characteristics, natureOfSoil, width,
+		height, buildShape(xCoords, yCoords));
     }
 
-    public Pitch(final int id, final String characteristics,
-	    final Site deliveryPoint, final String area, final int length,
-	    final Pitch_NatureOfSoil natureOfSoil, final Pitch_Type type,
-	    final int width, final Polygon shape) {
+    public Pitch(final int id, final Pitch_Type type, final String area,
+	    final Site deliveryPoint, final String characteristics,
+	    final Pitch_NatureOfSoil natureOfSoil, final int width,
+	    final int height, final Polygon shape) {
 	super(id);
-	this.characteristics = characteristics;
-	this.deliveryPoint = deliveryPoint;
-	this.area = area;
-	this.length = length;
-	this.natureOfSoil = natureOfSoil;
 	this.type = type;
+	this.areaName = area;
+	this.deliveryPoint = deliveryPoint;
+	this.characteristics = characteristics;
+	this.natureOfSoil = natureOfSoil;
 	this.width = width;
+	this.height = height;
 	this.shape = shape;
     }
 
-    public Pitch(final String characteristics, final Site deliveryPoint,
-	    final String area, final int length,
-	    final Pitch_NatureOfSoil natureOfSoil, final Pitch_Type type,
-	    final int width, final int[] xCoords, final int[] yCoords) {
-	this(0, characteristics, deliveryPoint, area, length, natureOfSoil, type,
-		width, xCoords, yCoords);
+    public Pitch(final Pitch_Type type, final String area,
+	    final Site deliveryPoint, final String characteristics,
+	    final Pitch_NatureOfSoil natureOfSoil, final int width,
+	    final int height, final int[] xCoords, final int[] yCoords) {
+	this(0, type, area, deliveryPoint, characteristics, natureOfSoil, width,
+		height, xCoords, yCoords);
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#equals(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
     @Override
     public boolean equals(final DataObject dataObject) {
 	final Pitch object = (Pitch) dataObject;
-	if (this.area.equals(object.getArea())
+	if (this.areaName.equals(object.getArea())
 		&& this.characteristics.equals(object.getCharacteristics())
 		&& this.deliveryPoint.equals(object.getDeliveryPoint())
-		&& this.length == object.getLength()
+		&& this.height == object.getHeight()
 		&& this.natureOfSoil.equals(object.getNatureOfSoil())
 		&& this.shape.equals(object.getShape())
 		&& this.type.equals(object.getType())
@@ -77,71 +77,47 @@ public class Pitch extends BaseDataObject implements PitchInterface {
 	return false;
     }
 
-    /**
-     * Returns the area.
-     * 
-     * @return the area
-     */
     @Override
     public String getArea() {
-	return area;
+	return areaName;
     }
 
-    /**
-     * Returns the characteristics.
-     * 
-     * @return the characteristics
-     */
     @Override
     public String getCharacteristics() {
 	return characteristics;
     }
 
-    /**
-     * Returns the deliveryPoint.
-     * 
-     * @return the deliveryPoint
-     */
     @Override
     public Site getDeliveryPoint() {
 	return deliveryPoint;
     }
 
-    /**
-     * Returns the length.
-     * 
-     * @return the length
-     */
     @Override
-    public int getLength() {
-	return length;
+    public int getHeight() {
+	return height;
     }
 
-    /**
-     * Returns the natureOfSoil.
-     * 
-     * @return the natureOfSoil
-     */
+    @Override
+    public String getName() {
+	final StringBuilder name = new StringBuilder();
+	name.append(areaName);
+	for (int i = 4 - (getId() + "").length(); i <= 0; i--) {
+	    name.append("0");
+	}
+	name.append(getId());
+	return name.toString();
+    }
+
     @Override
     public Pitch_NatureOfSoil getNatureOfSoil() {
 	return natureOfSoil;
     }
 
-    /**
-     * Returns the shape.
-     * 
-     * @return the shape
-     */
     @Override
     public Polygon getShape() {
 	return shape;
     }
 
-    /**
-     * Returns the type.
-     * 
-     * @return the type
-     */
     @Override
     public Polygon getShape(final int xShift, final int yShift) {
 	final int[] xPoints = shape.xpoints;
@@ -195,14 +171,24 @@ public class Pitch extends BaseDataObject implements PitchInterface {
 	return yCoords;
     }
 
-    private final String area;
+    /** The {@link Area} name. */
+    private final String areaName;
+    /** The characteristics. */
     private final String characteristics;
+    /** The delivery point {@link Site} */
     private final Site deliveryPoint;
-    private final int length;
+    /** The height/depth of the pitch. */
+    private final int height;
+    /** The nature of the pitch soil. */
     private final Pitch_NatureOfSoil natureOfSoil;
+    /** The shape of the pitch area. */
     private final Polygon shape;
+    /** The type of the pitch. */
     private final Pitch_Type type;
+    /** The width of the pitch. */
     private final int width;
+    /** The x coordinates */
     private String xCoords;
+    /** the */
     private String yCoords;
 }

@@ -28,14 +28,19 @@ public interface PitchInterface {
     Site getDeliveryPoint();
 
     /**
+     * @return the height of the Pitch in <code>dm</code>.
+     */
+    int getHeight();
+
+    /**
      * @return the ID of the {@link Pitch}.
      */
     int getId();
 
     /**
-     * @return the length of the Pitch in <code>dm</code>.
+     * @return the name of the Pitch.
      */
-    int getLength();
+    String getName();
 
     /**
      * @return the description for the {@link Pitch} nature of soil.

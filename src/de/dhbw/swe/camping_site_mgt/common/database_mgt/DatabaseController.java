@@ -588,7 +588,7 @@ public class DatabaseController {
 	    for (final Pitch tmpObj : querySelectPitch()) {
 		if (obj.getCharacteristics().equals(tmpObj.getCharacteristics())
 			// && obj.getDistrict().equals(tmpObj.getDistrict())
-			&& obj.getLength() == tmpObj.getLength()
+			&& obj.getHeight() == tmpObj.getHeight()
 			&& obj.getNatureOfSoil().equals(tmpObj.getNatureOfSoil())
 			&& obj.getType().equals(tmpObj.getType())
 			&& obj.getWidth() == tmpObj.getWidth()

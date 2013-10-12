@@ -19,7 +19,7 @@ public class BaseFormularPanel extends JPanel {
 	    lpGbc.fill = GridBagConstraints.HORIZONTAL;
 	    lpGbc.weightx = 1;
 	    final JLabel label = new JLabel(string, JLabel.LEFT);
-	    label.setPreferredSize(new Dimension(280, 30));
+	    label.setPreferredSize(new Dimension(200, 30));
 	    this.add(label, lpGbc);
 	    lpGbc.weighty = 2;
 	    lpGbc.gridy = 1;

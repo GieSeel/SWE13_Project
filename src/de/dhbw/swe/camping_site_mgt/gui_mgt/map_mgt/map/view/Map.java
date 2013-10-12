@@ -1,4 +1,4 @@
-package de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map;
+package de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.view;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -15,6 +15,7 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.GuiController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.*;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.area.Area;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.*;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.statusbar.*;
 import de.dhbw.swe.camping_site_mgt.place_mgt.*;
 
