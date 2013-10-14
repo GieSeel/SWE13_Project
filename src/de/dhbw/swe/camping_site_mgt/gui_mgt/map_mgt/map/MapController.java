@@ -7,15 +7,11 @@ import javax.swing.JComponent;
 
 import de.dhbw.swe.camping_site_mgt.common.Delegate;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.Displayable;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.area.Area;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.area.MapAreas;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.area.*;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.view.Map;
 import de.dhbw.swe.camping_site_mgt.place_mgt.*;
 
 public class MapController implements Displayable {
-    class MapListnener {
-
-    }
 
     public MapController(final String mapPath) {
 	final HashMap<String, Area> areas = new MapAreas().getAreas();
