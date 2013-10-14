@@ -22,10 +22,9 @@ import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
-import de.dhbw.swe.camping_site_mgt.common.*;
+import de.dhbw.swe.camping_site_mgt.common.Euro;
+import de.dhbw.swe.camping_site_mgt.common.IntArrayParser;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
-import de.dhbw.swe.camping_site_mgt.person_mgt.Person;
-import de.dhbw.swe.camping_site_mgt.person_mgt.PersonMgr;
 
 /**
  * Insert description for DatabaseMgr
@@ -83,21 +82,27 @@ public class DatabaseMgr {
 	    conncetion = DriverManager.getConnection(url, user, password);
 	    logger.info("Connected with Database.");
 	    // TODO del -- Tests v
+	    // final VisitorsTaxClassMgr test =
+	    // VisitorsTaxClassMgr.getInstance();
+	    // test.objectInsert(new VisitorsTaxClass(
+	    // VisitorsTaxClass_Labeling.BUSYSEASON, new Euro(9, 8)));
 	    //
-	    final PersonMgr test = PersonMgr.getInstance();
-	    final Country country = new Country("DE", "Deutschland");
-	    final Town town = new Town("Pforzheim", "75177");
-	    final Calendar cal = Calendar.getInstance();
-	    cal.setTimeInMillis(0);
-	    cal.set(1992, 5, 27);
-	    final Date datum = cal.getTime();
-	    final Person person = new Person("0123456789D", "Florian", "Seel",
-		    datum, "Ebersteinstr.", "3", town, country);
-	    test.objectInsert(person);
-
-	    final Town town2 = new Town("Haigerloch", "72401");
-	    test.objectUpdate(person, new Person("0123456789D", "Florian", "Seel",
-		    datum, "Buchenweg", "22/2", town2, country));
+	    // final PersonMgr test = PersonMgr.getInstance();
+	    // final Country country = new Country("DE", "Deutschland");
+	    // final Town town = new Town("Pforzheim", "75177");
+	    // final Calendar cal = Calendar.getInstance();
+	    // cal.setTimeInMillis(0);
+	    // cal.set(1992, 5, 27);
+	    // final Date datum = cal.getTime();
+	    // final Person person = new Person("0123456789D", "Florian",
+	    // "Seel",
+	    // datum, "Ebersteinstr.", "3", town, country);
+	    // test.objectInsert(person);
+	    //
+	    // final Town town2 = new Town("Haigerloch", "72401");
+	    // test.objectUpdate(person, new Person("0123456789D", "Florian",
+	    // "Seel",
+	    // datum, "Buchenweg", "22/2", town2, country));
 
 	    // TODO del -- Tests ^
 	} catch (final SQLException e) {
@@ -133,7 +138,7 @@ public class DatabaseMgr {
     public List<HashMap<String, Object>> getAllEntriesOf(final String table) {
 	PreparedStatement statement;
 	final String query = "SELECT * FROM " + table + ";";
-	final List<HashMap<String, Object>> entries = new ArrayList<HashMap<String, Object>>();
+	final Vector<HashMap<String, Object>> entries = new Vector<>();
 	if (conncetion == null) {
 	    logger.error("Not connected with database");
 	    return entries;
@@ -144,36 +149,49 @@ public class DatabaseMgr {
 	    final ResultSet result = statement.executeQuery();
 	    HashMap<String, Object> entry;
 
+	    Class<? extends Object> dbTyp;
+	    String fieldName, dbName;
+
 	    while (result.next()) {
 		entry = new HashMap<String, Object>();
 		for (final ColumnInfo column : DataStructure.getStructureFor(table)) {
-		    if (column.getDbType().equals(String.class)) {
-			entry.put(column.getFieldName(),
-				result.getString(column.getDbName()));
-		    } else if (column.getDbType().equals(Integer.class)) {
-			entry.put(column.getFieldName(),
-				result.getInt(column.getDbName()));
-		    } else if (column.getDbType().equals(Float.class)) {
-			entry.put(column.getFieldName(),
-				result.getFloat(column.getDbName()));
-		    } else if (column.getDbType().equals(Date.class)) {
-			entry.put(column.getFieldName(), new Date(
-				result.getTimestamp(column.getDbName()).getTime()));
-		    } else if (column.getDbType().equals(Array.class)) {
-			entry.put(
-				column.getFieldName(),
-				IntArrayParser.parseArray(result.getString(column.getDbName())));
+		    dbTyp = column.getDbType();
+		    fieldName = column.getFieldName();
+		    dbName = column.getDbName();
+
+		    if (dbTyp.equals(Integer.class)) {
+			// Integer
+			entry.put(fieldName, result.getInt(dbName));
+		    } else if (dbTyp.equals(Float.class)) {
+			// Float
+			entry.put(fieldName, result.getFloat(dbName));
+		    } else if (dbTyp.equals(Euro.class)) {
+			// Euro
+			entry.put(fieldName, new Euro(result.getFloat(dbName)));
+		    } else if (dbTyp.equals(String.class)) {
+			// String
+			entry.put(fieldName, result.getString(dbName));
+		    } else if (dbTyp.equals(Array.class)) {
+			// Array
+			entry.put(fieldName,
+				IntArrayParser.parseArray(result.getString(dbName)));
+		    } else if (dbTyp.equals(Date.class)) {
+			// Date
+			entry.put(fieldName, new Date(
+				result.getTimestamp(dbName).getTime()));
+		    } else if (dbTyp.equals(Enum.class)) {
+			// Enum
+			entry.put(fieldName, result.getInt(dbName));
 		    } else {
 			logger.error("Unexpected typ in database result analysis!");
 		    }
 		}
 		entries.add(entry);
 	    }
-	    return entries;
-	} catch (final SQLException e1) {
-	    logger.error("SQL-Exception..." + e1.getMessage());
+	} catch (final SQLException e) {
+	    logger.error("SQL-Exception..." + e.getMessage());
 	}
-	return null;
+	return entries;
     }
 
     /**
@@ -206,38 +224,15 @@ public class DatabaseMgr {
 	try {
 	    statement = conncetion.prepareStatement(query,
 		    Statement.RETURN_GENERATED_KEYS);
-
-	    for (int i = 1; i < columnInfos.length; i++) {
-		if (columnInfos[i].getDbType().equals(String.class)) {
-		    statement.setString(i,
-			    (String) dbObject.get(columnInfos[i].getFieldName()));
-		} else if (columnInfos[i].getDbType().equals(Integer.class)) {
-		    statement.setInt(i,
-			    (Integer) dbObject.get(columnInfos[i].getFieldName()));
-		} else if (columnInfos[i].getDbType().equals(Float.class)) {
-		    statement.setFloat(i,
-			    (Float) dbObject.get(columnInfos[i].getFieldName()));
-		} else if (columnInfos[i].getDbType().equals(Date.class)) {
-		    statement.setTimestamp(
-			    i,
-			    new Timestamp(
-				    ((Date) dbObject.get(columnInfos[i].getFieldName())).getTime()));
-		} else if (columnInfos[i].getDbType().equals(Array.class)) {
-		    statement.setString(
-			    i,
-			    IntArrayParser.parseArray((int[]) dbObject.get(columnInfos[i].getFieldName())));
-		} else {
-		    logger.error("Unexpected typ in database INSERT!");
-		}
-	    }
+	    fillStatement(statement, dbObject, columnInfos);
 	    statement.executeUpdate();
 
 	    final ResultSet result = statement.getGeneratedKeys();
 	    if (result.next()) {
 		return result.getInt(1);
 	    }
-	} catch (final SQLException e1) {
-	    logger.error("SQL-Exception..." + e1.getMessage());
+	} catch (final SQLException e) {
+	    logger.error("SQL-Exception..." + e.getMessage());
 	}
 	return 0;
     }
@@ -258,7 +253,7 @@ public class DatabaseMgr {
 	    statement.setInt(1, (int) dbObject.get("id"));
 	    statement.executeUpdate();
 	} catch (final SQLException e) {
-	    logger.error("SQL-Exception..." + e.getMessage());
+	    logger.error("SQL-Exception while removing object" + e.getMessage());
 	}
 
     }
@@ -289,36 +284,90 @@ public class DatabaseMgr {
 
 	try {
 	    statement = conncetion.prepareStatement(query);
+	    statement.setInt(fillStatement(statement, dbObject, columnInfos),
+		    (int) dbObject.get("id"));
+	    statement.executeUpdate();
+	} catch (final SQLException e) {
+	    logger.error("SQL-Exception..." + e.getMessage());
+	}
+    }
 
-	    int i = 1;
-	    for (; i < columnInfos.length; i++) {
-		if (columnInfos[i].getDbType().equals(String.class)) {
-		    statement.setString(i,
-			    (String) dbObject.get(columnInfos[i].getFieldName()));
-		} else if (columnInfos[i].getDbType().equals(Integer.class)) {
-		    statement.setInt(i,
-			    (Integer) dbObject.get(columnInfos[i].getFieldName()));
-		} else if (columnInfos[i].getDbType().equals(Float.class)) {
+    /**
+     * 
+     * @param statement
+     * @param dbObject
+     * @param columnInfos
+     * @return
+     */
+    private int fillStatement(final PreparedStatement statement,
+	    final HashMap<String, Object> dbObject, final ColumnInfo[] columnInfos) {
+	Class<? extends Object> dbTyp;
+	String fieldName;
+	int i = 1;
+	for (; i < columnInfos.length; i++) {
+	    dbTyp = columnInfos[i].getDbType();
+	    fieldName = columnInfos[i].getFieldName();
+
+	    if (dbTyp.equals(Integer.class)) {
+		// Integer
+		try {
+		    statement.setInt(i, (Integer) dbObject.get(fieldName));
+		} catch (final SQLException e) {
+		    logger.error("SQL-Exception (fill Integer)" + e.getMessage());
+		}
+	    } else if (dbTyp.equals(Float.class)) {
+		// Float
+		try {
+		    statement.setFloat(i, (Float) dbObject.get(fieldName));
+		} catch (final SQLException e) {
+		    logger.error("SQL-Exception (fill Float)" + e.getMessage());
+		}
+	    } else if (dbTyp.equals(Euro.class)) {
+		// Euro
+		try {
 		    statement.setFloat(i,
-			    (Float) dbObject.get(columnInfos[i].getFieldName()));
-		} else if (columnInfos[i].getDbType().equals(Date.class)) {
+			    ((Euro) dbObject.get(fieldName)).returnValue());
+		} catch (final SQLException e) {
+		    logger.error("SQL-Exception (fill Euro)" + e.getMessage());
+		}
+	    } else if (dbTyp.equals(String.class)) {
+		// String
+		try {
+		    statement.setString(i, (String) dbObject.get(fieldName));
+		} catch (final SQLException e) {
+		    logger.error("SQL-Exception (fill String)" + e.getMessage());
+		}
+	    } else if (dbTyp.equals(Array.class)) {
+		// Array
+		try {
+		    statement.setString(
+			    i,
+			    IntArrayParser.parseArray((int[]) dbObject.get(fieldName)));
+		} catch (final SQLException e) {
+		    logger.error("SQL-Exception (fill Array)" + e.getMessage());
+		}
+	    } else if (dbTyp.equals(Date.class)) {
+		// Date
+		try {
 		    statement.setTimestamp(
 			    i,
 			    new Timestamp(
-				    ((Date) dbObject.get(columnInfos[i].getFieldName())).getTime()));
-		} else if (columnInfos[i].getDbType().equals(Array.class)) {
-		    statement.setString(
-			    i,
-			    IntArrayParser.parseArray((int[]) dbObject.get(columnInfos[i].getFieldName())));
-		} else {
-		    logger.error("Unexpected typ in database INSERT!");
+				    ((Date) dbObject.get(fieldName)).getTime()));
+		} catch (final SQLException e) {
+		    logger.error("SQL-Exception (fill Date)" + e.getMessage());
 		}
+	    } else if (dbTyp.equals(Enum.class)) {
+		// Enum
+		try {
+		    statement.setInt(i, (Integer) dbObject.get(fieldName));
+		} catch (final SQLException e) {
+		    logger.error("SQL-Exception (fill Enum)" + e.getMessage());
+		}
+	    } else {
+		logger.error("Unexpected typ in database INSERT!");
 	    }
-	    statement.setInt(i, (int) dbObject.get("id"));
-	    statement.executeUpdate();
-	} catch (final SQLException e1) {
-	    logger.error("SQL-Exception..." + e1.getMessage());
 	}
+	return i;
     }
 
     private Connection conncetion;

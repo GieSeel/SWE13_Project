@@ -46,27 +46,27 @@ public class PitchMgr extends BaseDataObjectMgr {
 	String area;
 	String characteristics;
 	Site deliveryPoint;
-	int length;
+	int height;
 	Pitch_NatureOfSoil natureOfSoil;
-	final Pitch_Type type;
+	Pitch_Type type;
 	int width;
-	String xCoords;
-	String yCoords;
+	int[] xCoords;
+	int[] yCoords;
 
 	id = (int) entry.get("id");
 	area = (String) entry.get("area");
 	characteristics = (String) entry.get("characteristics");
 	deliveryPoint = (Site) SiteMgr.getInstance().objectGet(
 		(int) entry.get("deliveryPoint"), tableName, id);
-	length = (int) entry.get("length");
-	natureOfSoil = (Pitch_NatureOfSoil) entry.get("natureOfSoil");
-	xCoords = (String) entry.get("xCoords");
-	yCoords = (String) entry.get("yCoords");
-	type = (Pitch_Type) entry.get("type");
+	height = (int) entry.get("height");
+	natureOfSoil = Pitch_NatureOfSoil.values()[(int) entry.get("natureOfSoil")];
+	xCoords = (int[]) entry.get("xCoords");
+	yCoords = (int[]) entry.get("yCoords");
+	type = Pitch_Type.values()[(int) entry.get("type")];
 	width = (int) entry.get("width");
 
-	return new Pitch(id, characteristics, deliveryPoint, area, length,
-		natureOfSoil, type, width, xCoords, yCoords);
+	return new Pitch(id, type, area, deliveryPoint, characteristics,
+		natureOfSoil, width, height, xCoords, yCoords);
     }
 
     /**

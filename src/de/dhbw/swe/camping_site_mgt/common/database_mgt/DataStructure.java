@@ -9,8 +9,7 @@ import de.dhbw.swe.camping_site_mgt.common.*;
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageMgr;
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageProperties;
 import de.dhbw.swe.camping_site_mgt.person_mgt.*;
-import de.dhbw.swe.camping_site_mgt.place_mgt.Pitch;
-import de.dhbw.swe.camping_site_mgt.place_mgt.Site;
+import de.dhbw.swe.camping_site_mgt.place_mgt.*;
 import de.dhbw.swe.camping_site_mgt.service_mgt.Service;
 
 /**
@@ -70,10 +69,10 @@ public class DataStructure {
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
 			new ColumnInfo("labeling", Enum.class,
-				lm.get(lp.DM_LABELING)),
-			new ColumnInfo("priceBusySeason", Float.class,
+				lm.get(lp.DM_LABELING), BillItem_Labeling.class),
+			new ColumnInfo("priceBusySeason", Euro.class,
 				lm.get(lp.DM_PRICE_BUSY_SEASON)),
-			new ColumnInfo("priceLowSeason", Float.class,
+			new ColumnInfo("priceLowSeason", Euro.class,
 				lm.get(lp.DM_PRICE_LOW_SEASON)) });
 
 	// "booking"
@@ -140,16 +139,18 @@ public class DataStructure {
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
 			new ColumnInfo("labeling", Enum.class,
-				lm.get(lp.DM_LABELING)),
+				lm.get(lp.DM_LABELING), EmployeeRole_Labeling.class),
 			new ColumnInfo("arrangement", Enum.class,
-				lm.get(lp.DM_ARRANGEMENT)) });
+				lm.get(lp.DM_ARRANGEMENT),
+				EmployeeRole_Arrangement.class) });
 
 	// "equipment"
 	sqlObjects.put(
 		"equipment",
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
-			new ColumnInfo("type", Enum.class, lm.get(lp.DM_TYPE)),
+			new ColumnInfo("type", Enum.class, lm.get(lp.DM_TYPE),
+				Equipment_Type.class),
 			new ColumnInfo("size", String.class, lm.get(lp.DM_SIZE)),
 			new ColumnInfo("identification", String.class,
 				lm.get(lp.DM_IDENTIFICATION)) });
@@ -210,12 +211,14 @@ public class DataStructure {
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
 			new ColumnInfo("area", String.class, lm.get(lp.DM_AREA)),
-			new ColumnInfo("type", Enum.class, lm.get(lp.DM_TYPE)),
-			new ColumnInfo("length", Integer.class,
+			new ColumnInfo("type", Enum.class, lm.get(lp.DM_TYPE),
+				Pitch_Type.class),
+			new ColumnInfo("height", Integer.class,
 				lm.get(lp.DM_LENGTH)),
 			new ColumnInfo("width", Integer.class, lm.get(lp.DM_WIDTH)),
 			new ColumnInfo("natureOfSoil", Enum.class,
-				lm.get(lp.DM_NATURE_OF_SOIL)),
+				lm.get(lp.DM_NATURE_OF_SOIL),
+				Pitch_NatureOfSoil.class),
 			new ColumnInfo("deliveryPoint_ID", Integer.class, null,
 				"deliveryPoint", Site.class),
 			new ColumnInfo("characteristics", String.class,
@@ -303,8 +306,10 @@ public class DataStructure {
 	// "visitorstaxclass"
 	sqlObjects.put("visitorstaxclass",
 
-	new ColumnInfo[] { new ColumnInfo("id", Integer.class),
-		new ColumnInfo("labeling", String.class, lm.get(lp.DM_LABELING)),
-		new ColumnInfo("price", Float.class, lm.get(lp.DM_PRICE)) });
+	new ColumnInfo[] {
+		new ColumnInfo("id", Integer.class),
+		new ColumnInfo("labeling", Enum.class, lm.get(lp.DM_LABELING),
+			VisitorsTaxClass_Labeling.class),
+		new ColumnInfo("price", Euro.class, lm.get(lp.DM_PRICE)) });
     }
 }

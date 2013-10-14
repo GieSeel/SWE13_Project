@@ -46,13 +46,13 @@ public class SiteMgr extends BaseDataObjectMgr {
 	String description;
 	String labeling;
 	String openingHours;
-	String type;
+	Site_Type type;
 
 	id = (int) entry.get("id");
 	description = (String) entry.get("description");
 	labeling = (String) entry.get("labeling");
 	openingHours = (String) entry.get("openingHours");
-	type = (String) entry.get("type");
+	type = Site_Type.values()[(int) entry.get("type")];
 
 	return new Site(id, description, labeling, openingHours, type);
     }

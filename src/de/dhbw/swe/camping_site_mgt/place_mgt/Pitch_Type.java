@@ -1,6 +1,7 @@
 package de.dhbw.swe.camping_site_mgt.place_mgt;
 
-import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
+import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageMgr;
+import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageProperties;
 
 public enum Pitch_Type {
 
@@ -9,7 +10,6 @@ public enum Pitch_Type {
 	    LanguageProperties.TYPE_PITCH_TENT);
 
     private Pitch_Type(final String value) {
-
 	this.value = LanguageMgr.getInstance().get(value);
     }
 

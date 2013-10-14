@@ -62,11 +62,11 @@ public class VisitorsTaxClassMgr extends BaseDataObjectMgr {
     @Override
     protected DataObject entry2object(final HashMap<String, Object> entry) {
 	int id;
-	String labeling;
+	VisitorsTaxClass_Labeling labeling;
 	Euro price;
 
 	id = (int) entry.get("id");
-	labeling = (String) entry.get("labeling");
+	labeling = VisitorsTaxClass_Labeling.values()[(int) entry.get("labeling")];
 	price = (Euro) entry.get("price");
 
 	return new VisitorsTaxClass(id, labeling, price);
@@ -101,5 +101,4 @@ public class VisitorsTaxClassMgr extends BaseDataObjectMgr {
     protected String getTableName() {
 	return new VisitorsTaxClass().getTableName();
     }
-
 }

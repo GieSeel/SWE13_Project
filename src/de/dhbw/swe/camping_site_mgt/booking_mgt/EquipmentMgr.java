@@ -70,7 +70,7 @@ public class EquipmentMgr extends BaseDataObjectMgr {
 	id = (int) entry.get("id");
 	identification = (String) entry.get("identification");
 	size = (String) entry.get("size");
-	type = (Equipment_Type) entry.get("type");
+	type = Equipment_Type.values()[(int) entry.get("type")];
 
 	return new Equipment(id, identification, size, type);
     }

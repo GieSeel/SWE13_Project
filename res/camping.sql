@@ -3,18 +3,12 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 11. Okt 2013 um 02:22
+-- Erstellungszeit: 14. Okt 2013 um 12:05
 -- Server Version: 5.5.32
 -- PHP-Version: 5.4.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
 
 --
 -- Datenbank: `camping`
@@ -66,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `bill` (
 
 CREATE TABLE IF NOT EXISTS `billitem` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `labeling` enum('camper pitch','parking place','tent pitch','icebox','electricity','child','adult') COLLATE latin1_german1_ci NOT NULL,
+  `labeling` int(11) NOT NULL,
   `priceBusySeason` float NOT NULL,
   `priceLowSeason` float NOT NULL,
   PRIMARY KEY (`id`)
@@ -77,13 +71,13 @@ CREATE TABLE IF NOT EXISTS `billitem` (
 --
 
 INSERT INTO `billitem` (`id`, `labeling`, `priceBusySeason`, `priceLowSeason`) VALUES
-(1, 'tent pitch', 18.7, 12.5),
-(2, 'camper pitch', 33.4, 25.3),
-(3, 'parking place', 13.6, 8.5),
-(4, 'icebox', 2, 1.2),
-(5, 'electricity', 0.5, 0.3),
-(6, 'child', 4.3, 0),
-(7, 'adult', 9.9, 5.1);
+(1, 3, 18.7, 12.5),
+(2, 1, 33.4, 25.3),
+(3, 2, 13.6, 8.5),
+(4, 4, 2, 1.2),
+(5, 5, 0.5, 0.3),
+(6, 6, 4.3, 0),
+(7, 7, 9.9, 5.1);
 
 -- --------------------------------------------------------
 
@@ -163,8 +157,8 @@ CREATE TABLE IF NOT EXISTS `employee` (
 
 CREATE TABLE IF NOT EXISTS `employeerole` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `labeling` enum('caretaker','cleaner','conductor','groundkeeper','reception') COLLATE latin1_german1_ci NOT NULL,
-  `arrangement` enum('administrator','laboratory assistant','reception staff','') COLLATE latin1_german1_ci NOT NULL,
+  `labeling` int(11) NOT NULL,
+  `arrangement` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1 ;
 
@@ -176,7 +170,7 @@ CREATE TABLE IF NOT EXISTS `employeerole` (
 
 CREATE TABLE IF NOT EXISTS `equipment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` enum('bike','boat','camper','car','caravan','motorbike','other','tent','','') COLLATE latin1_german1_ci NOT NULL,
+  `type` int(11) NOT NULL,
   `size` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `identification` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   PRIMARY KEY (`id`)
@@ -252,10 +246,10 @@ INSERT INTO `person` (`id`, `identificationNumber`, `name`, `firstName`, `street
 CREATE TABLE IF NOT EXISTS `pitch` (
   `id` int(11) NOT NULL,
   `area` varchar(255) COLLATE latin1_german1_ci NOT NULL,
-  `type` enum('camper pitch','parking place','tent pitch','') COLLATE latin1_german1_ci NOT NULL,
-  `length` int(11) NOT NULL,
+  `type` int(11) NOT NULL,
+  `height` int(11) NOT NULL,
   `width` int(11) NOT NULL,
-  `natureOfSoil` enum('grass','gravel','sand','soil') COLLATE latin1_german1_ci NOT NULL,
+  `natureOfSoil` int(11) NOT NULL,
   `deliveryPoint_ID` int(11) NOT NULL,
   `characteristics` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `xCoords` text COLLATE latin1_german1_ci NOT NULL,
@@ -303,7 +297,7 @@ CREATE TABLE IF NOT EXISTS `service` (
 CREATE TABLE IF NOT EXISTS `site` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `labeling` varchar(255) COLLATE latin1_german1_ci NOT NULL,
-  `type` enum('activity','electrical power','entrance','fireplace','other','reception','sale','sanitary facillities','service','utillity room','','','') COLLATE latin1_german1_ci NOT NULL,
+  `type` int(11) NOT NULL,
   `openingHours` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `description` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   PRIMARY KEY (`id`)
@@ -320,7 +314,7 @@ CREATE TABLE IF NOT EXISTS `town` (
   `name` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `postalCode` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=17 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=10 ;
 
 --
 -- Daten für Tabelle `town`
@@ -339,21 +333,17 @@ INSERT INTO `town` (`id`, `name`, `postalCode`) VALUES
 
 CREATE TABLE IF NOT EXISTS `visitorstaxclass` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `labeling` enum('busy season','busy season reduced','low season','low season reduced') COLLATE latin1_german1_ci NOT NULL,
+  `labeling` int(11) NOT NULL,
   `price` float NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=8 ;
 
 --
 -- Daten für Tabelle `visitorstaxclass`
 --
 
 INSERT INTO `visitorstaxclass` (`id`, `labeling`, `price`) VALUES
-(1, 'busy season', 2),
-(2, 'busy season reduced', 1),
-(3, 'low season', 1.5),
-(4, 'low season reduced', 0.5);
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+(1, 0, 2),
+(2, 1, 1),
+(3, 2, 1.5),
+(4, 3, 0.5);
