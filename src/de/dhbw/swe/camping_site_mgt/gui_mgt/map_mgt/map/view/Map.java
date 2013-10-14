@@ -13,7 +13,6 @@ import de.dhbw.swe.camping_site_mgt.common.*;
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.GuiController;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.*;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.area.Area;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.*;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.statusbar.*;
@@ -235,10 +234,7 @@ public class Map extends JPanel implements AccessableMap {
     /** The {@link LanguageProperties}. */
     private static LanguageProperties lp;
 
-    /** The percentage of the space of screen covered by the map. */
-    private static final float MAP_SCREEN_COVERAGE = 0.8f;
-
-    /**   */
+    /** The serial version UID. */
     private static final long serialVersionUID = 1L;
 
     public Map(final String mapImagePath, final HashMap<String, Area> theAreas,
@@ -246,7 +242,7 @@ public class Map extends JPanel implements AccessableMap {
 	final Toolkit toolkit = Toolkit.getDefaultToolkit();
 	img = getMapImage(mapImagePath);
 	final Dimension screenSize = toolkit.getScreenSize();
-	GuiController.setScaleFactor((screenSize.width * MAP_SCREEN_COVERAGE)
+	GuiController.setScaleFactor((screenSize.width * MapPanelInterface.MAP_SCREEN_COVERAGE)
 		/ img.getWidth());
 
 	imgScaledOverview = getScaledImage(img);
@@ -277,6 +273,7 @@ public class Map extends JPanel implements AccessableMap {
 
     @Override
     public void paint(final Graphics g) {
+	super.paint(g);
 	final Graphics2D g2 = (Graphics2D) g;
 	if (zoomedIn) {
 	    paintZoomedIn(g2);

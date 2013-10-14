@@ -72,6 +72,23 @@ public class LanguageMgr {
 	return selectedLanguage;
     }
 
+    /**
+     * Sets a language if available.
+     * 
+     * @param language
+     *            the languages name
+     */
+    public void setLanguage(final String language) {
+	if (languages.containsKey(language)) {
+	    final StringBuilder message = new StringBuilder();
+	    message.append("Selected language has changed from "
+		    + selectedLanguage.getName());
+	    selectedLanguage = languages.get(language);
+	    message.append(" to " + selectedLanguage.getName() + "!");
+	    logger.info(message.toString());
+	}
+    }
+
     private void addContent(final String languageProperty, final String value) {
 	content.append(languageProperty);
 	content.append(CELL_SEPARATOR);

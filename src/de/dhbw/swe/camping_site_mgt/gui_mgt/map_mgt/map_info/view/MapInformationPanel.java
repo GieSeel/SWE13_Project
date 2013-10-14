@@ -6,6 +6,7 @@ import javax.swing.*;
 
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.BaseFormularPanel;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.view.MapPanelInterface;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map_info.MapInformationInterface;
 import de.dhbw.swe.camping_site_mgt.place_mgt.*;
 
@@ -18,9 +19,13 @@ public class MapInformationPanel extends BaseFormularPanel implements
 
     public MapInformationPanel() {
 	super();
+
+	initComponentWidth();
 	initTFArea();
 	initTFPichName();
 	initPnlShape();
+	initTACharacteristics();
+	initDeliveryPoint();
     }
 
     @Override
@@ -35,14 +40,15 @@ public class MapInformationPanel extends BaseFormularPanel implements
 
     @Override
     public void setPitchCharacteristics(final String characteristics) {
-	// TODO Auto-generated method stub
-
+	characteristicsTa.setText(characteristics);
     }
 
     @Override
     public void setPitchDeliveryPoint(final Site deliveryPoint) {
-	// TODO Auto-generated method stub
-
+	final StringBuilder text = new StringBuilder();
+	text.append(deliveryPoint.getId() + "\r\n");
+	text.append(deliveryPoint.getDescription());
+	deliveryPointTa.setText(text.toString());
     }
 
     @Override
@@ -92,10 +98,29 @@ public class MapInformationPanel extends BaseFormularPanel implements
 	return null;
     }
 
+    private void initComponentWidth() {
+	final Toolkit toolkit = Toolkit.getDefaultToolkit();
+	final Dimension screenSize = toolkit.getScreenSize();
+	mapInfoComponentWidth = (int) ((1f - MapPanelInterface.MAP_SCREEN_COVERAGE) * screenSize.getWidth()) - 13;
+	setPreferredSize(new Dimension(mapInfoComponentWidth, 20));
+    }
+
+    private void initDeliveryPoint() {
+	deliveryPointTa = new JTextArea();
+	deliveryPointTa.setBackground(new Color(238, 238, 238));
+	add(lm.get(lp.DELIVERY_POINT) + ":", deliveryPointTa);
+    }
+
     private void initPnlShape() {
 	shapePnl = new ShapePanel();
-	shapePnl.setPreferredSize(new Dimension(100, 150));
+	shapePnl.setPreferredSize(new Dimension(100, 230));
 	add("", shapePnl);
+    }
+
+    private void initTACharacteristics() {
+	characteristicsTa = new JTextArea();
+	characteristicsTa.setBackground(new Color(238, 238, 238));
+	add(lm.get(lp.DM_CHARACTERISTICS) + ":", characteristicsTa);
     }
 
     private void initTFArea() {
@@ -111,11 +136,11 @@ public class MapInformationPanel extends BaseFormularPanel implements
     }
 
     private JTextField areaTf;
+    private JTextArea characteristicsTa;
+    private JTextArea deliveryPointTa;
     private final LanguageMgr lm = LanguageMgr.getInstance();
-
     private LanguageProperties lp;
-
+    private int mapInfoComponentWidth;
     private JTextField pitchIdTF;
-
     private ShapePanel shapePnl;
 }
