@@ -89,12 +89,17 @@ public class MapInformationPanel extends BaseFormularPanel implements
      */
     private Color getColor(final Pitch_NatureOfSoil natureOfSoil) {
 	if (natureOfSoil == Pitch_NatureOfSoil.GRASS) {
-	    return Color.GREEN;
+	    return new Color(22, 191, 67);
 	}
 	if (natureOfSoil == Pitch_NatureOfSoil.SAND) {
-	    return Color.YELLOW;
+	    return new Color(254, 246, 135);
 	}
-	// TODO add other colors
+	if (natureOfSoil == Pitch_NatureOfSoil.GRAVEL) {
+	    return new Color(227, 205, 146);
+	}
+	if (natureOfSoil == Pitch_NatureOfSoil.SOIL) {
+	    return new Color(198, 156, 7);
+	}
 	return null;
     }
 
