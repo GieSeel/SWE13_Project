@@ -18,4 +18,7 @@ public interface MapPanelInterface {
      *            the map
      */
     void addMap(JComponent map);
+
+    /** The percentage of the space of screen covered by the map. */
+    float MAP_SCREEN_COVERAGE = 0.8f;
 }
