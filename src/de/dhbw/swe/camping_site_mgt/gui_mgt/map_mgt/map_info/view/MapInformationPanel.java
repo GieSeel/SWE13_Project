@@ -129,23 +129,22 @@ public class MapInformationPanel extends BaseFormularPanel implements
     }
 
     private void initTFArea() {
-	areaTf = new JTextField();
-	areaTf.setEnabled(false);
+	areaTf = new JLabel();
 	add(lm.get(lp.AREA) + ":", areaTf);
     }
 
     private void initTFPichName() {
 	pitchIdTF = new JTextField();
-	pitchIdTF.setEnabled(false);
 	add(lm.get(lp.PITCH) + ":", pitchIdTF);
     }
 
-    private JTextField areaTf;
+    private JLabel areaTf;
     private JTextArea characteristicsTa;
     private JTextArea deliveryPointTa;
     private final LanguageMgr lm = LanguageMgr.getInstance();
     private LanguageProperties lp;
     private int mapInfoComponentWidth;
     private JTextField pitchIdTF;
+
     private ShapePanel shapePnl;
 }

@@ -92,6 +92,7 @@ public class Gui extends JFrame {
 
 	setFocusable(true);
 	setCloseAppOn(KeyEvent.VK_ESCAPE);
+	setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
 
     /**
