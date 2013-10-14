@@ -32,10 +32,7 @@ public class Gui extends JFrame {
 			lm.get(LanguageProperties.GUI_CLOSE_DIALOG_TITLE),
 			JOptionPane.YES_NO_OPTION);
 		if (n == 0) {
-		    logger.info("Close Application...");
-		    dispose();
-		    delegate.getDelegator().closedApplication();
-		    logger.info("Closed Application!");
+		    closeApp();
 		}
 	    }
 	}
@@ -79,6 +76,31 @@ public class Gui extends JFrame {
     }
 
     /**
+     * Closing the application.
+     */
+    private void closeApp() {
+	logger.info("Close Application...");
+	dispose();
+	logger.info("Closed UI!");
+	delegate.getDelegator().closedApplication();
+	logger.info("Closed Application!");
+    }
+
+    /**
+     * Initialize closing functionality.
+     */
+    private void initClosingApp() {
+	setCloseAppOn(KeyEvent.VK_ESCAPE);
+	setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+	addWindowListener(new WindowAdapter() {
+	    @Override
+	    public void windowClosing(final WindowEvent e) {
+		closeApp();
+	    }
+	});
+    }
+
+    /**
      * Initializes the display.
      */
     private void initDisplay() {
@@ -90,9 +112,7 @@ public class Gui extends JFrame {
 	final JComponent statusBar = StatusBarController.getInstance().getGuiSnippet();
 	add(statusBar, BorderLayout.SOUTH);
 
-	setFocusable(true);
-	setCloseAppOn(KeyEvent.VK_ESCAPE);
-	setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+	initClosingApp();
     }
 
     /**
