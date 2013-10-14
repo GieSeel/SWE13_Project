@@ -80,6 +80,10 @@ public interface LanguageProperties {
     String LABELING_EMPLOYEEROLE_CONDUCTOR = "Conductor";
     String LABELING_EMPLOYEEROLE_GROUNDKEEPER = "Groundkeeper";
     String LABELING_EMPLOYEEROLE_RECEPTION = "Reception";
+    String LABELING_VISITORSTAXCLASSS_BUSYSEASON = "Busy Season";
+    String LABELING_VISITORSTAXCLASSS_BUSYSEASONREDUCED = "Busy Season Reduced";
+    String LABELING_VISITORSTAXCLASSS_LOWSEASON = "Low Season";
+    String LABELING_VISITORSTAXCLASSS_LOWSEASONREDUCED = "Low Season Reduced";
     /** The map (word) property */
     String MAP = "Map";
     String NATUREOFSOIL_PITCH_GRASS = "grass";
@@ -104,6 +108,17 @@ public interface LanguageProperties {
     String TYPE_PITCH_CAMPER = "camper pitch";
     String TYPE_PITCH_PARKING = "place to park";
     String TYPE_PITCH_TENT = "tent pitch";
+    String TYPE_SITE_ACTIVITY = "Activity";
+    String TYPE_SITE_DELIVERYPOINT = "Delivery Point";
+    String TYPE_SITE_ELECTRICALPOWER = "Electrical Power";
+    String TYPE_SITE_ENTRANCE = "Entrance";
+    String TYPE_SITE_FIREPLACE = "Fireplace";
+    String TYPE_SITE_OTHER = "Other";
+    String TYPE_SITE_RECEPTION = "Reception";
+    String TYPE_SITE_SALE = "Sale";
+    String TYPE_SITE_SANITARYFACILLITIES = "Sanitary Facillities";
+    String TYPE_SITE_SERVICE = "Service";
+    String TYPE_SITE_UTILLITYROOM = "Utillityroom";
 
     /** The yes property. */
     String YES = "yes";

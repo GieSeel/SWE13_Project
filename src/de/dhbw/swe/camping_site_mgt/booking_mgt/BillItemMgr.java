@@ -69,7 +69,7 @@ public class BillItemMgr extends BaseDataObjectMgr {
 	Euro priceLowSeason;
 
 	id = (int) entry.get("id");
-	labeling = (BillItem_Labeling) entry.get("labeling");
+	labeling = BillItem_Labeling.values()[(int) entry.get("labeling")];
 	priceBusySeason = (Euro) entry.get("priceBusySeason");
 	priceLowSeason = (Euro) entry.get("priceLowSeason");
 

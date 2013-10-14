@@ -7,7 +7,8 @@ import javax.swing.JComponent;
 
 import de.dhbw.swe.camping_site_mgt.common.Delegate;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.Displayable;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.area.*;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.area.Area;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.area.MapAreas;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.view.Map;
 import de.dhbw.swe.camping_site_mgt.place_mgt.*;
 
@@ -19,8 +20,8 @@ public class MapController implements Displayable {
     public MapController(final String mapPath) {
 	final HashMap<String, Area> areas = new MapAreas().getAreas();
 	final HashMap<Integer, PitchInterface> pitches = new HashMap<>();
-	final Site dev278 = new Site(278, "Electircity and Water", "Deliverypoint",
-		"0-24", "Deliverypoint");
+	final Site dev278 = new Site(278, "Electircity and Water",
+		"Delivery Point", "0-24", Site_Type.DELIVERYPOINT);
 	pitches.put(1, new Pitch(1, Pitch_Type.CAMPERPITCH, "A", dev278,
 		"In the west!\nJust one direkt neighbour!",
 		Pitch_NatureOfSoil.GRASS, 100, 100, new int[] { 7, 21, 39, 24 },

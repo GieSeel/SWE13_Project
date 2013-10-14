@@ -230,6 +230,8 @@ public abstract class BaseDataObjectMgr {
 	    tmpObj = ObjectFieldAccess.getValueOf(column.getFieldName(), dataObject);
 	    if (column.getReleationToColumn() == null) {
 		entry.put(column.getFieldName(), tmpObj);
+	    } else if (column.getDbType().equals(Enum.class)) {
+		entry.put(column.getFieldName(), ((Enum) tmpObj).ordinal());
 	    } else {
 		entry.put(column.getFieldName(), ((DataObject) tmpObj).getId());
 	    }
@@ -317,7 +319,8 @@ public abstract class BaseDataObjectMgr {
     private void checkForSubObjects() {
 	hasSubObjects = false;
 	for (final ColumnInfo column : DataStructure.getStructureFor(getTableName())) {
-	    if (column.getReleationToColumn() != null) {
+	    if (column.getReleationToColumn() != null
+		    && column.getDbType() != Enum.class) {
 		hasSubObjects = true;
 	    }
 	}

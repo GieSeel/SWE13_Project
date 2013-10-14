@@ -23,7 +23,7 @@ public class Site extends BaseDataObject {
      * @param type
      */
     public Site(final int id, final String description, final String labeling,
-	    final String openingHours, final String type) {
+	    final String openingHours, final Site_Type type) {
 	super(id);
 	this.description = description;
 	this.labeling = labeling;
@@ -40,7 +40,7 @@ public class Site extends BaseDataObject {
      * @param type
      */
     public Site(final String description, final String labeling,
-	    final String openingHours, final String type) {
+	    final String openingHours, final Site_Type type) {
 	this(0, description, labeling, openingHours, type);
     }
 
@@ -103,12 +103,12 @@ public class Site extends BaseDataObject {
      * 
      * @return the type
      */
-    public String getType() {
+    public Site_Type getType() {
 	return type;
     }
 
     private final String description;
     private final String labeling;
     private final String openingHours;
-    private final String type;
+    private final Site_Type type;
 }

@@ -65,8 +65,8 @@ public class EmployeeRoleMgr extends BaseDataObjectMgr {
 	EmployeeRole_Labeling labeling;
 
 	id = (int) entry.get("id");
-	arrangement = (EmployeeRole_Arrangement) entry.get("arrangement");
-	labeling = (EmployeeRole_Labeling) entry.get("labeling");
+	arrangement = EmployeeRole_Arrangement.values()[(int) entry.get("arrangement")];
+	labeling = EmployeeRole_Labeling.values()[(int) entry.get("labeling")];
 
 	return new EmployeeRole(id, arrangement, labeling);
     }

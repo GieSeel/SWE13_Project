@@ -2,21 +2,64 @@ package de.dhbw.swe.camping_site_mgt.common.database_mgt;
 
 public class ColumnInfo {
 
+    /**
+     * Constructor.
+     * 
+     * @param dbName
+     * @param dbType
+     */
     public ColumnInfo(final String dbName, final Class<? extends Object> dbType) {
 	this(dbName, dbType, null, dbName, null);
     }
 
+    /**
+     * Constructor.
+     * 
+     * @param dbName
+     * @param dbType
+     * @param releationToColumn
+     */
     public ColumnInfo(final String dbName, final Class<? extends Object> dbType,
 	    final Class<? extends Object> releationToColumn) {
 	this(dbName, dbType, null, releationToColumn.getSimpleName().toLowerCase(),
 		releationToColumn);
     }
 
+    /**
+     * Constructor.
+     * 
+     * @param dbName
+     * @param dbType
+     * @param displayName
+     */
     public ColumnInfo(final String dbName, final Class<? extends Object> dbType,
 	    final String displayName) {
 	this(dbName, dbType, displayName, dbName, null);
     }
 
+    /**
+     * Constructor.
+     * 
+     * @param dbName
+     * @param dbType
+     * @param displayName
+     * @param releationToColumn
+     */
+    public ColumnInfo(final String dbName, final Class<? extends Object> dbType,
+	    final String displayName,
+	    final Class<? extends Object> releationToColumn) {
+	this(dbName, dbType, displayName, dbName, releationToColumn);
+    }
+
+    /**
+     * Constructor.
+     * 
+     * @param dbName
+     * @param dbType
+     * @param displayName
+     * @param fieldName
+     * @param releationToColumn
+     */
     public ColumnInfo(final String dbName, final Class<? extends Object> dbType,
 	    final String displayName, final String fieldName,
 	    final Class<? extends Object> releationToColumn) {

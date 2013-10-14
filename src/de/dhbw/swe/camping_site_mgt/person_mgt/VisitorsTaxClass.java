@@ -21,7 +21,8 @@ public class VisitorsTaxClass extends BaseDataObject {
      * @param labeling
      * @param price
      */
-    public VisitorsTaxClass(final int id, final String labeling, final Euro price) {
+    public VisitorsTaxClass(final int id, final VisitorsTaxClass_Labeling labeling,
+	    final Euro price) {
 	super(id);
 	this.labeling = labeling;
 	this.price = price;
@@ -33,7 +34,8 @@ public class VisitorsTaxClass extends BaseDataObject {
      * @param labeling
      * @param price
      */
-    public VisitorsTaxClass(final String labeling, final Euro price) {
+    public VisitorsTaxClass(final VisitorsTaxClass_Labeling labeling,
+	    final Euro price) {
 	this(0, labeling, price);
     }
 
@@ -58,7 +60,7 @@ public class VisitorsTaxClass extends BaseDataObject {
      * 
      * @return the labeling
      */
-    public String getLabeling() {
+    public VisitorsTaxClass_Labeling getLabeling() {
 	return labeling;
     }
 
@@ -81,7 +83,6 @@ public class VisitorsTaxClass extends BaseDataObject {
 	return "visitorstaxclass";
     }
 
-    private final String labeling;
-
+    private final VisitorsTaxClass_Labeling labeling;
     private final Euro price;
 }
