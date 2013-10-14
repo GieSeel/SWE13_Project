@@ -22,8 +22,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
-import de.dhbw.swe.camping_site_mgt.common.Euro;
-import de.dhbw.swe.camping_site_mgt.common.IntArrayParser;
+import de.dhbw.swe.camping_site_mgt.common.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
@@ -119,8 +118,9 @@ public class DatabaseMgr {
      */
     public boolean disconnect() {
 	try {
+	    logger.info("Disconnecting from Database...");
 	    conncetion.close();
-	    logger.info("Disconnected from Database.");
+	    logger.info("Disconnected from Database!");
 	} catch (final SQLException e) {
 	    logger.error("Error in SQL..." + e.getMessage());
 	    return false;

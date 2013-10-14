@@ -1,7 +1,6 @@
 package de.dhbw.swe.camping_site_mgt.gui_mgt;
 
-import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageMgr;
-import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageProperties;
+import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.MapPanelController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.MapController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map_info.MapInformationController;
@@ -43,6 +42,15 @@ public class GuiController {
 	initView();
     }
 
+    public void register(final ApplicationClosedListener appClosedListener) {
+	view.register(appClosedListener);
+    }
+
+    public void unregister(final ApplicationClosedListener appClosedListener) {
+	view.unregister(appClosedListener);
+    }
+
+    @SuppressWarnings("static-access")
     private void initAdministration() {
 	adminTabsCtrl.addTab(lm.get(lp.MAP), mapPanelCtrl.getGuiSnippet());
 	// TODO other ad other tabs with controllers

@@ -5,6 +5,7 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+import de.dhbw.swe.camping_site_mgt.common.Delegate;
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.statusbar.StatusBarController;
@@ -31,7 +32,10 @@ public class Gui extends JFrame {
 			lm.get(LanguageProperties.GUI_CLOSE_DIALOG_TITLE),
 			JOptionPane.YES_NO_OPTION);
 		if (n == 0) {
+		    logger.info("Close Application...");
 		    dispose();
+		    delegate.getDelegator().closedApplication();
+		    logger.info("Closed Application!");
 		}
 	    }
 	}
@@ -62,8 +66,16 @@ public class Gui extends JFrame {
 	add(thePane, BorderLayout.CENTER);
     }
 
+    public void register(final ApplicationClosedListener appClosedListener) {
+	delegate.register(appClosedListener);
+    }
+
     public void setVisible() {
 	setVisible(true);
+    }
+
+    public void unregister(final ApplicationClosedListener appClosedListener) {
+	delegate.unregister(appClosedListener);
     }
 
     /**
@@ -100,6 +112,8 @@ public class Gui extends JFrame {
 	setExtendedState(JFrame.MAXIMIZED_BOTH);
 	final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	setBounds(0, 0, screenSize.width, screenSize.height);
-
     }
+
+    private final Delegate<ApplicationClosedListener> delegate = new Delegate<>(
+	    ApplicationClosedListener.class);
 }
