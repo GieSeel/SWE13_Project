@@ -22,8 +22,8 @@ public class CampingTable extends JTable {
      * 
      * @param columns
      */
-    public CampingTable(final HashMap<String, ColumnInfo> columns) {
-	this(columns, new Vector<HashMap<String, Object>>());
+    public CampingTable(final HashMap<Integer, ColumnInfo> columns) {
+	this(columns, new Vector<HashMap<Integer, Object>>());
     }
 
     /**
@@ -32,8 +32,8 @@ public class CampingTable extends JTable {
      * @param columns
      * @param data
      */
-    public CampingTable(final HashMap<String, ColumnInfo> columns,
-	    final Vector<HashMap<String, Object>> data) {
+    public CampingTable(final HashMap<Integer, ColumnInfo> columns,
+	    final Vector<HashMap<Integer, Object>> data) {
 	super();
 	// this.columns = columns; // TODO del?
 	this.tableModel = new CampingTableModel(columns, data);
@@ -45,7 +45,7 @@ public class CampingTable extends JTable {
      * 
      * @return the object that was typed in
      */
-    public HashMap<String, Object> getInputValues() {
+    public HashMap<Integer, Object> getInputValues() {
 	return tableModel.getRow(convertRowIndexToModel(0));
     }
 
@@ -56,7 +56,7 @@ public class CampingTable extends JTable {
      *            is the row
      * @return the selected row
      */
-    public HashMap<String, Object> getRowValues(final int row) {
+    public HashMap<Integer, Object> getRowValues(final int row) {
 	return tableModel.getRow(convertRowIndexToModel(row));
     }
 
@@ -82,7 +82,7 @@ public class CampingTable extends JTable {
      * @param data
      *            the object
      */
-    public void insertData(final HashMap<String, Object> data) {
+    public void insertData(final HashMap<Integer, Object> data) {
 	tableModel.insertData(data);
     }
 

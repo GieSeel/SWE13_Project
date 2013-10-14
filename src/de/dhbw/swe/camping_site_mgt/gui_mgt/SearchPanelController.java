@@ -56,32 +56,41 @@ public class SearchPanelController implements Displayable {
 
     public void init() {
 	// Select columns for display
-	final HashMap<String, Vector<String>> structur = new HashMap<>();
-	Vector<String> fields = new Vector<>();
-	fields.add("name");
-	fields.add("firstName");
-	structur.put("person", fields);
-	fields = new Vector<>();
-	fields.add("name");
-	structur.put("country", fields);
+	final Vector<String> fields = new Vector<>();
+	fields.add("person_identificationNumber");
+	fields.add("person_name");
+	fields.add("person_firstName");
+	// fields.add("person_dateOfBirth");
+	fields.add("person_street");
+	fields.add("person_houseNumber");
+
+	fields.add("town_postalCode");
+	fields.add("town_name");
+
+	fields.add("country_acronym");
+	fields.add("country_name");
 
 	objectManger = PersonMgr.getInstance();
 
 	// Save relevant data
-	final HashMap<String, ColumnInfo> columns = new HashMap<>();
-	String fieldName;
-	fields = new Vector<>();
-	for (final String table : structur.keySet()) {
-	    fields = structur.get(table);
-	    for (final ColumnInfo dataStructur : DataStructure.getStructureFor(table)) {
-		fieldName = dataStructur.getFieldName();
-		if (fields.contains(fieldName)) {
-		    // key: "person_name" | value: ColumnInfo
-		    columns.put(table + "_" + fieldName, dataStructur);
+	final HashMap<Integer, ColumnInfo> columns = new HashMap<>();
+	String className, lastClassName = null, fieldName;
+
+	for (final String field : fields) {
+	    className = field.split("_")[0];
+	    if (!className.equals(lastClassName)) {
+		lastClassName = className;
+		for (final ColumnInfo dataStructur : DataStructure.getStructureFor(className)) {
+		    fieldName = className + "_" + dataStructur.getFieldName();
+		    if (fields.contains(fieldName)) {
+			dataStructur.setClassName(className);
+			columns.put(fields.indexOf(fieldName), dataStructur);
+		    }
 		}
 	    }
 	}
-	Vector<HashMap<String, Object>> data = new Vector<>();
+
+	Vector<HashMap<Integer, Object>> data = new Vector<>();
 	data = objectManger.saveDisplayDataTo(columns);
 
 	((SearchPanel) view).makeTables(columns, data);

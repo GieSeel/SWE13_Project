@@ -68,6 +68,16 @@ public class ColumnInfo {
 	this.dbType = dbType;
 	this.displayName = displayName;
 	this.releationToColumn = releationToColumn;
+	this.className = null;
+    }
+
+    /**
+     * Returns the className.
+     * 
+     * @return the className
+     */
+    public String getClassName() {
+	return className;
     }
 
     /**
@@ -124,6 +134,18 @@ public class ColumnInfo {
 	return releationToColumn.getSimpleName().toLowerCase();
     }
 
+    /**
+     * Sets the className.
+     * 
+     * @param className
+     *            the className to set
+     */
+    public void setClassName(final String className) {
+	this.className = className;
+    }
+
+    private String className;
+
     private final String dbName;
 
     private final Class<? extends Object> dbType;
@@ -133,4 +155,5 @@ public class ColumnInfo {
     private final String fieldName;
 
     private final Class<? extends Object> releationToColumn;
+
 }

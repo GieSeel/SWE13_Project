@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.Array;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.List;
 
 import javax.swing.*;
@@ -14,7 +13,6 @@ import javax.swing.table.*;
 import de.dhbw.swe.camping_site_mgt.common.Euro;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.ColumnInfo;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.statusbar.StatusBarController;
 
 public class SearchPanel extends JPanel {
 
@@ -74,8 +72,8 @@ public class SearchPanel extends JPanel {
 	return null;
     }
 
-    public void makeTables(final HashMap<String, ColumnInfo> columns,
-	    final Vector<HashMap<String, Object>> data) {
+    public void makeTables(final HashMap<Integer, ColumnInfo> columns,
+	    final Vector<HashMap<Integer, Object>> data) {
 
 	this.columns = columns;
 
@@ -144,7 +142,7 @@ public class SearchPanel extends JPanel {
 	    @Override
 	    public void mouseClicked(final MouseEvent e) {
 		if (e.getClickCount() == 2) {
-		    final HashMap<String, Object> data = bodyTable.getRowValues(bodyTable.getSelectedRow());
+		    final HashMap<Integer, Object> data = bodyTable.getRowValues(bodyTable.getSelectedRow());
 		    System.out.println(data);
 		    // TODO open formular
 		}
@@ -208,14 +206,18 @@ public class SearchPanel extends JPanel {
 	    @Override
 	    public void actionPerformed(final ActionEvent arg0) {
 		// Get input data and save it into database
-		final HashMap<String, Object> data = headTable.getInputValues();
+		final HashMap<Integer, Object> data = headTable.getInputValues();
 
 		// Check if all fields are filled
 		if (data.containsValue("")) {
-		    StatusBarController.getInstance().setStatus(
-			    "Alle Felder müssen gefüllt sein!!");
+		    logger.info("You have to fill all fields first!");
 		    return;
 		} else {
+		    // TODO
+		    // ============================================================================================
+		    // PersonMgr.getInstance().objectFromDisplay(columns, data);
+		    // ============================================================================================
+
 		    // bodyTable.insertData(data);
 		    System.out.println(data);
 		    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -281,12 +283,12 @@ public class SearchPanel extends JPanel {
 	rowFilterList = new Vector<RowFilter<Object, Object>>();
 
 	int i = 0;
-	for (final Entry<String, ColumnInfo> columnEntry : columns.entrySet()) {
+	for (final ColumnInfo columnValues : columns.values()) {
 	    // Set empty filter for that column
 	    rowFilterList.add(RowFilter.regexFilter("^.*$", i));
 
 	    // Set column comparator
-	    final Class<? extends Object> type = columnEntry.getValue().getDbType();
+	    final Class<? extends Object> type = columnValues.getDbType();
 	    if (type.equals(Integer.class)) {
 		// Integer
 		sorter.setComparator(i, intComp);
@@ -309,7 +311,7 @@ public class SearchPanel extends JPanel {
 	}
     }
 
-    private HashMap<String, ColumnInfo> columns;
+    private HashMap<Integer, ColumnInfo> columns;
     private Vector<RowFilter<Object, Object>> rowFilterList;
     private TableRowSorter<CampingTableModel> sorter;
 }
