@@ -196,6 +196,10 @@ public class SearchPanel extends JPanel {
 	    public void actionPerformed(final ActionEvent arg0) {
 		// Clear all inputs
 		headTable.removeAllDataAndInsertAnEmptyRow();
+
+		// Reset Filter
+		initRowFilterList();
+		sorter.setRowFilter(RowFilter.andFilter(rowFilterList));
 	    }
 	});
 
@@ -282,7 +286,7 @@ public class SearchPanel extends JPanel {
 	    rowFilterList.add(RowFilter.regexFilter("^.*$", i));
 
 	    // Set column comparator
-	    final Class<? extends Object> type = columnEntry.getValue().getClass();
+	    final Class<? extends Object> type = columnEntry.getValue().getDbType();
 	    if (type.equals(Integer.class)) {
 		// Integer
 		sorter.setComparator(i, intComp);

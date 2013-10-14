@@ -41,6 +41,7 @@ public class SearchPanelController implements Displayable {
      */
     public SearchPanelController() {
 	view = new SearchPanel();
+	init();
     }
 
     /**
@@ -56,10 +57,11 @@ public class SearchPanelController implements Displayable {
     public void init() {
 	// Select columns for display
 	final HashMap<String, Vector<String>> structur = new HashMap<>();
-	final Vector<String> fields = new Vector<>();
+	Vector<String> fields = new Vector<>();
 	fields.add("name");
 	fields.add("firstName");
 	structur.put("person", fields);
+	fields = new Vector<>();
 	fields.add("name");
 	structur.put("country", fields);
 
@@ -67,13 +69,15 @@ public class SearchPanelController implements Displayable {
 
 	// Save relevant data
 	final HashMap<String, ColumnInfo> columns = new HashMap<>();
-	String dbName;
+	String fieldName;
+	fields = new Vector<>();
 	for (final String table : structur.keySet()) {
+	    fields = structur.get(table);
 	    for (final ColumnInfo dataStructur : DataStructure.getStructureFor(table)) {
-		dbName = dataStructur.getDbName();
-		if (fields.contains(dbName)) {
+		fieldName = dataStructur.getFieldName();
+		if (fields.contains(fieldName)) {
 		    // key: "person_name" | value: ColumnInfo
-		    columns.put(table + "_" + dbName, dataStructur);
+		    columns.put(table + "_" + fieldName, dataStructur);
 		}
 	    }
 	}

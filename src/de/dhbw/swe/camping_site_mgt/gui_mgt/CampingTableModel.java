@@ -1,7 +1,6 @@
 package de.dhbw.swe.camping_site_mgt.gui_mgt;
 
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -21,8 +20,9 @@ public class CampingTableModel extends AbstractTableModel {
     public CampingTableModel(final HashMap<String, ColumnInfo> columns,
 	    final Vector<HashMap<String, Object>> data) {
 	super();
-	this.columns = new HashMap<>();
-	this.columnKeys = (String[]) columns.keySet().toArray();
+	this.columns = columns;
+	final Set<String> keyset = columns.keySet();
+	this.columnKeys = keyset.toArray(new String[keyset.size()]);
 	// this.objects = new Vector<HashMap<String, Object>>(); // evtl. wenn
 	// object nicht dirket geändert werden soll (auch bei unteren methoden)
 	this.dataList = data;

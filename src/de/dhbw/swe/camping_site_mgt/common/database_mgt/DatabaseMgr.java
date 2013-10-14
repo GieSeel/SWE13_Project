@@ -22,7 +22,8 @@ import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
-import de.dhbw.swe.camping_site_mgt.common.*;
+import de.dhbw.swe.camping_site_mgt.common.Euro;
+import de.dhbw.swe.camping_site_mgt.common.IntArrayParser;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
@@ -71,9 +72,9 @@ public class DatabaseMgr {
 	try {
 	    Class.forName("com.mysql.jdbc.Driver").newInstance();
 	} catch (InstantiationException | IllegalAccessException
-		| ClassNotFoundException e1) {
+		| ClassNotFoundException e) {
 	    logger.error("There is an error while trying to connect with database!");
-	    // e1.printStackTrace();
+	    // e.printStackTrace();
 	    return false;
 	}
 

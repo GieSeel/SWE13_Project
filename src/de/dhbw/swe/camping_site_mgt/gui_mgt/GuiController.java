@@ -1,6 +1,7 @@
 package de.dhbw.swe.camping_site_mgt.gui_mgt;
 
-import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
+import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageMgr;
+import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageProperties;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.MapPanelController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.MapController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map_info.MapInformationController;
@@ -32,6 +33,7 @@ public class GuiController {
     public GuiController() {
 	view = new Gui();
 	adminTabsCtrl = new AdministrationTabsController();
+	searchPanelController = new SearchPanelController();
 
 	final MapController mapController;
 	mapController = new MapController("map/Valalta_BigMap_v7.png");
@@ -74,7 +76,7 @@ public class GuiController {
     private final MapPanelController mapPanelCtrl;
 
     /** The {@link SearchPanelController}. */
-    private SearchPanelController searchPanelController;
+    private final SearchPanelController searchPanelController;
 
     /** The {@link Gui}. */
     private final Gui view;

@@ -109,7 +109,7 @@ public class CampingTable extends JTable {
     public void setHeadTableSettings() {
 	setRowSelectionAllowed(false);
 	tableModel.setEditable(true);
-	// this.tableModel.insertEmptyRow();
+	tableModel.insertEmptyRow();
     }
 
     /**

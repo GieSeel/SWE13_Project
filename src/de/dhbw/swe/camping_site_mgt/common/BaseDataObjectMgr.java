@@ -118,15 +118,6 @@ public abstract class BaseDataObjectMgr {
     }
 
     /**
-     * Gets all saved {@link DataObject}s (for display in table).
-     * 
-     * @return the {@link DataObject}s
-     */
-    public HashMap<Integer, DataObject> objectsGet() {
-	return data;
-    }
-
-    /**
      * Updates the {@link DataObject}.
      * 
      * @param object
@@ -170,9 +161,9 @@ public abstract class BaseDataObjectMgr {
 	final Vector<HashMap<String, Object>> displayDataList = new Vector<>();
 	String columnKey, className, fieldName;
 	DataObject objectValue;
-	HashMap<String, Object> displayData = null;
+	HashMap<String, Object> displayData;
 
-	for (final Entry<Integer, DataObject> objectEntry : objectsGet().entrySet()) {
+	for (final Entry<Integer, DataObject> objectEntry : data.entrySet()) {
 	    objectValue = objectEntry.getValue();
 	    displayData = new HashMap<>();
 	    for (final Entry<String, ColumnInfo> columnEntry : columns.entrySet()) {
