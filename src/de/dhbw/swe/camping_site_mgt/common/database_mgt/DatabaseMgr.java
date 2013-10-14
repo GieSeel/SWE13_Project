@@ -22,8 +22,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
-import de.dhbw.swe.camping_site_mgt.common.Euro;
-import de.dhbw.swe.camping_site_mgt.common.IntArrayParser;
+import de.dhbw.swe.camping_site_mgt.common.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
