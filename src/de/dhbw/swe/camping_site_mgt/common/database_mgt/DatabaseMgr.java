@@ -106,7 +106,7 @@ public class DatabaseMgr {
 
 	    // TODO del -- Tests ^
 	} catch (final SQLException e) {
-	    logger.error("Error in SQL..." + e.getMessage());
+	    logger.error("Error in SQL: " + e.getMessage());
 	    return false;
 	}
 	return true;
@@ -119,10 +119,11 @@ public class DatabaseMgr {
      */
     public boolean disconnect() {
 	try {
+	    logger.info("Disconnecting from Database...");
 	    conncetion.close();
-	    logger.info("Disconnected from Database.");
+	    logger.info("Disconnected from Database!");
 	} catch (final SQLException e) {
-	    logger.error("Error in SQL..." + e.getMessage());
+	    logger.error("Error in SQL: " + e.getMessage());
 	    return false;
 	}
 	return true;
@@ -189,7 +190,7 @@ public class DatabaseMgr {
 		entries.add(entry);
 	    }
 	} catch (final SQLException e) {
-	    logger.error("SQL-Exception..." + e.getMessage());
+	    logger.error("SQL-Exception: " + e.getMessage());
 	}
 	return entries;
     }
@@ -232,7 +233,7 @@ public class DatabaseMgr {
 		return result.getInt(1);
 	    }
 	} catch (final SQLException e) {
-	    logger.error("SQL-Exception..." + e.getMessage());
+	    logger.error("SQL-Exception: " + e.getMessage());
 	}
 	return 0;
     }
@@ -288,7 +289,7 @@ public class DatabaseMgr {
 		    (int) dbObject.get("id"));
 	    statement.executeUpdate();
 	} catch (final SQLException e) {
-	    logger.error("SQL-Exception..." + e.getMessage());
+	    logger.error("SQL-Exception: " + e.getMessage());
 	}
     }
 

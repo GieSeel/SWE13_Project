@@ -95,6 +95,7 @@ public interface LanguageProperties {
     String PITCH = "Pitch";
     /** The question for closing the application. */
     String QUESTION_CLOSE_APPLICATION = "Do you like to close the application?";
+    String SEARCH = "Search";
     /** The selected property. */
     String SELECTED = "selected";
     String TYPE_EQUIPMENT_BIKE = "Bike";

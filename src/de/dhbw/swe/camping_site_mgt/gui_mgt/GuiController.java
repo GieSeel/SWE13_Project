@@ -43,8 +43,19 @@ public class GuiController {
 	initView();
     }
 
+    public void register(final ApplicationClosedListener appClosedListener) {
+	view.register(appClosedListener);
+    }
+
+    public void unregister(final ApplicationClosedListener appClosedListener) {
+	view.unregister(appClosedListener);
+    }
+
+    @SuppressWarnings("static-access")
     private void initAdministration() {
 	adminTabsCtrl.addTab(lm.get(lp.MAP), mapPanelCtrl.getGuiSnippet());
+	adminTabsCtrl.addTab(lm.get(lp.SEARCH),
+		searchPanelController.getGuiSnippet());
 	// TODO other ad other tabs with controllers
 	adminTabsCtrl.addTab(lm.get(lp.GUI_TAB_OPTIONS), new OptionsPanel());
     }
@@ -62,6 +73,9 @@ public class GuiController {
 
     /** The {@link MapPanelController}. */
     private final MapPanelController mapPanelCtrl;
+
+    /** The {@link SearchPanelController}. */
+    private SearchPanelController searchPanelController;
 
     /** The {@link Gui}. */
     private final Gui view;

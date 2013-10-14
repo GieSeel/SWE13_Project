@@ -18,10 +18,12 @@
  */
 package de.dhbw.swe.camping_site_mgt.common;
 
-import java.util.HashMap;
+import java.util.*;
+import java.util.Map.Entry;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.CampingTable;
 
 /**
  * Insert description for ObjectMgr
@@ -116,6 +118,15 @@ public abstract class BaseDataObjectMgr {
     }
 
     /**
+     * Gets all saved {@link DataObject}s (for display in table).
+     * 
+     * @return the {@link DataObject}s
+     */
+    public HashMap<Integer, DataObject> objectsGet() {
+	return data;
+    }
+
+    /**
      * Updates the {@link DataObject}.
      * 
      * @param object
@@ -145,6 +156,44 @@ public abstract class BaseDataObjectMgr {
 	    add(id, newObject);
 	    db.updateEntryIn(getTableName(), object2entry(newObject));
 	}
+    }
+
+    /**
+     * Saves the display data for the {@link CampingTable}.
+     * 
+     * @param columns
+     *            the columns that will be displayed
+     * @return a {@link Vector} with all needed data
+     */
+    public Vector<HashMap<String, Object>> saveDisplayDataTo(
+	    final HashMap<String, ColumnInfo> columns) {
+	final Vector<HashMap<String, Object>> displayDataList = new Vector<>();
+	String columnKey, className, fieldName;
+	DataObject objectValue;
+	HashMap<String, Object> displayData = null;
+
+	for (final Entry<Integer, DataObject> objectEntry : objectsGet().entrySet()) {
+	    objectValue = objectEntry.getValue();
+	    displayData = new HashMap<>();
+	    for (final Entry<String, ColumnInfo> columnEntry : columns.entrySet()) {
+		columnKey = columnEntry.getKey();
+		fieldName = columnEntry.getValue().getFieldName();
+		className = columnKey.split("_")[0];
+		if (className.equals(getTableName())) {
+		    // Save object field value
+		    displayData.put(columnKey,
+			    ObjectFieldAccess.getValueOf(fieldName, objectValue));
+		} else {
+		    // Save sub object field value
+		    displayData.put(columnKey,
+			    subSaveDisplayData(className, fieldName, objectValue));
+		}
+	    }
+	    if (displayData != null) {
+		displayDataList.add(displayData);
+	    }
+	}
+	return displayDataList;
     }
 
     /**
@@ -314,6 +363,26 @@ public abstract class BaseDataObjectMgr {
     }
 
     /**
+     * Saves the value of the field of one of the sub objects.
+     * 
+     * @param className
+     *            the name of the subclass
+     * @param fieldName
+     *            the name of the field
+     * @param object
+     *            the object that is parent of the other objects
+     * @return
+     */
+    protected Object subSaveDisplayData(final String className,
+	    final String fieldName, final DataObject object) {
+	// Initially left empty
+	if (hasSubObjects) {
+	    logger.error("Forgott to implement 'subSaveDisplayData' methode");
+	}
+	return null;
+    }
+
+    /**
      * Checks if the object has sub objects.
      */
     private void checkForSubObjects() {
@@ -336,6 +405,10 @@ public abstract class BaseDataObjectMgr {
 	    add(dataObject.getId(), dataObject);
 	}
     }
+
+    // Sub objects
+    final Vector<HashMap<String, Object>> subDataList = new Vector<>();
+    // subSaveDisplayDataTo(subDataList, subColumns);
 
     /** The {@link CampingLogger}. */
     protected final CampingLogger logger;

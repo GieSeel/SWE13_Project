@@ -15,6 +15,7 @@ public class DataObjectMethods {
      *            is the object
      * @return
      */
+    @Deprecated
     public static HashMap<String, Object> getDatabaseDataOf(
 	    final DataObject dataObject) {
 	final HashMap<String, Object> elements = new HashMap<String, Object>();
@@ -33,6 +34,7 @@ public class DataObjectMethods {
      *            is the object
      * @return
      */
+    @Deprecated
     public static HashMap<String, Object> getDisplayDataOf(final Object obj) {
 	return null;
 	// if (!(obj instanceof DataObject)) {
@@ -56,6 +58,7 @@ public class DataObjectMethods {
 	// return elements;
     }
 
+    @Deprecated
     public static boolean insertOrUpdateDatabase(final Object object) {
 	logger = CampingLogger.getLogger(object.getClass());
 	if (!(object instanceof DataObject)) {

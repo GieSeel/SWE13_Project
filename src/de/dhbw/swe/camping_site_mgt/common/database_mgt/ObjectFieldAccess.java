@@ -18,13 +18,13 @@ public class ObjectFieldAccess {
     /**
      * Returns the value of the given column of the object.
      * 
-     * @param columnName
+     * @param fieldName
      * @param object
      * @return
      */
-    static public Object getValueOf(final String columnName, final DataObject object) {
+    static public Object getValueOf(final String fieldName, final DataObject object) {
 	logger = CampingLogger.getLogger(object.getClass());
-	final String methodName = "get" + columnName;
+	final String methodName = "get" + fieldName;
 
 	for (final Method method : object.getClass().getMethods()) {
 	    if (method.getName().toLowerCase().equals(methodName.toLowerCase())) {
@@ -47,6 +47,7 @@ public class ObjectFieldAccess {
      * @param id
      * @param object
      */
+    @Deprecated
     public static void querySelect(final int id, final Object object) {
 	logger = CampingLogger.getLogger(object.getClass());
 
@@ -75,6 +76,7 @@ public class ObjectFieldAccess {
      * @param value
      * @param object
      */
+    @Deprecated
     public static void setValueOf(final String columnName, final Object value,
 	    final Object object) {
 	logger = CampingLogger.getLogger(object.getClass());

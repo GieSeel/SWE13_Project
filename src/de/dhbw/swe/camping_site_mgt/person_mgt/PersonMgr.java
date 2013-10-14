@@ -23,6 +23,7 @@ import java.util.HashMap;
 
 import de.dhbw.swe.camping_site_mgt.common.*;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.ObjectFieldAccess;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
@@ -187,6 +188,26 @@ public class PersonMgr extends BaseDataObjectMgr {
 	town.delUsage(tableName, id);
 	CountryMgr.getInstance().objectUpdate(country, newObject.getCountry());
 	TownMgr.getInstance().objectUpdate(town, newObject.getTown());
+    }
+
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subSaveDisplayData(java.lang.String,
+     *      java.lang.String,
+     *      de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
+     */
+    @Override
+    protected Object subSaveDisplayData(final String className,
+	    final String fieldName, final DataObject object) {
+	final Person person = (Person) object;
+	if (className.equals("country")) {
+	    return ObjectFieldAccess.getValueOf(fieldName, person.getCountry());
+	} else if (className.equals("town")) {
+	    return ObjectFieldAccess.getValueOf(fieldName, person.getTown());
+	} else {
+	    return null;
+	}
     }
 
     /**

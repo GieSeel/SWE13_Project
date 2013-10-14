@@ -2,63 +2,94 @@ package de.dhbw.swe.camping_site_mgt.gui_mgt;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Array;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.List;
 
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
+import de.dhbw.swe.camping_site_mgt.common.Euro;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.ColumnInfo;
+import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.statusbar.StatusBarController;
-import de.dhbw.swe.camping_site_mgt.person_mgt.Guest;
 
 public class SearchPanel extends JPanel {
+
+    private static CampingLogger logger = CampingLogger.getLogger(SearchPanel.class);
 
     /**   */
     private static final long serialVersionUID = 1L;
 
     public SearchPanel() {
-	dbController = DatabaseController.getInstance();
-
-	final List<Guest> objects = dbController.querySelectGuest();
-	final List<String[]> coulmnObjects = getColumnObjects(
-		objects.get(0).getClass().getSimpleName(), "");
-
-	// ## DEL
-	// final HashMap<String, Object> bspData =
-	// objects.get(0).getTableData("");
-
-	// HashMap<String, HashMap<String, Object>> data;
-	// HashMap<String, Object> columnNames;
-	// "columnNames" => HashMap:
-	// ##
+	rowFilterList = new Vector<>();
+	sorter = new TableRowSorter<>();
+	columns = new HashMap<>();
 
 	// TODO string.equals ((ignorCase??))
-
-	final List<HashMap<String, Object>> bodyData = new Vector<HashMap<String, Object>>();
-	for (final Guest guest : objects) {
-	    // bodyData.add(guest.getTableData(""));
-	    // Guest.class.getd
-	}
-
 	// TODO autovervollständigung (evtl. erst wenn nur noch ein eintrag
 	// gefiltert ist)
+    }
 
-	final CampingTable headTable = new CampingTable(coulmnObjects);
-	final CampingTable bodyTable = new CampingTable(coulmnObjects, bodyData);
+    /**
+     * Returns the column names of the given class.
+     * 
+     * @param className
+     *            is the name of the class
+     * @return
+     */
+    public List<String[]> getColumnObjects(String className,
+	    final String parentClass) {
+	className = className.toLowerCase();
+	if (className == "booking") {
+	    // TODO speziell!!!
+	} else {
+	    // final String[][] elements =
+	    // dbController.getSqlObjectClass(className);
+	    // final List<String[]> columnObjects = new Vector<String[]>();
+	    // // columnNames[0] = internal column name | columnNames[1] = value
+	    // for (final String[] element : elements) {
+	    // if (element[2] == null) {
+	    // if (!element[0].equals("id")) {
+	    // columnObjects.addAll(getColumnObjects(
+	    // element[0].split("_")[0], parentClass + className
+	    // + "_"));
+	    // }
+	    // } else {
+	    // final String[] val = {
+	    // parentClass + className + "_" + element[0], element[2],
+	    // element[1] };// TODO
+	    // // mit
+	    // // validation,
+	    // // element[3]
+	    // // };
+	    // columnObjects.add(val);
+	    // }
+	    // }
+	    // return columnObjects;
+	    return null;
+	}
+	return null;
+    }
+
+    public void makeTables(final HashMap<String, ColumnInfo> columns,
+	    final Vector<HashMap<String, Object>> data) {
+
+	this.columns = columns;
+
+	final CampingTable headTable = new CampingTable(columns);
+	final CampingTable bodyTable = new CampingTable(columns, data);
 
 	sorter = new TableRowSorter<CampingTableModel>(bodyTable.getTableModel());
-	initRowFilterList(coulmnObjects);
+	initRowFilterList();
 
 	headTable.setHeadTableSettings();
 	bodyTable.setBodyTableSettings();
+
 	sorter.setRowFilter(RowFilter.andFilter(rowFilterList));
 	bodyTable.setRowSorter(sorter);
-
-	// ## DEL
-	// headTable.insertData(bspData);
-	// ##
 
 	// TODO
 	// getColumnModel().getColumn(colIndex).setHeaderRenderer(new
@@ -88,6 +119,8 @@ public class SearchPanel extends JPanel {
 					tableList[index].getTableHeader().getColumnModel().getColumnIndex(
 						resizedColumn.getIdentifier())).setPreferredWidth(
 					resizedColumn.getPreferredWidth());
+				// TODO ColumnModel -> use other identifier
+				// (e.g. columnKey)
 			    }
 			}
 
@@ -111,7 +144,7 @@ public class SearchPanel extends JPanel {
 	    @Override
 	    public void mouseClicked(final MouseEvent e) {
 		if (e.getClickCount() == 2) {
-		    final HashMap<String, Object[]> data = bodyTable.getRowValues(bodyTable.getSelectedRow());
+		    final HashMap<String, Object> data = bodyTable.getRowValues(bodyTable.getSelectedRow());
 		    System.out.println(data);
 		    // TODO open formular
 		}
@@ -223,49 +256,11 @@ public class SearchPanel extends JPanel {
     }
 
     /**
-     * Returns the column names of the given class.
-     * 
-     * @param className
-     *            is the name of the class
-     * @return
+     * Initialize the row filters and sorters
      */
-    public List<String[]> getColumnObjects(String className,
-	    final String parentClass) {
-	className = className.toLowerCase();
-	if (className == "booking") {
-	    // TODO speziell!!!
-	} else {
-	    // final String[][] elements =
-	    // dbController.getSqlObjectClass(className);
-	    // final List<String[]> columnObjects = new Vector<String[]>();
-	    // // columnNames[0] = internal column name | columnNames[1] = value
-	    // for (final String[] element : elements) {
-	    // if (element[2] == null) {
-	    // if (!element[0].equals("id")) {
-	    // columnObjects.addAll(getColumnObjects(
-	    // element[0].split("_")[0], parentClass + className
-	    // + "_"));
-	    // }
-	    // } else {
-	    // final String[] val = {
-	    // parentClass + className + "_" + element[0], element[2],
-	    // element[1] };// TODO
-	    // // mit
-	    // // validation,
-	    // // element[3]
-	    // // };
-	    // columnObjects.add(val);
-	    // }
-	    // }
-	    // return columnObjects;
-	    return null;
-	}
-	return null;
-    }
+    private void initRowFilterList() {
 
-    private void initRowFilterList(final List<String[]> columnObjects) {
-
-	// Prepare the integer-comparator
+	// Prepares the integer-comparator
 	final Comparator<Integer> intComp = new Comparator<Integer>() {
 	    @Override
 	    public int compare(final Integer obj1, final Integer obj2) {
@@ -279,28 +274,38 @@ public class SearchPanel extends JPanel {
 	};
 	// TODO evtl. weitere comperatoren bauen
 
-	rowFilterList = new ArrayList<RowFilter<Object, Object>>();
-	for (int i = 0; i < columnObjects.size(); i++) {
+	rowFilterList = new Vector<RowFilter<Object, Object>>();
+
+	int i = 0;
+	for (final Entry<String, ColumnInfo> columnEntry : columns.entrySet()) {
 	    // Set empty filter for that column
 	    rowFilterList.add(RowFilter.regexFilter("^.*$", i));
 
 	    // Set column comparator
-	    final String type = columnObjects.get(i)[1];
-	    if (type.equals("int")) {
+	    final Class<? extends Object> type = columnEntry.getValue().getClass();
+	    if (type.equals(Integer.class)) {
+		// Integer
 		sorter.setComparator(i, intComp);
-	    } else if (type.equals("float")) {
-
-	    } else if (type.equals("date")) {
-
-	    } else if (type.equals("string")) {
-
+	    } else if (type.equals(Float.class)) {
+		// Float
+	    } else if (type.equals(Euro.class)) {
+		// Euro
+	    } else if (type.equals(String.class)) {
+		// String
+	    } else if (type.equals(Array.class)) {
+		// Array
+	    } else if (type.equals(Date.class)) {
+		// Date
+	    } else if (type.equals(Enum.class)) {
+		// Enum
 	    } else {
-		// TODO throw Unerwarteter Typ!
+		logger.error("Unexpected typ while setting comparators!");
 	    }
+	    i++;
 	}
     }
 
-    private final DatabaseController dbController;
-    private List<RowFilter<Object, Object>> rowFilterList;
-    private final TableRowSorter<CampingTableModel> sorter;
+    private HashMap<String, ColumnInfo> columns;
+    private Vector<RowFilter<Object, Object>> rowFilterList;
+    private TableRowSorter<CampingTableModel> sorter;
 }

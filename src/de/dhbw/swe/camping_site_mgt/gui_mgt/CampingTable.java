@@ -1,10 +1,18 @@
 package de.dhbw.swe.camping_site_mgt.gui_mgt;
 
-import java.text.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Vector;
 
 import javax.swing.JTable;
 
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.ColumnInfo;
+
+/**
+ * Insert description for CampingTable
+ * 
+ * @author GieSeel
+ * @version 1.0
+ */
 public class CampingTable extends JTable {
     /** The serial version UID. */
     private static final long serialVersionUID = 1L;
@@ -12,80 +20,50 @@ public class CampingTable extends JTable {
     /**
      * Constructor.
      * 
-     * @param columnNames
+     * @param columns
      */
-    public CampingTable(final List<String[]> columnObjects) {
-	super();
-	this.columnObjects = columnObjects;
-	this.tableModel = new CampingTableModel(getColumnNames());
-	init();
+    public CampingTable(final HashMap<String, ColumnInfo> columns) {
+	this(columns, new Vector<HashMap<String, Object>>());
     }
 
     /**
      * Constructor.
      * 
-     * @param columnNames
-     * @param objects
+     * @param columns
+     * @param data
      */
-    public CampingTable(final List<String[]> columnObjects,
-	    final List<HashMap<String, Object>> objects) {
+    public CampingTable(final HashMap<String, ColumnInfo> columns,
+	    final Vector<HashMap<String, Object>> data) {
 	super();
-	this.columnObjects = columnObjects;
-	this.tableModel = new CampingTableModel(getColumnNames(), objects);
+	// this.columns = columns; // TODO del?
+	this.tableModel = new CampingTableModel(columns, data);
 	init();
     }
 
     /**
-     * Returns the input values.
+     * Gets the inputed values.
      * 
-     * @return
+     * @return the object that was typed in
      */
     public HashMap<String, Object> getInputValues() {
-	return this.tableModel.getRow(convertRowIndexToModel(0));
+	return tableModel.getRow(convertRowIndexToModel(0));
     }
 
     /**
-     * Returns the values of the selected row.
+     * Gets the values of the selected row.
      * 
      * @param row
      *            is the row
-     * @return
+     * @return the selected row
      */
-    public HashMap<String, Object[]> getRowValues(final int row) {
-	final HashMap<String, Object[]> tmpMap = new HashMap<String, Object[]>();
-	final HashMap<String, Object> tmpRow = this.tableModel.getRow(convertRowIndexToModel(row));
-
-	for (final String[] columnObject : columnObjects) {
-	    final Object[] tmpElement = new Object[2];
-	    final String type = columnObject[2];
-
-	    if (type.equals("int")) {
-		tmpElement[0] = new Integer(tmpRow.get(columnObject[0]).toString());
-	    } else if (type.equals("float")) {
-		tmpElement[0] = new Float(tmpRow.get(columnObject[0]).toString());
-	    } else if (type.equals("datum")) {
-		try {
-		    tmpElement[0] = new SimpleDateFormat("dd.MM.yyyy").parse(tmpRow.get(
-			    columnObject[0]).toString());
-		} catch (final ParseException e) {
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
-		}
-	    } else if (type.equals("string")) {
-		tmpElement[0] = new String(tmpRow.get(columnObject[0]).toString());
-	    } else {
-		// TODO throw Unerwarteter Typ!
-	    }
-	    tmpElement[1] = type;
-	    tmpMap.put(columnObject[0], tmpElement);
-	}
-	return tmpMap;
+    public HashMap<String, Object> getRowValues(final int row) {
+	return tableModel.getRow(convertRowIndexToModel(row));
     }
 
     /**
-     * Returns the {@link CampingTableModel}
+     * Gets the {@link CampingTableModel}.
      * 
-     * @return
+     * @return the {@link CampingTableModel}
      */
     public CampingTableModel getTableModel() {
 	return this.tableModel;
@@ -95,40 +73,25 @@ public class CampingTable extends JTable {
     @Override
     public Object getValueAt(final int row, final int col) {
 	// convertRowIndexToModel() is needed for the correct sorting order
-	return this.tableModel.getValueAt(convertRowIndexToModel(row), col);
+	return tableModel.getValueAt(convertRowIndexToModel(row), col);
     }
 
     /**
      * Inserts an object.
      * 
-     * @param object
-     *            is the object
+     * @param data
+     *            the object
      */
-    public void insertData(final HashMap<String, Object> object) {
-	this.tableModel.insertData(object);
-    }
-
-    /**
-     * Inserts an object.
-     * 
-     * @param object
-     *            is the object
-     */
-    public void insertDataObject(final HashMap<String, Object[]> object) {
-	final HashMap<String, Object> tmpMap = new HashMap<String, Object>();
-	final Set<String> keys = object.keySet();
-	for (final String key : keys) {
-	    tmpMap.put(key, object.get(key)[0]);
-	}
-	insertData(tmpMap);
+    public void insertData(final HashMap<String, Object> data) {
+	tableModel.insertData(data);
     }
 
     /**
      * Removes all data and inserts an empty row.
      */
     public void removeAllDataAndInsertAnEmptyRow() {
-	this.tableModel.removeAll();
-	this.tableModel.insertEmptyRow();
+	tableModel.removeAll();
+	tableModel.insertEmptyRow();
     }
 
     /**
@@ -145,33 +108,20 @@ public class CampingTable extends JTable {
      */
     public void setHeadTableSettings() {
 	setRowSelectionAllowed(false);
+	tableModel.setEditable(true);
 	// this.tableModel.insertEmptyRow();
-    }
-
-    /**
-     * Filters the column names from the column objects
-     * 
-     * @return
-     */
-    private List<String[]> getColumnNames() {
-	final List<String[]> columnNames = new Vector<String[]>();
-	for (final String[] columnObject : columnObjects) {
-	    final String[] tmpColumnName = { columnObject[0], columnObject[1] };
-	    columnNames.add(tmpColumnName);
-	}
-	return columnNames;
     }
 
     /**
      * Initializes the table.
      */
     private void init() {
-	setModel(this.tableModel);
+	setModel(tableModel);
 	// Some table settings
 	getTableHeader().setReorderingAllowed(false);
 	setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     }
 
-    List<String[]> columnObjects; // 0: key | 1: name | 2: type | 3: validation
+    // private HashMap<String, ColumnInfo> columns; // TODO del?
     private final CampingTableModel tableModel;
 }

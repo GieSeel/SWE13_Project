@@ -1,8 +1,11 @@
 package de.dhbw.swe.camping_site_mgt.gui_mgt;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
+
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.ColumnInfo;
 
 public class CampingTableModel extends AbstractTableModel {
 
@@ -12,101 +15,88 @@ public class CampingTableModel extends AbstractTableModel {
     /**
      * Constructor.
      * 
+     * @param columnNames
+     * @param data
      */
-    public CampingTableModel(final List<String[]> columnNames) {
+    public CampingTableModel(final HashMap<String, ColumnInfo> columns,
+	    final Vector<HashMap<String, Object>> data) {
 	super();
-	this.columnNames = columnNames;
-	this.objects = new Vector<HashMap<String, Object>>();
-	this.editable = true;
-    }
-
-    public CampingTableModel(final List<String[]> columnNames,
-	    final List<HashMap<String, Object>> objects) {
-	super();
-	this.columnNames = columnNames;
-	this.objects = new Vector<HashMap<String, Object>>();
-	this.objects = objects;
+	this.columns = new HashMap<>();
+	this.columnKeys = (String[]) columns.keySet().toArray();
+	// this.objects = new Vector<HashMap<String, Object>>(); // evtl. wenn
+	// object nicht dirket geändert werden soll (auch bei unteren methoden)
+	this.dataList = data;
 	this.editable = false;
     }
 
     @Override
-    public Class getColumnClass(final int col) {
-	return getValueAt(0, col).getClass();
+    public Class<? extends Object> getColumnClass(final int column) {
+	return columns.get(columnKeys[column]).getDbType();
     }
 
     @Override
     public int getColumnCount() {
-	return this.columnNames.size();
+	return columns.size();
     }
 
     @Override
-    public String getColumnName(final int col) {
-	return this.columnNames.get(col)[1];
+    public String getColumnName(final int column) {
+	return columns.get(getColumnKey(column)).getDisplayName();
     }
 
     /**
-     * Returns the wanted row.
+     * Gets a row.
      * 
      * @param row
-     *            is the row
-     * @return
+     *            the row number
+     * @return a data row
      */
     public HashMap<String, Object> getRow(final int row) {
-	return this.objects.get(row);
+	return this.dataList.get(row);
     }
 
     @Override
     public int getRowCount() {
-	return objects.size();
+	return dataList.size();
     }
 
     @Override
-    public Object getValueAt(final int row, final int col) {
-	return getValueAt(row, this.columnNames.get(col)[0]);
-    }
-
-    /**
-     * Get cell by row and column-name.
-     * 
-     * @param row
-     *            is the row
-     * @param col
-     *            is the column name
-     * @return
-     */
-    public Object getValueAt(final int row, final String col) {
-	return this.objects.get(row).get(col);
+    public Object getValueAt(final int row, final int column) {
+	return dataList.get(row).get(getColumnKey(column));
     }
 
     /**
      * Inserts an object.
      * 
-     * @param object
-     *            is the object
+     * @param data
+     *            the object
      */
-    public void insertData(final HashMap<String, Object> object) {
-	this.objects.add(new HashMap<String, Object>(object));
+    public void insertData(final HashMap<String, Object> data) {
+	dataList.add(data);
 	fireTableDataChanged();
     }
 
+    /**
+     * Inserts an empty row.
+     */
     public void insertEmptyRow() {
-	final HashMap<String, Object> tmpMap = new HashMap<String, Object>();
-	for (final String[] column : this.columnNames) {
-	    tmpMap.put(column[0], "");
+	final HashMap<String, Object> newData = new HashMap<>();
+	for (final String columnKey : columnKeys) {
+	    newData.put(columnKey, "");
 	}
-	this.objects.add(tmpMap);
+	insertData(newData);
     }
 
     @Override
-    public boolean isCellEditable(final int row, final int col) {
-	return this.editable;
+    public boolean isCellEditable(final int row, final int column) {
+	return editable;
     }
 
     /**
      * Removes all data.
      */
     public void removeAll() {
-	this.objects = new Vector<HashMap<String, Object>>();
+	dataList = new Vector<>();
 	fireTableDataChanged();
     }
 
@@ -114,56 +104,51 @@ public class CampingTableModel extends AbstractTableModel {
      * Removes one row.
      * 
      * @param row
-     *            is the row number
+     *            the row number
      */
     public void removeRow(final int row) {
-	this.objects.remove(row);
+	this.dataList.remove(row);
 	fireTableDataChanged();
     }
 
     /**
      * Sets all data.
      * 
-     * @param objects
+     * @param data
      *            are all data objects
      */
-    public void setData(final List<HashMap<String, Object>> objects) {
-	this.objects = objects;
+    public void setData(final Vector<HashMap<String, Object>> data) {
+	dataList = data;
     }
 
     /**
      * Sets if the cells are editable or not
      * 
      * @param val
+     *            true if cells should be editable
      */
     public void setEditable(final boolean val) {
-	this.editable = val;
+	editable = val;
     }
 
     @Override
-    public void setValueAt(final Object value, final int row, final int col) {
-	setValueAt(value, row, col, this.columnNames.get(col)[0]);
+    public void setValueAt(final Object value, final int row, final int column) {
+	getRow(row).put(getColumnKey(column), value);
     }
 
     /**
-     * Set cell value by row and column-name.
+     * Gets key of the column.
      * 
-     * @param value
-     *            is the value
-     * @param row
-     *            is the row
-     * @param col
-     *            is the column number (is needed for the fire-event)
-     * @param colStr
-     *            is the column name
+     * @param column
+     *            the column number
+     * @return the key of the wanted column
      */
-    public void setValueAt(final Object value, final int row, final int col,
-	    final String colStr) {
-	this.objects.get(row).put(colStr, value);
-	fireTableCellUpdated(row, col);
+    private String getColumnKey(final int column) {
+	return columnKeys[column];
     }
 
-    private final List<String[]> columnNames; // 0: column key | 1: column name
+    private final String[] columnKeys;
+    private final HashMap<String, ColumnInfo> columns;
+    private Vector<HashMap<String, Object>> dataList;
     private boolean editable;
-    private List<HashMap<String, Object>> objects;
 }
