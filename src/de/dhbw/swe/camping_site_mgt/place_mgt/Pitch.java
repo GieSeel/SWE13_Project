@@ -101,7 +101,7 @@ public class Pitch extends BaseDataObject implements PitchInterface {
     public String getName() {
 	final StringBuilder name = new StringBuilder();
 	name.append(areaName);
-	for (int i = 4 - (getId() + "").length(); i <= 0; i--) {
+	for (int i = 4 - (getId() + "").length(); i > 0; i--) {
 	    name.append("0");
 	}
 	name.append(getId());
