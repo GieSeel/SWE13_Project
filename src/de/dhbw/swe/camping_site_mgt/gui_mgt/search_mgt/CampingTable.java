@@ -4,8 +4,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import javax.swing.JTable;
-
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.ColumnInfo;
+import javax.swing.table.DefaultTableColumnModel;
 
 /**
  * Insert description for CampingTable
@@ -20,33 +19,15 @@ public class CampingTable extends JTable {
     /**
      * Constructor.
      * 
-     * @param columns
-     */
-    public CampingTable(final HashMap<Integer, ColumnInfo> columns) {
-	this(columns, new Vector<HashMap<Integer, Object>>());
-    }
-
-    /**
-     * Constructor.
+     * @param tableModel
      * 
-     * @param columns
-     * @param data
+     * @param tableModel
      */
-    public CampingTable(final HashMap<Integer, ColumnInfo> columns,
-	    final Vector<HashMap<Integer, Object>> data) {
-	super();
-	// this.columns = columns; // TODO del?
-	this.tableModel = new CampingTableModel(columns, data);
+    public CampingTable(final CampingTableModel tableModel,
+	    final DefaultTableColumnModel columnModel) {
+	super(tableModel, columnModel);
+	this.tableModel = tableModel;
 	init();
-    }
-
-    /**
-     * Gets the inputed values.
-     * 
-     * @return the object that was typed in
-     */
-    public HashMap<Integer, Object> getInputValues() {
-	return tableModel.getRow(convertRowIndexToModel(0));
     }
 
     /**
@@ -87,6 +68,16 @@ public class CampingTable extends JTable {
     }
 
     /**
+     * Inserts objects.
+     * 
+     * @param data
+     *            the object list
+     */
+    public void insertData(final Vector<HashMap<Integer, Object>> data) {
+	tableModel.insertData(data);
+    }
+
+    /**
      * Inserts an empty row.
      */
     public void insertEmptyRow() {
@@ -106,8 +97,6 @@ public class CampingTable extends JTable {
      */
     public void setBodyTableSettings() {
 	setAutoCreateRowSorter(true);
-	// getTableHeader().setVisible(false);
-	// setTableHeader(null); // -- macht resize column kaputt
     }
 
     /**
@@ -116,18 +105,18 @@ public class CampingTable extends JTable {
     public void setHeadTableSettings() {
 	setRowSelectionAllowed(false);
 	tableModel.setEditable(true);
-	tableModel.insertEmptyRow();
+	setTableHeader(null);
     }
 
     /**
      * Initializes the table.
      */
     private void init() {
-	setModel(tableModel);
+	setAutoCreateColumnsFromModel(true);
+
 	// Some table settings
 	getTableHeader().setReorderingAllowed(false);
-	// setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-	setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+	setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
     }
 
     // private HashMap<String, ColumnInfo> columns; // TODO del?
