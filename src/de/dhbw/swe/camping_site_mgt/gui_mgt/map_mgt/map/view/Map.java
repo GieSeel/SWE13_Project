@@ -34,6 +34,10 @@ public class Map extends JPanel implements AccessableMap {
 	}
 
 	private void keyTyped(final KeyEvent e) {
+	    if (!e.isAltDown()) {
+		return;
+	    }
+
 	    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 		if (selectedArea != null) {
 		    zoomIn();
@@ -47,9 +51,6 @@ public class Map extends JPanel implements AccessableMap {
 		return;
 	    }
 
-	    if (!e.isAltDown()) {
-		return;
-	    }
 	    final char[] keys = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
 		    'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
 		    'W', 'X' };
@@ -290,6 +291,30 @@ public class Map extends JPanel implements AccessableMap {
      */
     public void register(final MapListener listener) {
 	delegate.register(listener);
+    }
+
+    @Override
+    public void setSelectedArea(String areName) {
+	areName = areName.toUpperCase();
+	if (areas.containsKey(areName)) {
+	    selectedArea = areas.get(areName);
+	    delegate.getDelegator().areaSelected(selectedArea);
+	    repaint();
+	    return;
+	}
+	logger.info("No area with name '" + areName + "' available!");
+    }
+
+    @Override
+    public void setSelectedPitch(final int pitchNumber) {
+	if (pitches.containsKey(pitchNumber)) {
+	    selectedPitch = pitches.get(pitchNumber);
+	    delegate.getDelegator().pitchSelected(selectedPitch);
+	    zoomIn();
+	    return;
+	}
+	logger.info("No pitch with number '" + pitchNumber + "' available in "
+		+ selectedArea.getName() + "!");
     }
 
     /**

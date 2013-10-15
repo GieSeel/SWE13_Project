@@ -13,4 +13,20 @@ public interface AccessableMap {
      * @return the selected {@link Pitch}.
      */
     PitchInterface getSelectedPitch();
+
+    /**
+     * Sets the selected {@link Area}.
+     * 
+     * @param areName
+     *            the name of the {@link Area}
+     */
+    void setSelectedArea(String areName);
+
+    /**
+     * Sets the selected {@link Pitch}
+     * 
+     * @param pitchNumber
+     *            the name of the {@link Pitch}
+     */
+    void setSelectedPitch(int pitchNumber);
 }

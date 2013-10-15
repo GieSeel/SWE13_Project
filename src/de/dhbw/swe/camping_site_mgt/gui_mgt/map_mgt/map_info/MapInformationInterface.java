@@ -4,9 +4,18 @@ import java.awt.Polygon;
 
 import de.dhbw.swe.camping_site_mgt.gui_mgt.Displayable;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.area.Area;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map_info.view.MapInformationListener;
 import de.dhbw.swe.camping_site_mgt.place_mgt.*;
 
 public interface MapInformationInterface extends Displayable {
+
+    /**
+     * Registers a {@link MapInformationListener}.
+     * 
+     * @param mapInfoListener
+     *            the {@link MapInformationListener}
+     */
+    void register(MapInformationListener mapInfoListener);
 
     /**
      * Set the {@link Area} name information on screen.
@@ -73,5 +82,13 @@ public interface MapInformationInterface extends Displayable {
      *            the {@link Pitch_Type}
      */
     void setPitchType(Pitch_Type type);
+
+    /**
+     * Unregisters a {@link MapInformationListener}.
+     * 
+     * @param mapInfoListener
+     *            the {@link MapInformationListener}
+     */
+    void unregister(MapInformationListener mapInfoListener);
 
 }

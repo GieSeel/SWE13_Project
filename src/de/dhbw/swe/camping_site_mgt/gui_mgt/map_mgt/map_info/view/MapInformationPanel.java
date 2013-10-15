@@ -1,9 +1,11 @@
 package de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map_info.view;
 
 import java.awt.*;
+import java.awt.event.*;
 
 import javax.swing.*;
 
+import de.dhbw.swe.camping_site_mgt.common.Delegate;
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.BaseFormularPanel;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.view.MapPanelInterface;
@@ -31,6 +33,17 @@ public class MapInformationPanel extends BaseFormularPanel implements
     @Override
     public JComponent getGuiSnippet() {
 	return this;
+    }
+
+    /**
+     * Registers a {@link MapInformationListener}.
+     * 
+     * @param mapInfoListener
+     *            the {@link MapInformationListener}
+     */
+    @Override
+    public void register(final MapInformationListener mapInfoListener) {
+	delegate.register(mapInfoListener);
     }
 
     @Override
@@ -78,6 +91,17 @@ public class MapInformationPanel extends BaseFormularPanel implements
     public void setPitchType(final Pitch_Type type) {
 	// TODO Auto-generated method stub
 
+    }
+
+    /**
+     * Unregisters a {@link MapInformationListener}.
+     * 
+     * @param mapInfoListener
+     *            the {@link MapInformationListener}
+     */
+    @Override
+    public void unregister(final MapInformationListener mapInfoListener) {
+	delegate.unregister(mapInfoListener);
     }
 
     /**
@@ -129,17 +153,37 @@ public class MapInformationPanel extends BaseFormularPanel implements
     }
 
     private void initTFArea() {
-	areaTf = new JLabel();
+	areaTf = new JTextField();
+	areaTf.setBackground(new Color(230, 230, 230));
+	areaTf.addKeyListener(new KeyAdapter() {
+	    @Override
+	    public void keyReleased(final KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+		    delegate.getDelegator().areaChangedto(areaTf.getText());
+		}
+	    }
+	});
 	add(lm.get(lp.AREA) + ":", areaTf);
     }
 
     private void initTFPichName() {
 	pitchIdTF = new JTextField();
+	pitchIdTF.setBackground(new Color(230, 230, 230));
+	pitchIdTF.addKeyListener(new KeyAdapter() {
+	    @Override
+	    public void keyReleased(final KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+		    delegate.getDelegator().pitchChangedTo(pitchIdTF.getText());
+		}
+	    }
+	});
 	add(lm.get(lp.PITCH) + ":", pitchIdTF);
     }
 
-    private JLabel areaTf;
+    private JTextField areaTf;
     private JTextArea characteristicsTa;
+    private final Delegate<MapInformationListener> delegate = new Delegate<>(
+	    MapInformationListener.class);
     private JTextArea deliveryPointTa;
     private final LanguageMgr lm = LanguageMgr.getInstance();
     private LanguageProperties lp;
