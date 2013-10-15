@@ -16,7 +16,7 @@
  * copied or distributed with electronic tools or by paper copy or 
  * any other process without written authorization of GieSeel.
  */
-package de.dhbw.swe.camping_site_mgt.gui_mgt;
+package de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt;
 
 import java.util.HashMap;
 import java.util.Vector;
@@ -26,6 +26,7 @@ import javax.swing.JComponent;
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.ColumnInfo;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataStructure;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.Displayable;
 import de.dhbw.swe.camping_site_mgt.person_mgt.PersonMgr;
 
 /**
@@ -93,9 +94,29 @@ public class SearchPanelController implements Displayable {
 	Vector<HashMap<Integer, Object>> data = new Vector<>();
 	data = objectManger.saveDisplayDataTo(columns);
 
-	((SearchPanel) view).makeTables(columns, data);
+	view.makeTables(columns, data);
+    }
+
+    /**
+     * Registers a {@link SearchTableListener}.
+     * 
+     * @param searchTableListener
+     *            the {@link SearchTableListener}
+     */
+    public void register(final SearchTableListener searchTableListener) {
+	view.register(searchTableListener);
+    }
+
+    /**
+     * Unregisters a {@link SearchTableListener}.
+     * 
+     * @param searchTableListener
+     *            the {@link SearchTableListener}
+     */
+    public void unregister(final SearchTableListener searchTableListener) {
+	view.unregister(searchTableListener);
     }
 
     private BaseDataObjectMgr objectManger;
-    private final JComponent view;
+    private final SearchPanel view;
 }

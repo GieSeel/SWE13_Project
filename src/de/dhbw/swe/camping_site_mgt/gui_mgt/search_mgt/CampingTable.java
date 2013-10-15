@@ -1,4 +1,4 @@
-package de.dhbw.swe.camping_site_mgt.gui_mgt;
+package de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt;
 
 import java.util.HashMap;
 import java.util.Vector;
@@ -87,6 +87,13 @@ public class CampingTable extends JTable {
     }
 
     /**
+     * Inserts an empty row.
+     */
+    public void insertEmptyRow() {
+	tableModel.insertEmptyRow();
+    }
+
+    /**
      * Removes all data and inserts an empty row.
      */
     public void removeAllDataAndInsertAnEmptyRow() {
@@ -119,6 +126,7 @@ public class CampingTable extends JTable {
 	setModel(tableModel);
 	// Some table settings
 	getTableHeader().setReorderingAllowed(false);
+	// setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 	setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     }
 

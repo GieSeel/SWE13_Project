@@ -1,4 +1,4 @@
-package de.dhbw.swe.camping_site_mgt.gui_mgt;
+package de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt;
 
 import java.util.HashMap;
 import java.util.Vector;

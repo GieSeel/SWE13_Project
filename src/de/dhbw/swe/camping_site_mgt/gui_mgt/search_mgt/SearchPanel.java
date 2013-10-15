@@ -1,4 +1,4 @@
-package de.dhbw.swe.camping_site_mgt.gui_mgt;
+package de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -10,9 +10,11 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 
+import de.dhbw.swe.camping_site_mgt.common.Delegate;
 import de.dhbw.swe.camping_site_mgt.common.Euro;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.ColumnInfo;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.statusbar.StatusBarController;
 
 public class SearchPanel extends JPanel {
 
@@ -89,6 +91,8 @@ public class SearchPanel extends JPanel {
 	sorter.setRowFilter(RowFilter.andFilter(rowFilterList));
 	bodyTable.setRowSorter(sorter);
 
+	bodyTable.insertEmptyRow();
+
 	// TODO
 	// getColumnModel().getColumn(colIndex).setHeaderRenderer(new
 	// MyButtonHeaderRenderer());
@@ -142,9 +146,8 @@ public class SearchPanel extends JPanel {
 	    @Override
 	    public void mouseClicked(final MouseEvent e) {
 		if (e.getClickCount() == 2) {
-		    final HashMap<Integer, Object> data = bodyTable.getRowValues(bodyTable.getSelectedRow());
-		    System.out.println(data);
-		    // TODO open formular
+		    final HashMap<Integer, Object> values = bodyTable.getRowValues(bodyTable.getSelectedRow());
+		    delegate.getDelegator().editRow(columns, values);
 		}
 	    }
 	});
@@ -210,7 +213,8 @@ public class SearchPanel extends JPanel {
 
 		// Check if all fields are filled
 		if (data.containsValue("")) {
-		    logger.info("You have to fill all fields first!");
+		    StatusBarController.getInstance().setStatus(
+			    "You have to fill all fields first!");
 		    return;
 		} else {
 		    // TODO
@@ -259,6 +263,26 @@ public class SearchPanel extends JPanel {
 
 	this.setLayout(new BorderLayout());
 	this.add(mainPanel, BorderLayout.CENTER);
+    }
+
+    /**
+     * Registers a {@link SearchTableListener}.
+     * 
+     * @param searchTableListener
+     *            the {@link SearchTableListener}
+     */
+    public void register(final SearchTableListener searchTableListener) {
+	delegate.register(searchTableListener);
+    }
+
+    /**
+     * Unregisters a {@link SearchTableListener}.
+     * 
+     * @param searchTableListener
+     *            the {@link SearchTableListener}
+     */
+    public void unregister(final SearchTableListener searchTableListener) {
+	delegate.unregister(searchTableListener);
     }
 
     /**
@@ -312,6 +336,8 @@ public class SearchPanel extends JPanel {
     }
 
     private HashMap<Integer, ColumnInfo> columns;
+    private final Delegate<SearchTableListener> delegate = new Delegate<>(
+	    SearchTableListener.class);
     private Vector<RowFilter<Object, Object>> rowFilterList;
     private TableRowSorter<CampingTableModel> sorter;
 }

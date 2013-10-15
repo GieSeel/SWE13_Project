@@ -23,7 +23,7 @@ import java.util.Map.Entry;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.CampingTable;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt.CampingTable;
 
 /**
  * Insert description for ObjectMgr

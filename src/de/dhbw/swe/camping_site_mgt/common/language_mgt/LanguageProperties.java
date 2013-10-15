@@ -24,11 +24,13 @@ public interface LanguageProperties {
     String DM_AREA = "Area";
     String DM_ARRANGEMENT = "Arrangement";
     String DM_CHARACTERISTICS = "Characteristics";
+    String DM_COUNTRY = "Country";
     String DM_CREATION_DATE = "Created at";
     String DM_DATE_OF_BIRTH = "Birthday";
     String DM_DESCRIPTION = "Description";
     String DM_DONE_DATE = "Done at";
     String DM_ELECTRICITY = "Electricity";
+    String DM_EXTRABOOKING = "Extra Booking";
     String DM_FIRST_NAME = "First name";
     String DM_HOUSE_NUMBER = "House number";
     String DM_IDENTIFICATION = "Identification";
@@ -49,6 +51,7 @@ public interface LanguageProperties {
     String DM_PRIORITY = "Priority";
     String DM_SIZE = "Size";
     String DM_STREET = "Street";
+    String DM_TOWN = "Town";
     String DM_TYPE = "Type";
     String DM_USER_NAME = "User name";
     String DM_VALIDE_FROM = "Valid from";
