@@ -3,21 +3,19 @@ package de.dhbw.swe.camping_site_mgt.gui_mgt;
 import java.util.HashMap;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.ColumnInfo;
-import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageMgr;
-import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageProperties;
+import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.edit.EditDialog;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.MapPanelController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.MapController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map_info.MapInformationController;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt.SearchPanelController;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt.SearchTableListener;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt.*;
 
 public class GuiController {
-    /** The scale factor especially for map components. */
-    static float scaleFactor = 1;
-
     /** The {@link LanguageMgr}. */
     private final static LanguageMgr lm = LanguageMgr.getInstance();
+
+    /** The scale factor especially for map components. */
+    private static float scaleFactor = 1;
 
     /**
      * @return the components scale factor.
@@ -42,7 +40,7 @@ public class GuiController {
 	searchPanelController = new SearchPanelController();
 
 	final MapController mapController;
-	mapController = new MapController("map/Valalta_BigMap_v7.png");
+	mapController = new MapController("map/Valalta_BigMap_v8.png");
 	final MapInformationController mapInfoController = new MapInformationController();
 	mapPanelCtrl = new MapPanelController(mapController, mapInfoController);
 

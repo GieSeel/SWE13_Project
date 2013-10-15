@@ -86,8 +86,8 @@ public class Map extends JPanel implements AccessableMap {
 	    final StringBuilder info = new StringBuilder();
 	    info.append(selectedArea.getName());
 	    info.append(selectedPitch.getId());
-	    info.append(" " + lm.get(lp.PITCH));
-	    info.append(" " + lm.get(lp.SELECTED));
+	    info.append(" " + LM.get(LP.PITCH));
+	    info.append(" " + LM.get(LP.SELECTED));
 	    return info.toString();
 	}
 
@@ -153,7 +153,7 @@ public class Map extends JPanel implements AccessableMap {
 
 	private String buildAreaHoverInfo() {
 	    final StringBuilder hoverInfo = new StringBuilder();
-	    hoverInfo.append(lm.get(lp.AREA));
+	    hoverInfo.append(LM.get(LP.AREA));
 	    hoverInfo.append(" " + highlightedArea.getName());
 
 	    if (highlightedArea == selectedArea) {
@@ -164,15 +164,15 @@ public class Map extends JPanel implements AccessableMap {
 	}
 
 	private String buildHoverInteractionHint(final StringBuilder hoverInfo) {
-	    hoverInfo.append(" (" + lm.get(lp.CLICK_TO_SELECT) + " & ");
-	    hoverInfo.append(lm.get(lp.ADDITIONAL_INFO) + " | ");
-	    hoverInfo.append(lm.get(lp.HOW_TO_ZOOM_IN) + ")");
+	    hoverInfo.append(" (" + LM.get(LP.CLICK_TO_SELECT) + " & ");
+	    hoverInfo.append(LM.get(LP.ADDITIONAL_INFO) + " | ");
+	    hoverInfo.append(LM.get(LP.HOW_TO_ZOOM_IN) + ")");
 	    return hoverInfo.toString();
 	}
 
 	private String buildPitchHoverInfo() {
 	    final StringBuilder hoverInfo = new StringBuilder();
-	    hoverInfo.append(lm.get(lp.PITCH));
+	    hoverInfo.append(LM.get(LP.PITCH));
 	    hoverInfo.append(" " + highlightedPitch.getId());
 
 	    if (highlightedPitch == selectedPitch) {
@@ -201,14 +201,14 @@ public class Map extends JPanel implements AccessableMap {
 	}
 
 	private void handleMouseMotionZoom(final MouseEvent e) {
-	    statusBar.setHoverInfo(lm.get(lp.HOW_TO_ZOOM_OUT));
+	    statusBar.setHoverInfo(LM.get(LP.HOW_TO_ZOOM_OUT));
 	    highlightedPitch = null;
 
 	    for (final PitchInterface pitch : pitches.values()) {
 		if (!pitch.getArea().equalsIgnoreCase(selectedArea.getName())) {
 		    return;
 		}
-		statusBar.setHoverInfo(lm.get(lp.HOW_TO_ZOOM_OUT));
+		statusBar.setHoverInfo(LM.get(LP.HOW_TO_ZOOM_OUT));
 		setCurserDefault();
 
 		if (pitch.getShape().contains(e.getX() + frame.x,
@@ -227,13 +227,13 @@ public class Map extends JPanel implements AccessableMap {
     private static float ALPHA = 0.3f;
 
     /** The {@link LanguageMgr}. */
-    private static LanguageMgr lm = LanguageMgr.getInstance();
+    private static LanguageMgr LM = LanguageMgr.getInstance();
 
     /** The {@link CampingLogger}. */
     private static CampingLogger logger = CampingLogger.getLogger(Map.class);
 
     /** The {@link LanguageProperties}. */
-    private static LanguageProperties lp;
+    private static LanguageProperties LP;
 
     /** The serial version UID. */
     private static final long serialVersionUID = 1L;
@@ -329,9 +329,9 @@ public class Map extends JPanel implements AccessableMap {
 
     private String buildAreaSelectedInfo() {
 	final StringBuilder info = new StringBuilder();
-	info.append(lm.get(lp.AREA));
+	info.append(LM.get(LP.AREA));
 	info.append(" " + selectedArea.getName());
-	info.append(" " + lm.get(lp.SELECTED));
+	info.append(" " + LM.get(LP.SELECTED));
 	return info.toString();
     }
 
