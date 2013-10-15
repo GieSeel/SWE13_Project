@@ -4,17 +4,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.Array;
 import java.util.*;
-import java.util.List;
 
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.table.*;
 
 import de.dhbw.swe.camping_site_mgt.common.Delegate;
 import de.dhbw.swe.camping_site_mgt.common.Euro;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.ColumnInfo;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.statusbar.StatusBarController;
 
 public class SearchPanel extends JPanel {
 
@@ -28,118 +25,39 @@ public class SearchPanel extends JPanel {
 	sorter = new TableRowSorter<>();
 	columns = new HashMap<>();
 
-	// TODO string.equals ((ignorCase??))
 	// TODO autovervollständigung (evtl. erst wenn nur noch ein eintrag
 	// gefiltert ist)
     }
 
     /**
-     * Returns the column names of the given class.
+     * Makes the tables and fills them with data.
      * 
-     * @param className
-     *            is the name of the class
-     * @return
+     * @param columns
+     *            the columns that will show
+     * @param data
+     *            the data for the table
      */
-    public List<String[]> getColumnObjects(String className,
-	    final String parentClass) {
-	className = className.toLowerCase();
-	if (className == "booking") {
-	    // TODO speziell!!!
-	} else {
-	    // final String[][] elements =
-	    // dbController.getSqlObjectClass(className);
-	    // final List<String[]> columnObjects = new Vector<String[]>();
-	    // // columnNames[0] = internal column name | columnNames[1] = value
-	    // for (final String[] element : elements) {
-	    // if (element[2] == null) {
-	    // if (!element[0].equals("id")) {
-	    // columnObjects.addAll(getColumnObjects(
-	    // element[0].split("_")[0], parentClass + className
-	    // + "_"));
-	    // }
-	    // } else {
-	    // final String[] val = {
-	    // parentClass + className + "_" + element[0], element[2],
-	    // element[1] };// TODO
-	    // // mit
-	    // // validation,
-	    // // element[3]
-	    // // };
-	    // columnObjects.add(val);
-	    // }
-	    // }
-	    // return columnObjects;
-	    return null;
-	}
-	return null;
-    }
-
     public void makeTables(final HashMap<Integer, ColumnInfo> columns,
 	    final Vector<HashMap<Integer, Object>> data) {
 
 	this.columns = columns;
 
-	final CampingTable headTable = new CampingTable(columns);
-	final CampingTable bodyTable = new CampingTable(columns, data);
-
-	sorter = new TableRowSorter<CampingTableModel>(bodyTable.getTableModel());
-	initRowFilterList();
-
+	final DefaultTableColumnModel dtColumnModel = new DefaultTableColumnModel();
+	final CampingTable headTable = new CampingTable(new CampingTableModel(
+		columns), dtColumnModel);
+	final CampingTable bodyTable = new CampingTable(new CampingTableModel(
+		columns), dtColumnModel);
 	headTable.setHeadTableSettings();
 	bodyTable.setBodyTableSettings();
 
+	headTable.insertEmptyRow();
+	bodyTable.insertData(data);
+
+	sorter = new TableRowSorter<CampingTableModel>(bodyTable.getTableModel());
+
+	initRowFilterList();
 	sorter.setRowFilter(RowFilter.andFilter(rowFilterList));
 	bodyTable.setRowSorter(sorter);
-
-	bodyTable.insertEmptyRow();
-
-	// TODO
-	// getColumnModel().getColumn(colIndex).setHeaderRenderer(new
-	// MyButtonHeaderRenderer());
-	// oder
-	// selbst position setzten: ((https://forums.oracle.com/thread/1359052))
-	// headTable.getTableHeader().getHeaderRect(column)
-
-	// Change both column widths
-	final CampingTable[] tableList = { headTable, bodyTable };
-	for (int i = 0; i < tableList.length; i++) {
-	    final int index = i;
-	    tableList[index].getColumnModel().addColumnModelListener(
-		    new TableColumnModelListener() {
-
-			@Override
-			public void columnAdded(final TableColumnModelEvent arg0) {
-			}
-
-			@Override
-			public void columnMarginChanged(final ChangeEvent arg0) {
-			    // Check if the column width was changed
-
-			    final TableColumn resizedColumn;
-			    if ((resizedColumn = tableList[index].getTableHeader().getResizingColumn()) != null) {
-				tableList[tableList.length - 1 - index].getTableHeader().getColumnModel().getColumn(
-					tableList[index].getTableHeader().getColumnModel().getColumnIndex(
-						resizedColumn.getIdentifier())).setPreferredWidth(
-					resizedColumn.getPreferredWidth());
-				// TODO ColumnModel -> use other identifier
-				// (e.g. columnKey)
-			    }
-			}
-
-			@Override
-			public void columnMoved(final TableColumnModelEvent arg0) {
-			}
-
-			@Override
-			public void columnRemoved(final TableColumnModelEvent arg0) {
-			}
-
-			@Override
-			public void columnSelectionChanged(
-				final ListSelectionEvent arg0) {
-			}
-		    });
-	}
 
 	// Double-click event on a row
 	bodyTable.addMouseListener(new MouseAdapter() {
@@ -167,19 +85,25 @@ public class SearchPanel extends JPanel {
 		    if (editor != null) {
 			// Updates the cell value
 			editor.stopCellEditing();
+
+			// TODO inputvalidation
+			// (z.B.: geb. darf nur 24.02.1992 sein und sonst
+			// nichts!)
+
+			// Filter
+			String val = headTable.getValueAt(0, column).toString();
+			val = val.replaceAll("[Ää]", "[Ää]");
+			val = val.replaceAll("[Öö]", "[Öö]");
+			val = val.replaceAll("[Üü]", "[Üü]");
+			final RowFilter<Object, Object> rowFilter = RowFilter.regexFilter(
+				"(?i)^" + val + ".*$", column);
+			rowFilterList.set(column, rowFilter);
+			sorter.setRowFilter(RowFilter.andFilter(rowFilterList));
+			bodyTable.setRowSorter(sorter);
+
+			headTable.editCellAt(0, column);
+			// TODO set correct tab order!
 		    }
-
-		    // TODO inputvalidation (z.B.: geb. darf nur 24.02.1992 sein
-		    // und sonst nichts!)
-
-		    // Filter
-		    final RowFilter<Object, Object> rowFilter = RowFilter.regexFilter(
-			    "(?i)^" + headTable.getValueAt(0, column) + ".*$",
-			    column);
-		    // TODO Umlaute caseinsensitiv??
-		    rowFilterList.set(column, rowFilter);
-		    sorter.setRowFilter(RowFilter.andFilter(rowFilterList));
-		    bodyTable.setRowSorter(sorter);
 		}
 	    }
 
@@ -196,6 +120,10 @@ public class SearchPanel extends JPanel {
 	    @Override
 	    public void actionPerformed(final ActionEvent arg0) {
 		// Clear all inputs
+		final TableCellEditor editor = headTable.getCellEditor();
+		if (editor != null) {
+		    editor.stopCellEditing();
+		}
 		headTable.removeAllDataAndInsertAnEmptyRow();
 
 		// Reset Filter
@@ -208,61 +136,44 @@ public class SearchPanel extends JPanel {
 	but_save.addActionListener(new ActionListener() {
 	    @Override
 	    public void actionPerformed(final ActionEvent arg0) {
-		// Get input data and save it into database
-		final HashMap<Integer, Object> data = headTable.getInputValues();
 
-		// Check if all fields are filled
-		if (data.containsValue("")) {
-		    StatusBarController.getInstance().setStatus(
-			    "You have to fill all fields first!");
-		    return;
-		} else {
-		    // TODO
-		    // ============================================================================================
-		    // PersonMgr.getInstance().objectFromDisplay(columns, data);
-		    // ============================================================================================
-
-		    // bodyTable.insertData(data);
-		    System.out.println(data);
-		    // TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		    // ((DateFXI!!
-		    // if (dbController.queryInsertUpdateGuest(new
-		    // Guest().setTableData(data)) != 0) {
-		    // bodyTable.insertData(data);
-		    // }
-		}
+		final HashMap<Integer, Object> values = headTable.getRowValues(0);
+		delegate.getDelegator().editRow(columns, values);
 	    }
 	});
-
-	final JPanel mainPanel = new JPanel();
-	mainPanel.setMinimumSize(new Dimension(800, 600));
-	mainPanel.setLayout(new BorderLayout());
+	final JPanel buttons = new JPanel(new BorderLayout());
+	buttons.add(but_clear, BorderLayout.WEST);
+	buttons.add(but_save, BorderLayout.EAST);
 
 	final JScrollPane headScrollPane = new JScrollPane(headTable);
 	final JScrollPane bodyScrollPane = new JScrollPane(bodyTable);
-	// TODO scrollpane funzt nicht?!
+	headScrollPane.setMinimumSize(new Dimension(getWidth(), 18));
 
-	// headScrollPane.setPreferredSize(new Dimension(this.getWidth(), 40));
-	headScrollPane.setPreferredSize(new Dimension(this.getWidth(), 200));
 	headScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 	headScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-	headScrollPane.getVerticalScrollBar().setModel(
-		bodyScrollPane.getVerticalScrollBar().getModel());
 	headScrollPane.getHorizontalScrollBar().setModel(
 		bodyScrollPane.getHorizontalScrollBar().getModel());
 
-	mainPanel.add(headScrollPane, BorderLayout.NORTH);
-	mainPanel.add(bodyScrollPane, BorderLayout.CENTER);
+	final GridBagLayout gbl = new GridBagLayout();
+	final GridBagConstraints gbc = new GridBagConstraints();
+	setLayout(gbl);
 
-	final JPanel buttons = new JPanel();
-	buttons.setLayout(new FlowLayout());
-	buttons.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-	buttons.add(but_clear);
-	buttons.add(but_save);
-	mainPanel.add(buttons, BorderLayout.SOUTH);
+	gbc.fill = GridBagConstraints.BOTH;
+	gbc.weightx = 0;
+	gbc.weighty = 0;
+	add(headScrollPane, gbc);
 
-	this.setLayout(new BorderLayout());
-	this.add(mainPanel, BorderLayout.CENTER);
+	gbc.weightx = 1;
+	gbc.weighty = 1;
+	gbc.gridx++;
+	add(bodyScrollPane, gbc);
+
+	// TODO buttons entweder oben oder unten!!
+	gbc.weightx = 0;
+	gbc.weighty = 0;
+	gbc.gridx++;
+	gbc.fill = GridBagConstraints.CENTER;
+	add(buttons, gbc);
     }
 
     /**

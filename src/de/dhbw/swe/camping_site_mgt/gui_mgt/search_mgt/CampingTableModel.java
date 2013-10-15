@@ -18,14 +18,13 @@ public class CampingTableModel extends AbstractTableModel {
      * @param columnNames
      * @param data
      */
-    public CampingTableModel(final HashMap<Integer, ColumnInfo> columns,
-	    final Vector<HashMap<Integer, Object>> data) {
+    public CampingTableModel(final HashMap<Integer, ColumnInfo> columns) {
 	super();
 	this.columns = columns;
 	// this.objects = new Vector<HashMap<String, Object>>();
 	// evtl. "NEW" wenn object nicht dirket geändert werden soll (auch bei
 	// unteren methoden)
-	this.dataList = data;
+	this.dataList = new Vector<>();
 	this.editable = false;
     }
 
@@ -73,6 +72,17 @@ public class CampingTableModel extends AbstractTableModel {
      */
     public void insertData(final HashMap<Integer, Object> data) {
 	dataList.add(data);
+	fireTableDataChanged();
+    }
+
+    /**
+     * Inserts objects.
+     * 
+     * @param datam
+     *            the list of objects
+     */
+    public void insertData(final Vector<HashMap<Integer, Object>> data) {
+	dataList.addAll(data);
 	fireTableDataChanged();
     }
 
@@ -138,5 +148,6 @@ public class CampingTableModel extends AbstractTableModel {
 
     private final HashMap<Integer, ColumnInfo> columns;
     private Vector<HashMap<Integer, Object>> dataList;
+
     private boolean editable;
 }
