@@ -24,6 +24,21 @@ public class ShapePanel extends JPanel {
 
 	g2.setColor(Color.BLACK);
 	g2.draw(polygon);
+
+	g2.setColor(Color.BLACK);
+	final Font defaultFont = g2.getFont();
+	g2.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
+	final Rectangle bounds = polygon.getBounds();
+	final int stringLength = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
+	final int stringHeight = (int) g2.getFontMetrics().getStringBounds(text, g2).getHeight();
+	final int xStart = (bounds.width - stringLength) / 2;
+	final int yStart = (bounds.height + stringHeight) / 2;
+	g2.drawString(text, xStart, yStart);
+	g2.setFont(defaultFont);
+    }
+
+    public void setLabel(final String text) {
+	this.text = text;
     }
 
     public void setNature(final Color nature) {
@@ -46,4 +61,6 @@ public class ShapePanel extends JPanel {
     private Color nature = null;
 
     private Polygon polygon = null;
+
+    private String text = "";
 }

@@ -25,7 +25,10 @@ public class MapInformationPanel extends BaseFormularPanel implements
 	initComponentWidth();
 	initTFArea();
 	initTFPichName();
+	initTAType();
 	initPnlShape();
+	initTASize();
+	initTANatureOfSoil();
 	initTACharacteristics();
 	initDeliveryPoint();
     }
@@ -66,31 +69,33 @@ public class MapInformationPanel extends BaseFormularPanel implements
 
     @Override
     public void setPitchExpanse(final int width, final int height) {
-	// TODO Auto-generated method stub
-
+	final StringBuilder size = new StringBuilder();
+	size.append(width / 10 + "," + width % (width / 10) + " m");
+	size.append(" x ");
+	size.append(height / 10 + "," + height % (height / 10) + " m");
+	pitchSizeTa.setText(size.toString());
     }
 
     @Override
     public void setPitchName(final String name) {
-	pitchIdTF.setText(name);
+	pitchNameTf.setText(name);
     }
 
     @Override
     public void setPitchShape(final Polygon shape) {
 	shapePnl.setPolygon(shape);
+	shapePnl.setLabel(pitchNameTf.getText());
     }
 
     @Override
     public void setPitchSoil(final Pitch_NatureOfSoil natureOfSoil) {
 	shapePnl.setNature(getColor(natureOfSoil));
-	// TODO Auto-generated method stub
-
+	natureOfSoilTa.setText(natureOfSoil.getDisplayName());
     }
 
     @Override
     public void setPitchType(final Pitch_Type type) {
-	// TODO Auto-generated method stub
-
+	pitchTypeTa.setText(type.getDisplayName());
     }
 
     /**
@@ -136,7 +141,7 @@ public class MapInformationPanel extends BaseFormularPanel implements
 
     private void initDeliveryPoint() {
 	deliveryPointTa = new JTextArea();
-	deliveryPointTa.setBackground(new Color(238, 238, 238));
+	deliveryPointTa.setBackground(defaultBgColor);
 	add(lm.get(lp.DELIVERY_POINT) + ":", deliveryPointTa);
     }
 
@@ -148,13 +153,31 @@ public class MapInformationPanel extends BaseFormularPanel implements
 
     private void initTACharacteristics() {
 	characteristicsTa = new JTextArea();
-	characteristicsTa.setBackground(new Color(238, 238, 238));
+	characteristicsTa.setBackground(defaultBgColor);
 	add(lm.get(lp.DM_CHARACTERISTICS) + ":", characteristicsTa);
+    }
+
+    private void initTANatureOfSoil() {
+	natureOfSoilTa = new JTextArea();
+	natureOfSoilTa.setBackground(defaultBgColor);
+	add(lm.get(lp.DM_NATURE_OF_SOIL) + ":", natureOfSoilTa);
+    }
+
+    private void initTASize() {
+	pitchSizeTa = new JTextArea();
+	pitchSizeTa.setBackground(defaultBgColor);
+	add(lm.get(lp.SIZE) + ":", pitchSizeTa);
+    }
+
+    private void initTAType() {
+	pitchTypeTa = new JTextArea();
+	pitchTypeTa.setBackground(defaultBgColor);
+	add(lm.get(lp.DM_TYPE) + ":", pitchTypeTa);
     }
 
     private void initTFArea() {
 	areaTf = new JTextField();
-	areaTf.setBackground(new Color(230, 230, 230));
+	areaTf.setBackground(highlitedBgColor);
 	areaTf.addKeyListener(new KeyAdapter() {
 	    @Override
 	    public void keyReleased(final KeyEvent e) {
@@ -164,31 +187,39 @@ public class MapInformationPanel extends BaseFormularPanel implements
 	    }
 	});
 	add(lm.get(lp.AREA) + ":", areaTf);
+
     }
 
     private void initTFPichName() {
-	pitchIdTF = new JTextField();
-	pitchIdTF.setBackground(new Color(230, 230, 230));
-	pitchIdTF.addKeyListener(new KeyAdapter() {
+	pitchNameTf = new JTextField();
+	pitchNameTf.setBackground(highlitedBgColor);
+	pitchNameTf.addKeyListener(new KeyAdapter() {
 	    @Override
 	    public void keyReleased(final KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-		    delegate.getDelegator().pitchChangedTo(pitchIdTF.getText());
+		    delegate.getDelegator().pitchChangedTo(pitchNameTf.getText());
 		}
 	    }
 	});
-	add(lm.get(lp.PITCH) + ":", pitchIdTF);
+	add(lm.get(lp.PITCH) + ":", pitchNameTf);
     }
 
     private JTextField areaTf;
+
     private JTextArea characteristicsTa;
+
+    private final Color defaultBgColor = new Color(238, 238, 238);
     private final Delegate<MapInformationListener> delegate = new Delegate<>(
 	    MapInformationListener.class);
     private JTextArea deliveryPointTa;
+    private final Color highlitedBgColor = new Color(230, 230, 230);
     private final LanguageMgr lm = LanguageMgr.getInstance();
     private LanguageProperties lp;
     private int mapInfoComponentWidth;
-    private JTextField pitchIdTF;
+    private JTextArea natureOfSoilTa;
+    private JTextField pitchNameTf;
+    private JTextArea pitchSizeTa;
+    private JTextArea pitchTypeTa;
 
     private ShapePanel shapePnl;
 }

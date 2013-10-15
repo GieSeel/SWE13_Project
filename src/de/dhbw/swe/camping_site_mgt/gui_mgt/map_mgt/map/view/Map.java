@@ -157,7 +157,8 @@ public class Map extends JPanel implements AccessableMap {
 	    hoverInfo.append(" " + highlightedArea.getName());
 
 	    if (highlightedArea == selectedArea) {
-		return buildHoverInteractionHint(hoverInfo);
+		hoverInfo.append(" (" + LM.get(LP.CLICK_TO_DESELECT) + ")");
+		return hoverInfo.toString();
 	    }
 
 	    return buildHoverInteractionHint(hoverInfo);
@@ -166,7 +167,8 @@ public class Map extends JPanel implements AccessableMap {
 	private String buildHoverInteractionHint(final StringBuilder hoverInfo) {
 	    hoverInfo.append(" (" + LM.get(LP.CLICK_TO_SELECT) + " & ");
 	    hoverInfo.append(LM.get(LP.ADDITIONAL_INFO) + " | ");
-	    hoverInfo.append(LM.get(LP.HOW_TO_ZOOM_IN) + ")");
+	    hoverInfo.append(LM.get(zoomedIn ? LP.HOW_TO_ZOOM_OUT
+		    : LP.HOW_TO_ZOOM_IN) + ")");
 	    return hoverInfo.toString();
 	}
 
@@ -176,7 +178,8 @@ public class Map extends JPanel implements AccessableMap {
 	    hoverInfo.append(" " + highlightedPitch.getId());
 
 	    if (highlightedPitch == selectedPitch) {
-		return buildHoverInteractionHint(hoverInfo);
+		hoverInfo.append(" (" + LM.get(LP.CLICK_TO_DESELECT) + ")");
+		return hoverInfo.toString();
 	    }
 
 	    return buildHoverInteractionHint(hoverInfo);
