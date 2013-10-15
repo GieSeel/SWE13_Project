@@ -1,6 +1,7 @@
-package de.dhbw.swe.camping_site_mgt.gui_mgt;
+package de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -17,21 +18,20 @@ public class CampingTableModel extends AbstractTableModel {
      * @param columnNames
      * @param data
      */
-    public CampingTableModel(final HashMap<String, ColumnInfo> columns,
-	    final Vector<HashMap<String, Object>> data) {
+    public CampingTableModel(final HashMap<Integer, ColumnInfo> columns,
+	    final Vector<HashMap<Integer, Object>> data) {
 	super();
 	this.columns = columns;
-	final Set<String> keyset = columns.keySet();
-	this.columnKeys = keyset.toArray(new String[keyset.size()]);
-	// this.objects = new Vector<HashMap<String, Object>>(); // evtl. wenn
-	// object nicht dirket geändert werden soll (auch bei unteren methoden)
+	// this.objects = new Vector<HashMap<String, Object>>();
+	// evtl. "NEW" wenn object nicht dirket geändert werden soll (auch bei
+	// unteren methoden)
 	this.dataList = data;
 	this.editable = false;
     }
 
     @Override
     public Class<? extends Object> getColumnClass(final int column) {
-	return columns.get(columnKeys[column]).getDbType();
+	return columns.get(column).getDbType();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class CampingTableModel extends AbstractTableModel {
 
     @Override
     public String getColumnName(final int column) {
-	return columns.get(getColumnKey(column)).getDisplayName();
+	return columns.get(column).getDisplayName();
     }
 
     /**
@@ -51,8 +51,8 @@ public class CampingTableModel extends AbstractTableModel {
      *            the row number
      * @return a data row
      */
-    public HashMap<String, Object> getRow(final int row) {
-	return this.dataList.get(row);
+    public HashMap<Integer, Object> getRow(final int row) {
+	return dataList.get(row);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class CampingTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(final int row, final int column) {
-	return dataList.get(row).get(getColumnKey(column));
+	return dataList.get(row).get(column);
     }
 
     /**
@@ -71,7 +71,7 @@ public class CampingTableModel extends AbstractTableModel {
      * @param data
      *            the object
      */
-    public void insertData(final HashMap<String, Object> data) {
+    public void insertData(final HashMap<Integer, Object> data) {
 	dataList.add(data);
 	fireTableDataChanged();
     }
@@ -80,8 +80,8 @@ public class CampingTableModel extends AbstractTableModel {
      * Inserts an empty row.
      */
     public void insertEmptyRow() {
-	final HashMap<String, Object> newData = new HashMap<>();
-	for (final String columnKey : columnKeys) {
+	final HashMap<Integer, Object> newData = new HashMap<>();
+	for (final Integer columnKey : columns.keySet()) {
 	    newData.put(columnKey, "");
 	}
 	insertData(newData);
@@ -117,7 +117,7 @@ public class CampingTableModel extends AbstractTableModel {
      * @param data
      *            are all data objects
      */
-    public void setData(final Vector<HashMap<String, Object>> data) {
+    public void setData(final Vector<HashMap<Integer, Object>> data) {
 	dataList = data;
     }
 
@@ -133,22 +133,10 @@ public class CampingTableModel extends AbstractTableModel {
 
     @Override
     public void setValueAt(final Object value, final int row, final int column) {
-	getRow(row).put(getColumnKey(column), value);
+	getRow(row).put(column, value);
     }
 
-    /**
-     * Gets key of the column.
-     * 
-     * @param column
-     *            the column number
-     * @return the key of the wanted column
-     */
-    private String getColumnKey(final int column) {
-	return columnKeys[column];
-    }
-
-    private final String[] columnKeys;
-    private final HashMap<String, ColumnInfo> columns;
-    private Vector<HashMap<String, Object>> dataList;
+    private final HashMap<Integer, ColumnInfo> columns;
+    private Vector<HashMap<Integer, Object>> dataList;
     private boolean editable;
 }

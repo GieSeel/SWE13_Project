@@ -22,8 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import de.dhbw.swe.camping_site_mgt.common.*;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.ObjectFieldAccess;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
@@ -53,6 +52,28 @@ public class PersonMgr extends BaseDataObjectMgr {
      */
     private PersonMgr() {
 	super();
+    }
+
+    /**
+     * 
+     * @param columns
+     * @param displayData
+     */
+    public void objectFromDisplay(final HashMap<Integer, ColumnInfo> columns,
+	    final HashMap<Integer, Object> displayData,
+	    final HashMap<String, Object> objectMap) {
+	ColumnInfo column;
+	// TODO
+	for (int i = 0; i < columns.size(); i++) {
+	    column = columns.get(i);
+	    if (column.getClassName().equals(getTableName())) {
+		objectMap.put(column.getFieldName(), displayData.get(i));
+	    } else {
+		subObjectFromDisplay(columns, objectMap);
+	    }
+	}
+	// ================================================================================================
+	// ================================================================================================
     }
 
     /**
@@ -219,5 +240,18 @@ public class PersonMgr extends BaseDataObjectMgr {
      */
     private Person castObject(final DataObject dataObject) {
 	return (Person) dataObject;
+    }
+
+    /**
+     * 
+     * @param columns
+     * @param objectMap
+     */
+    private void subObjectFromDisplay(final HashMap<Integer, ColumnInfo> columns,
+	    final HashMap<String, Object> objectMap) {
+	// TODO Auto-generated method stub
+	// ================================================================================================
+	// ================================================================================================
+
     }
 }

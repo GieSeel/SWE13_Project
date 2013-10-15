@@ -111,7 +111,7 @@ public class DataStructure {
 	// "country"
 	sqlObjects.put("country", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("name", String.class, lm.get(lp.DM_NAME)),
+		new ColumnInfo("name", String.class, lm.get(lp.DM_COUNTRY)),
 		new ColumnInfo("acronym", String.class, lm.get(lp.DM_ACRONYM)) });
 
 	// "employee"
@@ -164,7 +164,7 @@ public class DataStructure {
 	// "extrabooking"
 	sqlObjects.put("extrabooking", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("name", String.class, lm.get(lp.DM_NAME)),
+		new ColumnInfo("name", String.class, lm.get(lp.DM_EXTRABOOKING)),
 		new ColumnInfo("labeling", String.class, lm.get(lp.DM_LABELING)),
 		new ColumnInfo("site_ID", Integer.class, Site.class) });
 
@@ -299,7 +299,7 @@ public class DataStructure {
 		"town",
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
-			new ColumnInfo("name", String.class, lm.get(lp.DM_NAME)),
+			new ColumnInfo("name", String.class, lm.get(lp.DM_TOWN)),
 			new ColumnInfo("postalCode", String.class,
 				lm.get(lp.DM_POSTAL_CODE)) });
 

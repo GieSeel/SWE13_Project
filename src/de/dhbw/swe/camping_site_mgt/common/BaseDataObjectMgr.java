@@ -23,7 +23,7 @@ import java.util.Map.Entry;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.CampingTable;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt.CampingTable;
 
 /**
  * Insert description for ObjectMgr
@@ -156,20 +156,21 @@ public abstract class BaseDataObjectMgr {
      *            the columns that will be displayed
      * @return a {@link Vector} with all needed data
      */
-    public Vector<HashMap<String, Object>> saveDisplayDataTo(
-	    final HashMap<String, ColumnInfo> columns) {
-	final Vector<HashMap<String, Object>> displayDataList = new Vector<>();
-	String columnKey, className, fieldName;
+    public Vector<HashMap<Integer, Object>> saveDisplayDataTo(
+	    final HashMap<Integer, ColumnInfo> columns) {
+	final Vector<HashMap<Integer, Object>> displayDataList = new Vector<>();
+	int columnKey;
+	String className, fieldName;
 	DataObject objectValue;
-	HashMap<String, Object> displayData;
+	HashMap<Integer, Object> displayData;
 
 	for (final Entry<Integer, DataObject> objectEntry : data.entrySet()) {
 	    objectValue = objectEntry.getValue();
 	    displayData = new HashMap<>();
-	    for (final Entry<String, ColumnInfo> columnEntry : columns.entrySet()) {
+	    for (final Entry<Integer, ColumnInfo> columnEntry : columns.entrySet()) {
 		columnKey = columnEntry.getKey();
 		fieldName = columnEntry.getValue().getFieldName();
-		className = columnKey.split("_")[0];
+		className = columnEntry.getValue().getClassName();
 		if (className.equals(getTableName())) {
 		    // Save object field value
 		    displayData.put(columnKey,
@@ -181,6 +182,7 @@ public abstract class BaseDataObjectMgr {
 		}
 	    }
 	    if (displayData != null) {
+		displayData.put(displayData.size(), objectValue.getId());
 		displayDataList.add(displayData);
 	    }
 	}
