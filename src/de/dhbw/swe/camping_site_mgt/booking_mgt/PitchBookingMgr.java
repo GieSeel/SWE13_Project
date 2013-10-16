@@ -19,6 +19,7 @@
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
@@ -35,6 +36,9 @@ import de.dhbw.swe.camping_site_mgt.place_mgt.PitchMgr;
 public class PitchBookingMgr extends BaseDataObjectMgr {
     /** The singleton instance. */
     private static PitchBookingMgr instance;
+
+    /** The {@link PitchMgr}. */
+    private static PitchMgr pitchMgr = PitchMgr.getInstance();
 
     /**
      * Returns the instance.
@@ -56,25 +60,13 @@ public class PitchBookingMgr extends BaseDataObjectMgr {
     }
 
     /**
-     * Parses a database entry to an object.
+     * {@inheritDoc}.
      * 
-     * @param entry
-     *            the entry
-     * @return the prepared {@link PitchBooking} object
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
      */
     @Override
-    protected DataObject entry2object(final HashMap<String, Object> entry) {
-	final String tableName = getTableName();
-	int id;
-	boolean electricity;
-	Pitch pitch;
-
-	id = (int) entry.get("id");
-	electricity = (boolean) entry.get("electricity");
-	pitch = (Pitch) PitchMgr.getInstance().objectGet((int) entry.get("pitch"),
-		tableName, id);
-
-	return new PitchBooking(id, electricity, pitch);
+    public String getTableName() {
+	return new PitchBooking().getTableName();
     }
 
     /**
@@ -100,82 +92,29 @@ public class PitchBookingMgr extends BaseDataObjectMgr {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getSubMgr()
      */
     @Override
-    protected String getTableName() {
-	return new PitchBooking().getTableName();
+    protected Vector<BaseDataObjectMgr> getSubMgr() {
+	final Vector<BaseDataObjectMgr> subMgr = new Vector<>();
+	subMgr.add(pitchMgr);
+	return subMgr;
     }
 
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectAdd(int,
-     *      de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#map2DataObject(java.util.HashMap)
      */
     @Override
-    protected void subObjectAdd(final int id, final DataObject dataObject) {
-	final PitchBooking object = castObject(dataObject);
-	final String tableName = object.getTableName();
+    protected DataObject map2DataObject(final HashMap<String, Object> map) {
+	int id = 0;
+	if (map.containsKey("id")) {
+	    id = (int) map.get("id");
+	}
+	final boolean electricity = (boolean) map.get("electricity");
+	final Pitch pitch = (Pitch) map.get("pitch");
 
-	object.getPitch().addUsage(tableName, id);
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectInsert(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
-    @Override
-    protected void subObjectInsert(final DataObject dataObject) {
-	final PitchBooking object = castObject(dataObject);
-
-	PitchMgr.getInstance().objectInsert(object.getPitch());
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectRemove(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
-    @Override
-    protected void subObjectRemove(final DataObject dataObject) {
-	final PitchBooking object = castObject(dataObject);
-	final int id = object.getId();
-	final String tableName = object.getTableName();
-
-	final Pitch pitch = object.getPitch();
-	pitch.delUsage(tableName, id);
-	PitchMgr.getInstance().objectRemove(pitch);
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectUpdate(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject,
-     *      de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
-    @Override
-    protected void subObjectUpdate(final DataObject dataObject,
-	    final DataObject newDataObject) {
-	final PitchBooking object = castObject(dataObject);
-	final PitchBooking newObject = castObject(newDataObject);
-	final int id = object.getId();
-	final String tableName = object.getTableName();
-
-	final Pitch pitch = object.getPitch();
-	pitch.delUsage(tableName, id);
-	PitchMgr.getInstance().objectUpdate(pitch, newObject.getPitch());
-    }
-
-    /**
-     * Cast {@link DataObject} to {@link PitchBooking} object.
-     * 
-     * @param dataObject
-     *            the {@link DataObject}
-     * @return the {@link PitchBooking} object
-     */
-    private PitchBooking castObject(final DataObject dataObject) {
-	return (PitchBooking) dataObject;
+	return new PitchBooking(id, electricity, pitch);
     }
 }

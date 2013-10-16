@@ -19,6 +19,7 @@
 package de.dhbw.swe.camping_site_mgt.person_mgt;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
 import de.dhbw.swe.camping_site_mgt.common.Euro;
@@ -57,19 +58,11 @@ public class VisitorsTaxClassMgr extends BaseDataObjectMgr {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#entry2object(java.util.HashMap)
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
      */
     @Override
-    protected DataObject entry2object(final HashMap<String, Object> entry) {
-	int id;
-	VisitorsTaxClass_Labeling labeling;
-	Euro price;
-
-	id = (int) entry.get("id");
-	labeling = VisitorsTaxClass_Labeling.values()[(int) entry.get("labeling")];
-	price = (Euro) entry.get("price");
-
-	return new VisitorsTaxClass(id, labeling, price);
+    public String getTableName() {
+	return new VisitorsTaxClass().getTableName();
     }
 
     /**
@@ -95,10 +88,27 @@ public class VisitorsTaxClassMgr extends BaseDataObjectMgr {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getSubMgr()
      */
     @Override
-    protected String getTableName() {
-	return new VisitorsTaxClass().getTableName();
+    protected Vector<BaseDataObjectMgr> getSubMgr() {
+	return null;
+    }
+
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#map2DataObject(java.util.HashMap)
+     */
+    @Override
+    protected DataObject map2DataObject(final HashMap<String, Object> map) {
+	int id = 0;
+	if (map.containsKey("id")) {
+	    id = (int) map.get("id");
+	}
+	final VisitorsTaxClass_Labeling labeling = VisitorsTaxClass_Labeling.values()[(int) map.get("labeling")];
+	final Euro price = (Euro) map.get("price");
+
+	return new VisitorsTaxClass(id, labeling, price);
     }
 }

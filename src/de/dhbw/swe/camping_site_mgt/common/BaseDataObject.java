@@ -76,7 +76,7 @@ public abstract class BaseDataObject implements DataObject {
      *            the {@link DataObject};
      * @return true if the objects are the same
      */
-    public abstract boolean equals(DataObject dataObject);
+    abstract public boolean equals(DataObject dataObject);
 
     /**
      * {@inheritDoc}.
@@ -100,7 +100,7 @@ public abstract class BaseDataObject implements DataObject {
      * @return the table name of the {@link Town} object.
      */
     @Override
-    public abstract String getTableName();
+    abstract public String getTableName();
 
     /**
      * @return the {@link Usage}.

@@ -19,6 +19,7 @@
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
@@ -54,25 +55,13 @@ public class EquipmentMgr extends BaseDataObjectMgr {
     }
 
     /**
-     * Parses a database entry to an object.
+     * {@inheritDoc}.
      * 
-     * @param entry
-     *            the entry
-     * @return the prepared {@link Equipment} object
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
      */
     @Override
-    protected DataObject entry2object(final HashMap<String, Object> entry) {
-	int id;
-	String identification;
-	String size;
-	Equipment_Type type;
-
-	id = (int) entry.get("id");
-	identification = (String) entry.get("identification");
-	size = (String) entry.get("size");
-	type = Equipment_Type.values()[(int) entry.get("type")];
-
-	return new Equipment(id, identification, size, type);
+    public String getTableName() {
+	return new Equipment().getTableName();
     }
 
     /**
@@ -98,10 +87,28 @@ public class EquipmentMgr extends BaseDataObjectMgr {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getSubMgr()
      */
     @Override
-    protected String getTableName() {
-	return new Equipment().getTableName();
+    protected Vector<BaseDataObjectMgr> getSubMgr() {
+	return null;
+    }
+
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#map2DataObject(java.util.HashMap)
+     */
+    @Override
+    protected DataObject map2DataObject(final HashMap<String, Object> map) {
+	int id = 0;
+	if (map.containsKey("id")) {
+	    id = (int) map.get("id");
+	}
+	final String identification = (String) map.get("identification");
+	final String size = (String) map.get("size");
+	final Equipment_Type type = Equipment_Type.values()[(int) map.get("type")];
+
+	return new Equipment(id, identification, size, type);
     }
 }

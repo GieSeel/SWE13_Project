@@ -1,6 +1,7 @@
 package de.dhbw.swe.camping_site_mgt.person_mgt;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
@@ -15,6 +16,12 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 public class GuestMgr extends BaseDataObjectMgr {
     /** The singleton instance. */
     private static GuestMgr instance;
+
+    /** The {@link PersonMgr}. */
+    private static PersonMgr personMgr = PersonMgr.getInstance();
+
+    /** The {@link VisitorsTaxClassMgr}. */
+    private static VisitorsTaxClassMgr visitorsTaxClassMgr = VisitorsTaxClassMgr.getInstance();
 
     /**
      * Returns the instance.
@@ -38,20 +45,11 @@ public class GuestMgr extends BaseDataObjectMgr {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#entry2object(java.util.HashMap)
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
      */
     @Override
-    protected DataObject entry2object(final HashMap<String, Object> entry) {
-	int id;
-	Person person;
-	VisitorsTaxClass visitorsTaxClass;
-
-	id = (int) entry.get("id");
-	person = (Person) PersonMgr.getInstance().get((int) entry.get("person"));
-	visitorsTaxClass = (VisitorsTaxClass) VisitorsTaxClassMgr.getInstance().get(
-		(int) entry.get("visitorsTaxClass"));
-
-	return new Guest(id, person, visitorsTaxClass);
+    public String getTableName() {
+	return new Guest().getTableName();
     }
 
     /**
@@ -77,91 +75,30 @@ public class GuestMgr extends BaseDataObjectMgr {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getSubMgr()
      */
     @Override
-    protected String getTableName() {
-	return new Guest().getTableName();
+    protected Vector<BaseDataObjectMgr> getSubMgr() {
+	final Vector<BaseDataObjectMgr> subMgr = new Vector<>();
+	subMgr.add(personMgr);
+	subMgr.add(visitorsTaxClassMgr);
+	return subMgr;
     }
 
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectAdd(int,
-     *      de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#map2DataObject(java.util.HashMap)
      */
     @Override
-    protected void subObjectAdd(final int id, final DataObject dataObject) {
-	final Guest object = castObject(dataObject);
-	final String tableName = object.getTableName();
+    protected DataObject map2DataObject(final HashMap<String, Object> map) {
+	int id = 0;
+	if (map.containsKey("id")) {
+	    id = (int) map.get("id");
+	}
+	final Person person = (Person) map.get("person");
+	final VisitorsTaxClass visitorsTaxClass = (VisitorsTaxClass) map.get("visitorsTaxClass");
 
-	object.getPerson().addUsage(tableName, id);
-	object.getVisitorsTaxClass().addUsage(tableName, id);
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectInsert(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
-    @Override
-    protected void subObjectInsert(final DataObject dataObject) {
-	final Guest object = castObject(dataObject);
-
-	PersonMgr.getInstance().objectInsert(object.getPerson());
-	VisitorsTaxClassMgr.getInstance().objectInsert(object.getVisitorsTaxClass());
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectRemove(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
-    @Override
-    protected void subObjectRemove(final DataObject dataObject) {
-	final Guest object = castObject(dataObject);
-	final int id = object.getId();
-	final String tableName = object.getTableName();
-
-	final Person person = object.getPerson();
-	final VisitorsTaxClass visitorsTaxClass = object.getVisitorsTaxClass();
-	person.delUsage(tableName, id);
-	visitorsTaxClass.delUsage(tableName, id);
-	PersonMgr.getInstance().objectRemove(person);
-	VisitorsTaxClassMgr.getInstance().objectRemove(visitorsTaxClass);
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectUpdate(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject,
-     *      de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
-    @Override
-    protected void subObjectUpdate(final DataObject dataObject,
-	    final DataObject newDataObject) {
-	final Guest object = castObject(dataObject);
-	final Guest newObject = castObject(newDataObject);
-	final int id = object.getId();
-	final String tableName = object.getTableName();
-
-	final Person person = object.getPerson();
-	final VisitorsTaxClass visitorsTaxClass = object.getVisitorsTaxClass();
-	person.delUsage(tableName, id);
-	visitorsTaxClass.delUsage(tableName, id);
-	PersonMgr.getInstance().objectUpdate(person, newObject.getPerson());
-	VisitorsTaxClassMgr.getInstance().objectUpdate(visitorsTaxClass,
-		newObject.getVisitorsTaxClass());
-    }
-
-    /**
-     * Cast {@link DataObject} to {@link Guest} object.
-     * 
-     * @param dataObject
-     *            the {@link DataObject}
-     * @return the {@link Guest} object
-     */
-    private Guest castObject(final DataObject dataObject) {
-	return (Guest) dataObject;
+	return new Guest(id, person, visitorsTaxClass);
     }
 }

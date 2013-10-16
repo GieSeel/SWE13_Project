@@ -1,6 +1,7 @@
 package de.dhbw.swe.camping_site_mgt.person_mgt;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 import de.dhbw.swe.camping_site_mgt.common.*;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
@@ -13,8 +14,17 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
  * @version 1.0
  */
 public class EmployeeMgr extends BaseDataObjectMgr {
+    /** The {@link ChipCardMgr}. */
+    private static ChipCardMgr chipCardMgr = ChipCardMgr.getInstance();
+
+    /** The {@link EmployeeRoleMgr}. */
+    private static EmployeeRoleMgr employeeRoleMgr = EmployeeRoleMgr.getInstance();
+
     /** The singleton instance. */
     private static EmployeeMgr instance;
+
+    /** The {@link PersonMgr}. */
+    private static PersonMgr personMgr = PersonMgr.getInstance();
 
     /**
      * Returns the instance.
@@ -37,29 +47,11 @@ public class EmployeeMgr extends BaseDataObjectMgr {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#entry2object(java.util.HashMap)
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
      */
     @Override
-    protected DataObject entry2object(final HashMap<String, Object> entry) {
-	int id;
-	boolean blocked;
-	ChipCard chipCard;
-	String password;
-	Person person;
-	EmployeeRole role;
-	String userName;
-
-	id = (int) entry.get("id");
-	blocked = ((int) entry.get("blocked") == 1 ? true : false);
-	chipCard = (ChipCard) ChipCardMgr.getInstance().get(
-		(int) entry.get("chipCard"));
-	password = (String) entry.get("password");
-	person = (Person) PersonMgr.getInstance().get((int) entry.get("person"));
-	role = (EmployeeRole) EmployeeRoleMgr.getInstance().get(
-		(int) entry.get("role"));
-	userName = (String) entry.get("userName");
-
-	return new Employee(id, blocked, chipCard, password, person, role, userName);
+    public String getTableName() {
+	return new Employee().getTableName();
     }
 
     /**
@@ -85,99 +77,36 @@ public class EmployeeMgr extends BaseDataObjectMgr {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getSubMgr()
      */
     @Override
-    protected String getTableName() {
-	return new Employee().getTableName();
+    protected Vector<BaseDataObjectMgr> getSubMgr() {
+	final Vector<BaseDataObjectMgr> subMgr = new Vector<>();
+	subMgr.add(chipCardMgr);
+	subMgr.add(employeeRoleMgr);
+	subMgr.add(personMgr);
+	return subMgr;
     }
 
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectAdd(int,
-     *      de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#map2DataObject(java.util.HashMap)
      */
     @Override
-    protected void subObjectAdd(final int id, final DataObject dataObject) {
-	final Employee object = castObject(dataObject);
-	final String tableName = object.getTableName();
+    protected DataObject map2DataObject(final HashMap<String, Object> map) {
+	int id = 0;
+	if (map.containsKey("id")) {
+	    id = (int) map.get("id");
+	}
+	final boolean blocked = (boolean) map.get("blocked");
+	final String password = (String) map.get("password");
+	final String userName = (String) map.get("userName");
 
-	object.getChipCard().addUsage(tableName, id);
-	object.getPerson().addUsage(tableName, id);
-	object.getRole().addUsage(tableName, id);
-    }
+	final ChipCard chipCard = (ChipCard) map.get("chipCard");
+	final EmployeeRole role = (EmployeeRole) map.get("role");
+	final Person person = (Person) map.get("person");
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectInsert(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
-    @Override
-    protected void subObjectInsert(final DataObject dataObject) {
-	final Employee object = castObject(dataObject);
-
-	ChipCardMgr.getInstance().objectInsert(object.getChipCard());
-	PersonMgr.getInstance().objectInsert(object.getPerson());
-	EmployeeRoleMgr.getInstance().objectInsert(object.getRole());
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectRemove(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
-    @Override
-    protected void subObjectRemove(final DataObject dataObject) {
-	final Employee object = castObject(dataObject);
-	final int id = object.getId();
-	final String tableName = object.getTableName();
-
-	final ChipCard chipCard = object.getChipCard();
-	final Person person = object.getPerson();
-	final EmployeeRole employeeRole = object.getRole();
-	chipCard.delUsage(tableName, id);
-	person.delUsage(tableName, id);
-	employeeRole.delUsage(tableName, id);
-	ChipCardMgr.getInstance().objectRemove(chipCard);
-	PersonMgr.getInstance().objectRemove(person);
-	EmployeeRoleMgr.getInstance().objectRemove(employeeRole);
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectUpdate(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject,
-     *      de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
-    @Override
-    protected void subObjectUpdate(final DataObject dataObject,
-	    final DataObject newDataObject) {
-	final Employee object = castObject(dataObject);
-	final Employee newObject = castObject(newDataObject);
-	final int id = object.getId();
-	final String tableName = object.getTableName();
-
-	final ChipCard chipCard = object.getChipCard();
-	final Person person = object.getPerson();
-	final EmployeeRole employeeRole = object.getRole();
-	chipCard.delUsage(tableName, id);
-	person.delUsage(tableName, id);
-	employeeRole.delUsage(tableName, id);
-	ChipCardMgr.getInstance().objectUpdate(chipCard, newObject.getChipCard());
-	PersonMgr.getInstance().objectUpdate(person, newObject.getPerson());
-	EmployeeRoleMgr.getInstance().objectUpdate(employeeRole,
-		newObject.getRole());
-    }
-
-    /**
-     * Cast {@link DataObject} to {@link Employee} object.
-     * 
-     * @param dataObject
-     *            the {@link DataObject}
-     * @return the {@link Employee} object
-     */
-    private Employee castObject(final DataObject dataObject) {
-	return (Employee) dataObject;
+	return new Employee(id, blocked, chipCard, password, person, role, userName);
     }
 }

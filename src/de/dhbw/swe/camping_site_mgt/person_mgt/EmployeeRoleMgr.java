@@ -19,6 +19,7 @@
 package de.dhbw.swe.camping_site_mgt.person_mgt;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
@@ -56,19 +57,11 @@ public class EmployeeRoleMgr extends BaseDataObjectMgr {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#entry2object(java.util.HashMap)
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
      */
     @Override
-    protected DataObject entry2object(final HashMap<String, Object> entry) {
-	int id;
-	EmployeeRole_Arrangement arrangement;
-	EmployeeRole_Labeling labeling;
-
-	id = (int) entry.get("id");
-	arrangement = EmployeeRole_Arrangement.values()[(int) entry.get("arrangement")];
-	labeling = EmployeeRole_Labeling.values()[(int) entry.get("labeling")];
-
-	return new EmployeeRole(id, arrangement, labeling);
+    public String getTableName() {
+	return new EmployeeRole().getTableName();
     }
 
     /**
@@ -94,10 +87,27 @@ public class EmployeeRoleMgr extends BaseDataObjectMgr {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getSubMgr()
      */
     @Override
-    protected String getTableName() {
-	return new EmployeeRole().getTableName();
+    protected Vector<BaseDataObjectMgr> getSubMgr() {
+	return null;
+    }
+
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#map2DataObject(java.util.HashMap)
+     */
+    @Override
+    protected DataObject map2DataObject(final HashMap<String, Object> map) {
+	int id = 0;
+	if (map.containsKey("id")) {
+	    id = (int) map.get("id");
+	}
+	final EmployeeRole_Arrangement arrangement = EmployeeRole_Arrangement.values()[(int) map.get("arrangement")];
+	final EmployeeRole_Labeling labeling = EmployeeRole_Labeling.values()[(int) map.get("labeling")];
+
+	return new EmployeeRole(id, arrangement, labeling);
     }
 }

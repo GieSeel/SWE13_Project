@@ -91,8 +91,8 @@ public class SearchPanelController implements Displayable {
 	    }
 	}
 
-	Vector<HashMap<Integer, Object>> data = new Vector<>();
-	data = objectManger.saveDisplayDataTo(columns);
+	final Vector<HashMap<Integer, Object>> data = new Vector<>();
+	objectManger.saveObjects2DisplayIn(data, columns);
 
 	view.makeTables(columns, data);
     }

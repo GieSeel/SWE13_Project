@@ -90,9 +90,7 @@ public class DatabaseMgr {
 	    // final PersonMgr test = PersonMgr.getInstance();
 	    // final Country country = new Country("DE", "Deutschland");
 	    // final Town town = new Town("Pforzheim", "75177");
-	    // final Calendar cal = Calendar.getInstance();
-	    // cal.setTimeInMillis(0);
-	    // cal.set(1992, 5, 27);
+	    // final Calendar cal = new GregorianCalendar(1992, 4, 27);
 	    // final Date datum = cal.getTime();
 	    // final Person person = new Person("0123456789D", "Florian",
 	    // "Seel",
@@ -160,7 +158,11 @@ public class DatabaseMgr {
 		    fieldName = column.getFieldName();
 		    dbName = column.getDbName();
 
-		    if (dbTyp.equals(Integer.class)) {
+		    if (dbTyp.equals(Boolean.class)) {
+			// Boolean
+			entry.put(fieldName, (result.getInt(dbName) == 1 ? true
+				: false));
+		    } else if (dbTyp.equals(Integer.class)) {
 			// Integer
 			entry.put(fieldName, result.getInt(dbName));
 		    } else if (dbTyp.equals(Float.class)) {
@@ -309,7 +311,14 @@ public class DatabaseMgr {
 	    dbTyp = columnInfos[i].getDbType();
 	    fieldName = columnInfos[i].getFieldName();
 
-	    if (dbTyp.equals(Integer.class)) {
+	    if (dbTyp.equals(Boolean.class)) {
+		// Boolean
+		try {
+		    statement.setInt(i, ((boolean) dbObject.get(fieldName) ? 1 : 0));
+		} catch (final SQLException e) {
+		    logger.error("SQL-Exception (fill Boolean)" + e.getMessage());
+		}
+	    } else if (dbTyp.equals(Integer.class)) {
 		// Integer
 		try {
 		    statement.setInt(i, (Integer) dbObject.get(fieldName));

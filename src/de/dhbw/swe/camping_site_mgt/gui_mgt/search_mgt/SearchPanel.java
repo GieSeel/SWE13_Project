@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.Array;
 import java.util.*;
+import java.util.Map.Entry;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -217,16 +218,18 @@ public class SearchPanel extends JPanel {
 
 	rowFilterList = new Vector<RowFilter<Object, Object>>();
 
-	int i = 0;
-	for (final ColumnInfo columnValues : columns.values()) {
+	int index;
+	for (final Entry<Integer, ColumnInfo> column : columns.entrySet()) {
+	    index = column.getKey();
+
 	    // Set empty filter for that column
-	    rowFilterList.add(RowFilter.regexFilter("^.*$", i));
+	    rowFilterList.add(RowFilter.regexFilter("^.*$", index));
 
 	    // Set column comparator
-	    final Class<? extends Object> type = columnValues.getDbType();
+	    final Class<? extends Object> type = column.getValue().getDbType();
 	    if (type.equals(Integer.class)) {
 		// Integer
-		sorter.setComparator(i, intComp);
+		sorter.setComparator(index, intComp);
 	    } else if (type.equals(Float.class)) {
 		// Float
 	    } else if (type.equals(Euro.class)) {
@@ -242,7 +245,6 @@ public class SearchPanel extends JPanel {
 	    } else {
 		logger.error("Unexpected typ while setting comparators!");
 	    }
-	    i++;
 	}
     }
 

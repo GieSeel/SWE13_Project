@@ -18,11 +18,10 @@
  */
 package de.dhbw.swe.camping_site_mgt.person_mgt;
 
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 import de.dhbw.swe.camping_site_mgt.common.*;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
@@ -32,8 +31,15 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
  * @version 1.0
  */
 public class PersonMgr extends BaseDataObjectMgr {
+
+    /** The {@link CountryMgr} */
+    private static CountryMgr countryMgr = CountryMgr.getInstance();
+
     /** The singleton instance. */
     private static PersonMgr instance;
+
+    /** The {@link TownMgr} */
+    private static TownMgr townMgr = TownMgr.getInstance();
 
     /**
      * Returns the instance.
@@ -55,61 +61,13 @@ public class PersonMgr extends BaseDataObjectMgr {
     }
 
     /**
+     * {@inheritDoc}.
      * 
-     * @param columns
-     * @param displayData
-     */
-    public void objectFromDisplay(final HashMap<Integer, ColumnInfo> columns,
-	    final HashMap<Integer, Object> displayData,
-	    final HashMap<String, Object> objectMap) {
-	ColumnInfo column;
-	// TODO
-	for (int i = 0; i < columns.size(); i++) {
-	    column = columns.get(i);
-	    if (column.getClassName().equals(getTableName())) {
-		objectMap.put(column.getFieldName(), displayData.get(i));
-	    } else {
-		subObjectFromDisplay(columns, objectMap);
-	    }
-	}
-	// ================================================================================================
-	// ================================================================================================
-    }
-
-    /**
-     * Parses a database entry to an object.
-     * 
-     * @param entry
-     *            the entry
-     * @return the prepared {@link Person} object
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
      */
     @Override
-    protected DataObject entry2object(final HashMap<String, Object> entry) {
-	final String tableName = getTableName();
-	int id;
-	Country country;
-	Date dateOfBirth;
-	String firstName;
-	String houseNumber;
-	String identificationNumber;
-	String name;
-	String street;
-	Town town;
-
-	id = (int) entry.get("id");
-	country = (Country) CountryMgr.getInstance().objectGet(
-		(int) entry.get("country"), tableName, id);
-	dateOfBirth = (Date) entry.get("dateOfBirth");
-	firstName = (String) entry.get("firstName");
-	houseNumber = (String) entry.get("houseNumber");
-	identificationNumber = (String) entry.get("identificationNumber");
-	name = (String) entry.get("name");
-	street = (String) entry.get("street");
-	town = (Town) TownMgr.getInstance().objectGet((int) entry.get("town"),
-		tableName, id);
-
-	return new Person(id, identificationNumber, firstName, name, dateOfBirth,
-		street, houseNumber, town, country);
+    public String getTableName() {
+	return new Person().getTableName();
     }
 
     /**
@@ -135,123 +93,40 @@ public class PersonMgr extends BaseDataObjectMgr {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getSubMgr()
      */
     @Override
-    protected String getTableName() {
-	return new Person().getTableName();
+    protected Vector<BaseDataObjectMgr> getSubMgr() {
+	final Vector<BaseDataObjectMgr> subMgr = new Vector<>();
+	subMgr.add(countryMgr);
+	subMgr.add(townMgr);
+	return subMgr;
     }
 
     /**
-     * {@inheritDoc}.
+     * Converts the map to an {@link DataObject}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectAdd(int,
-     *      de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
+     * @param map
+     *            the map
+     * @return the object
      */
     @Override
-    protected void subObjectAdd(final int id, final DataObject dataObject) {
-	final Person object = castObject(dataObject);
-	final String tableName = object.getTableName();
-
-	object.getCountry().addUsage(tableName, id);
-	object.getTown().addUsage(tableName, id);
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectInsert(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
-    @Override
-    protected void subObjectInsert(final DataObject dataObject) {
-	final Person object = castObject(dataObject);
-
-	CountryMgr.getInstance().objectInsert(object.getCountry());
-	TownMgr.getInstance().objectInsert(object.getTown());
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectRemove(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
-    @Override
-    protected void subObjectRemove(final DataObject dataObject) {
-	final Person object = castObject(dataObject);
-	final int id = object.getId();
-	final String tableName = object.getTableName();
-
-	final Country country = object.getCountry();
-	final Town town = object.getTown();
-	country.delUsage(tableName, id);
-	town.delUsage(tableName, id);
-	CountryMgr.getInstance().objectRemove(country);
-	TownMgr.getInstance().objectRemove(town);
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectUpdate(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject,
-     *      de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
-    @Override
-    protected void subObjectUpdate(final DataObject dataObject,
-	    final DataObject newDataObject) {
-	final Person object = castObject(dataObject);
-	final Person newObject = castObject(newDataObject);
-	final int id = object.getId();
-	final String tableName = object.getTableName();
-
-	final Country country = object.getCountry();
-	final Town town = object.getTown();
-	country.delUsage(tableName, id);
-	town.delUsage(tableName, id);
-	CountryMgr.getInstance().objectUpdate(country, newObject.getCountry());
-	TownMgr.getInstance().objectUpdate(town, newObject.getTown());
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subSaveDisplayData(java.lang.String,
-     *      java.lang.String,
-     *      de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
-    @Override
-    protected Object subSaveDisplayData(final String className,
-	    final String fieldName, final DataObject object) {
-	final Person person = (Person) object;
-	if (className.equals("country")) {
-	    return ObjectFieldAccess.getValueOf(fieldName, person.getCountry());
-	} else if (className.equals("town")) {
-	    return ObjectFieldAccess.getValueOf(fieldName, person.getTown());
-	} else {
-	    return null;
+    protected DataObject map2DataObject(final HashMap<String, Object> map) {
+	int id = 0;
+	if (map.containsKey("id")) {
+	    id = (int) map.get("id");
 	}
-    }
+	final Date dateOfBirth = (Date) map.get("dateOfBirth");
+	final String firstName = (String) map.get("firstName");
+	final String houseNumber = (String) map.get("houseNumber");
+	final String identificationNumber = (String) map.get("identificationNumber");
+	final String name = (String) map.get("name");
+	final String street = (String) map.get("street");
 
-    /**
-     * Cast {@link DataObject} to {@link Person} object.
-     * 
-     * @param dataObject
-     *            the {@link DataObject}
-     * @return the {@link Person} object
-     */
-    private Person castObject(final DataObject dataObject) {
-	return (Person) dataObject;
-    }
+	final Country country = (Country) map.get("country");
+	final Town town = (Town) map.get("town");
 
-    /**
-     * 
-     * @param columns
-     * @param objectMap
-     */
-    private void subObjectFromDisplay(final HashMap<Integer, ColumnInfo> columns,
-	    final HashMap<String, Object> objectMap) {
-	// TODO Auto-generated method stub
-	// ================================================================================================
-	// ================================================================================================
-
+	return new Person(id, identificationNumber, firstName, name, dateOfBirth,
+		street, houseNumber, town, country);
     }
 }

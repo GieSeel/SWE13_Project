@@ -19,6 +19,7 @@
 package de.dhbw.swe.camping_site_mgt.gui_mgt.edit;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -48,16 +49,13 @@ public class EditDialog extends JFrame {
     public EditDialog(final HashMap<Integer, ColumnInfo> columns,
 	    final HashMap<Integer, Object> values) {
 	final BaseFormularPanel baseFormularPanel = new BaseFormularPanel();
-	int i = 0;
-	for (final ColumnInfo column : columns.values()) {
-	    baseFormularPanel.add(column.getDisplayName(), new JTextField(
-		    values.get(i).toString()));
-	    i++;
+	for (final Entry<Integer, ColumnInfo> column : columns.entrySet()) {
+	    baseFormularPanel.add(column.getValue().getDisplayName(),
+		    new JTextField(values.get(column.getKey()).toString()));
 	}
 	add(baseFormularPanel);
 	pack();
 	setLocationRelativeTo(null);
 	setVisible(true);
     }
-
 }

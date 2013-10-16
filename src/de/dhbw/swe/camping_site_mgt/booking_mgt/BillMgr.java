@@ -19,6 +19,7 @@
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
@@ -31,6 +32,9 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
  * @version 1.0
  */
 public class BillMgr extends BaseDataObjectMgr {
+    /** The {@link BillItemMgr}. */
+    private static BillItemMgr billItemMgr = BillItemMgr.getInstance();
+
     /** The singleton instance. */
     private static BillMgr instance;
 
@@ -54,27 +58,13 @@ public class BillMgr extends BaseDataObjectMgr {
     }
 
     /**
-     * Parses a database entry to an object.
+     * {@inheritDoc}.
      * 
-     * @param entry
-     *            the entry
-     * @return the prepared {@link Bill} object
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
      */
     @Override
-    protected DataObject entry2object(final HashMap<String, Object> entry) {
-	final String tableName = getTableName();
-	int id;
-	BillItem billItem;
-	int multiplier;
-	int number;
-
-	id = (int) entry.get("id");
-	billItem = (BillItem) BillItemMgr.getInstance().objectGet(
-		(int) entry.get("billItem"), tableName, id);
-	multiplier = (int) entry.get("multiplier");
-	number = (int) entry.get("number");
-
-	return new Bill(id, number, billItem, multiplier);
+    public String getTableName() {
+	return new Bill().getTableName();
     }
 
     /**
@@ -100,82 +90,31 @@ public class BillMgr extends BaseDataObjectMgr {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getSubMgr()
      */
     @Override
-    protected String getTableName() {
-	return new Bill().getTableName();
+    protected Vector<BaseDataObjectMgr> getSubMgr() {
+	final Vector<BaseDataObjectMgr> subMgr = new Vector<>();
+	subMgr.add(billItemMgr);
+	return subMgr;
     }
 
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectAdd(int,
-     *      de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#map2DataObject(java.util.HashMap)
      */
     @Override
-    protected void subObjectAdd(final int id, final DataObject dataObject) {
-	final Bill object = castObject(dataObject);
-	final String tableName = object.getTableName();
+    protected DataObject map2DataObject(final HashMap<String, Object> map) {
+	int id = 0;
+	if (map.containsKey("id")) {
+	    id = (int) map.get("id");
+	}
+	final int multiplier = (int) map.get("multiplier");
+	final int number = (int) map.get("number");
 
-	object.getBillItem().addUsage(tableName, id);
-    }
+	final BillItem billItem = (BillItem) map.get("billItem");
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectInsert(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
-    @Override
-    protected void subObjectInsert(final DataObject dataObject) {
-	final Bill object = castObject(dataObject);
-
-	BillItemMgr.getInstance().objectInsert(object.getBillItem());
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectRemove(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
-    @Override
-    protected void subObjectRemove(final DataObject dataObject) {
-	final Bill object = castObject(dataObject);
-	final int id = object.getId();
-	final String tableName = object.getTableName();
-
-	final BillItem billItem = object.getBillItem();
-	billItem.delUsage(tableName, id);
-	BillItemMgr.getInstance().objectRemove(billItem);
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectUpdate(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject,
-     *      de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
-    @Override
-    protected void subObjectUpdate(final DataObject dataObject,
-	    final DataObject newDataObject) {
-	final Bill object = castObject(dataObject);
-	final Bill newObject = castObject(newDataObject);
-	final int id = object.getId();
-	final String tableName = object.getTableName();
-
-	final BillItem billItem = object.getBillItem();
-	billItem.delUsage(tableName, id);
-	BillItemMgr.getInstance().objectUpdate(billItem, newObject.getBillItem());
-    }
-
-    /**
-     * Cast {@link DataObject} to {@link Bill} object.
-     * 
-     * @param dataObject
-     *            the {@link DataObject}
-     * @return the {@link Bill} object
-     */
-    private Bill castObject(final DataObject dataObject) {
-	return (Bill) dataObject;
+	return new Bill(id, number, billItem, multiplier);
     }
 }
