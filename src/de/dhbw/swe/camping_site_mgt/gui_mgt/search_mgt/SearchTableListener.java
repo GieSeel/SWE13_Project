@@ -40,4 +40,12 @@ public interface SearchTableListener {
      */
     void editRow(HashMap<Integer, ColumnInfo> columns,
 	    HashMap<Integer, Object> values);
+
+    /**
+     * Action for changing the search table.
+     * 
+     * @param index
+     *            the index of the search subject
+     */
+    void subjectChangedTo(final int index);
 }
