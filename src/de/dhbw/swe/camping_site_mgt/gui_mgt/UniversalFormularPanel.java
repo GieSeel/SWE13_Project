@@ -11,7 +11,12 @@ public class UniversalFormularPanel extends JPanel {
 
     public UniversalFormularPanel() {
 	setLayout(new GridBagLayout());
-	gridBagConstraints = new GridBagConstraints();
+	gbc = new GridBagConstraints();
+
+	gbc.fill = GridBagConstraints.BOTH;
+	gbc.insets = new Insets(3, 1, 5, 2);
+
+	currentLine = 0;
     }
 
     /**
@@ -21,7 +26,26 @@ public class UniversalFormularPanel extends JPanel {
      *            the content
      */
     public void add(final JComponent object) {
+	add(object, GridBagConstraints.CENTER);
+    }
 
+    /**
+     * Ads a entry to the form without description.
+     * 
+     * @param object
+     *            the content
+     * @param position
+     *            the position from {@link GridBagConstraints}
+     */
+    public void add(final JComponent object, final int position) {
+	gbc.gridy = currentLine;
+	gbc.gridx = 0;
+	gbc.weightx = 0.0;
+	gbc.weighty = 0.0;
+	gbc.gridwidth = 2;
+	gbc.anchor = position;
+	add(object, gbc);
+	currentLine++;
     }
 
     /**
@@ -33,8 +57,23 @@ public class UniversalFormularPanel extends JPanel {
      *            the entries content
      */
     public void add(final String title, final JComponent object) {
+	gbc.gridy = currentLine;
+	gbc.gridwidth = 1;
+	gbc.weightx = 0.5;
+	gbc.gridx = 0;
+	gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+	final JLabel titleLb = new JLabel(title);
+	add(titleLb, gbc);
 
+	gbc.gridx = 1;
+	gbc.anchor = GridBagConstraints.CENTER;
+	add(object, gbc);
+	currentLine++;
     }
 
-    private final GridBagConstraints gridBagConstraints;
+    /** The current line. */
+    private int currentLine;
+
+    /** The {@link GridBagConstraints}. */
+    private final GridBagConstraints gbc;
 }

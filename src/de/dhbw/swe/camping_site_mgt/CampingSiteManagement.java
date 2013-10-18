@@ -1,14 +1,11 @@
 package de.dhbw.swe.camping_site_mgt;
 
 import de.dhbw.swe.camping_site_mgt.booking_mgt.BookingMgr;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseController;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseMgr;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.ApplicationClosedListener;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.GuiController;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.*;
 import de.dhbw.swe.camping_site_mgt.person_mgt.EmployeeMgr;
-import de.dhbw.swe.camping_site_mgt.place_mgt.PitchMgr;
-import de.dhbw.swe.camping_site_mgt.place_mgt.SiteMgr;
+import de.dhbw.swe.camping_site_mgt.place_mgt.*;
 import de.dhbw.swe.camping_site_mgt.service_mgt.ServiceMgr;
 
 public class CampingSiteManagement {
@@ -46,10 +43,8 @@ public class CampingSiteManagement {
      * 
      */
     public CampingSiteManagement() {
-	configDatabaseMgr(); // TODO wieder unter guiController schieben!!
+	configDatabaseMgr();
 	guiCtrl = new GuiController();
-	// configDatabaseController();
-	// TODO on delete comment change CampingplaceAdministrationTabbedPane
 	addApplicationClosedListener();
     }
 
@@ -64,30 +59,17 @@ public class CampingSiteManagement {
     }
 
     /**
-     * Configuring the {@link DatabaseController}.
-     */
-    private void configDatabaseController() {
-	dbController = DatabaseController.getInstance();
-	dbController.connect("jdbc:mysql://" + HOST_NAME + "/" + DATABASE_NAME,
-		"willi", "bald");
-	// final Guest test = dbController.querySelectGuest(1);
-	// dbController.disconnect();
-    }
-
-    /**
      * Configuring the {@link DatabaseMgr}.
      */
     private void configDatabaseMgr() {
 	dbMgr = DatabaseMgr.getInstance();
 	dbMgr.connect("jdbc:mysql://" + HOST_NAME + "/" + DATABASE_NAME, "willi",
 		"bald");
-	// dbMgr.disconnect();
     }
 
     private BookingMgr bookingManager;
 
     /** The {@link DatabaseController}. */
-    private DatabaseController dbController;
     private DatabaseMgr dbMgr;
     private EmployeeMgr employeeManager;
     /** The {@link GuiController}. */

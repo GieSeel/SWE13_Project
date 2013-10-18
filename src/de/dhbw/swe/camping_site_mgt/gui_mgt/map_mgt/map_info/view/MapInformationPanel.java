@@ -2,7 +2,6 @@ package de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map_info.view;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Vector;
 
 import javax.swing.*;
 
@@ -21,9 +20,9 @@ public class MapInformationPanel implements MapInformationInterface {
     private static LanguageProperties LP;
 
     public MapInformationPanel() {
+	view = new UniversalFormularPanel();
 	mapInfoComponentWidth = (int) ((1f - MapPanelInterface.MAP_SCREEN_COVERAGE) * Gui.screenSize.width) - 13;
-
-	entries = new Vector<>();
+	initComponentWidth();
 
 	initTFArea();
 	initTFPichName();
@@ -34,8 +33,6 @@ public class MapInformationPanel implements MapInformationInterface {
 	initTACharacteristics();
 	initDeliveryPoint();
 
-	view = new FormularPanel(entries);
-	initComponentWidth();
     }
 
     @Override
@@ -145,40 +142,36 @@ public class MapInformationPanel implements MapInformationInterface {
     private void initDeliveryPoint() {
 	deliveryPointTa = new JTextArea();
 	deliveryPointTa.setBackground(defaultBgColor);
-	entries.add(new FormularEntry(LM.get(LP.DELIVERY_POINT) + ":",
-		deliveryPointTa));
+	view.add(LM.get(LP.DELIVERY_POINT) + ":", deliveryPointTa);
     }
 
     private void initPnlShape() {
 	shapePnl = new ShapePanel();
-	shapePnl.setPreferredSize(new Dimension(100, 230));
-	entries.add(new FormularEntry("", shapePnl));
+	view.add(shapePnl);
     }
 
     private void initTACharacteristics() {
 	characteristicsTa = new JTextArea();
 	characteristicsTa.setBackground(defaultBgColor);
-	entries.add(new FormularEntry(LM.get(LP.DM_CHARACTERISTICS) + ":",
-		characteristicsTa));
+	view.add(LM.get(LP.DM_CHARACTERISTICS) + ":", characteristicsTa);
     }
 
     private void initTANatureOfSoil() {
 	natureOfSoilTa = new JTextArea();
 	natureOfSoilTa.setBackground(defaultBgColor);
-	entries.add(new FormularEntry(LM.get(LP.DM_NATURE_OF_SOIL) + ":",
-		natureOfSoilTa));
+	view.add(LM.get(LP.DM_NATURE_OF_SOIL) + ":", natureOfSoilTa);
     }
 
     private void initTASize() {
 	pitchSizeTa = new JTextArea();
 	pitchSizeTa.setBackground(defaultBgColor);
-	entries.add(new FormularEntry(LM.get(LP.SIZE) + ":", pitchSizeTa));
+	view.add(LM.get(LP.SIZE) + ":", pitchSizeTa);
     }
 
     private void initTAType() {
 	pitchTypeTa = new JTextArea();
 	pitchTypeTa.setBackground(defaultBgColor);
-	entries.add(new FormularEntry(LM.get(LP.DM_TYPE) + ":", pitchTypeTa));
+	view.add(LM.get(LP.DM_TYPE) + ":", pitchTypeTa);
     }
 
     private void initTFArea() {
@@ -192,7 +185,7 @@ public class MapInformationPanel implements MapInformationInterface {
 		}
 	    }
 	});
-	entries.add(new FormularEntry(LM.get(LP.AREA) + ":", areaTf));
+	view.add(LM.get(LP.AREA) + ":", areaTf);
 
     }
 
@@ -207,7 +200,7 @@ public class MapInformationPanel implements MapInformationInterface {
 		}
 	    }
 	});
-	entries.add(new FormularEntry(LM.get(LP.PITCH) + ":", pitchNameTf));
+	view.add(LM.get(LP.PITCH) + ":", pitchNameTf);
     }
 
     private JTextField areaTf;
@@ -218,7 +211,7 @@ public class MapInformationPanel implements MapInformationInterface {
     private final Delegate<MapInformationListener> delegate = new Delegate<>(
 	    MapInformationListener.class);
     private JTextArea deliveryPointTa;
-    private final Vector<FormularEntry> entries;
+    // private final Vector<FormularEntry> entries;
     private final Color highlitedBgColor = new Color(230, 230, 230);
     private final int mapInfoComponentWidth;
     private JTextArea natureOfSoilTa;
@@ -228,5 +221,5 @@ public class MapInformationPanel implements MapInformationInterface {
     private ShapePanel shapePnl;
 
     /** The view. */
-    private final FormularPanel view;
+    private final UniversalFormularPanel view;
 }
