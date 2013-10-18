@@ -41,15 +41,26 @@ public class MapPanelController implements Displayable {
 		if (pitchName.length() < 1) {
 		    return;
 		}
-		areaChangedto(pitchName.substring(0, 1));
-
-		if (pitchName.length() < 2) {
-		    return;
-		}
+		int pitchNumber;
 		final AccessableMap map = (AccessableMap) mapCtrl.getGuiSnippet();
-		final int pitchNumber = Integer.parseInt(pitchName.substring(1,
-			pitchName.length()));
-		map.setSelectedPitch(pitchNumber);
+		try {
+		    pitchNumber = Integer.parseInt(pitchName);
+		    map.setSelectedPitch(pitchNumber);
+		    return;
+		} catch (final Exception e) {
+		}
+
+		try {
+
+		    areaChangedto(pitchName.substring(0, 1));
+		    if (pitchName.length() < 2) {
+			return;
+		    }
+		    pitchNumber = Integer.parseInt(pitchName.substring(1,
+			    pitchName.length()));
+		    map.setSelectedPitch(pitchNumber);
+		} catch (final Exception e) {
+		}
 	    }
 	});
     }

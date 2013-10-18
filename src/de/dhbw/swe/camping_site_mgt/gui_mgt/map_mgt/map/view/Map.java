@@ -311,6 +311,7 @@ public class Map extends JPanel implements AccessableMap {
     @Override
     public void setSelectedPitch(final int pitchNumber) {
 	if (pitches.containsKey(pitchNumber)) {
+	    selectedArea = areas.get(pitches.get(pitchNumber).getArea());
 	    selectedPitch = pitches.get(pitchNumber);
 	    delegate.getDelegator().pitchSelected(selectedPitch);
 	    zoomIn();

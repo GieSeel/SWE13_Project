@@ -54,7 +54,6 @@ public class ShapePanel extends JPanel {
 	final int multiplicator = mapInfoComponentWidth / bounds.width;
 	setPreferredSize(new Dimension(bounds.width * multiplicator + 1,
 		bounds.height * multiplicator + 3));
-	System.out.println(mapInfoComponentWidth + " - " + getPreferredSize());
 	final int[] xPoints = polygon.xpoints;
 	final int[] yPoints = polygon.ypoints;
 	for (int i = 0; i < xPoints.length; i++) {
