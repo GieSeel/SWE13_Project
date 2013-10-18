@@ -18,16 +18,19 @@
  */
 package de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt;
 
+import java.awt.BorderLayout;
 import java.util.HashMap;
 import java.util.Vector;
 
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
 import de.dhbw.swe.camping_site_mgt.common.CountryMgr;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.ColumnInfo;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataStructure;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.Displayable;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.edit.EditDialog;
 import de.dhbw.swe.camping_site_mgt.person_mgt.PersonMgr;
 
 /**
@@ -42,7 +45,7 @@ public class SearchPanelController implements Displayable {
      * 
      */
     public SearchPanelController() {
-	mainPanel = null;
+	view = new JPanel(new BorderLayout());
 	searchPanels = new HashMap<>();
 
 	// Save search subjects
@@ -64,42 +67,31 @@ public class SearchPanelController implements Displayable {
      */
     @Override
     public JComponent getGuiSnippet() {
-	return mainPanel;
+	return view;
     }
 
     /**
-     * Registers the {@link SearchTableListener} in the {@link SearchPanel} s.
-     * 
-     * @param searchTableListener
-     *            the {@link SearchTableListener}
+     * Adds the {@link SearchTableListener}.
      */
-    public void register(final SearchTableListener searchTableListener) {
-	for (final SearchPanel searchPanel : searchPanels.values()) {
-	    searchPanel.register(searchTableListener);
-	}
-    }
+    private void addSearchTableListener() {
+	register(new SearchTableListener() {
 
-    /**
-     * Selects a panel.
-     * 
-     * @param searchPanelIndex
-     *            the index of the panel
-     */
-    public void selectPanel(final int searchPanelIndex) {
-	mainPanel = searchPanels.get(searchPanelIndex);
-    }
+	    @Override
+	    public void editRow(final HashMap<Integer, ColumnInfo> columns,
+		    final HashMap<Integer, Object> values) {
+		final EditDialog editDialog = new EditDialog(columns, values);
+	    }
 
-    /**
-     * Unregisters the {@link SearchTableListener} from the {@link SearchPanel}
-     * s.
-     * 
-     * @param searchTableListener
-     *            the {@link SearchTableListener}
-     */
-    public void unregister(final SearchTableListener searchTableListener) {
-	for (final SearchPanel searchPanel : searchPanels.values()) {
-	    searchPanel.unregister(searchTableListener);
-	}
+	    @Override
+	    public void subjectChangedTo(final int index) {
+		selectPanel(index);
+		// TODO ??
+		// Was muss man tun, damit das neu ausgewählte Panel dargestellt
+		// wird?
+		// --> getGuiSnippet und den tab ersetzten?
+		// view.repaint();
+	    }
+	});
     }
 
     /**
@@ -112,6 +104,8 @@ public class SearchPanelController implements Displayable {
 	// makeBookingsPanel();
 
 	selectPanel(0);
+
+	addSearchTableListener();
     }
 
     /**
@@ -204,7 +198,46 @@ public class SearchPanelController implements Displayable {
 	makePanel(PersonMgr.getInstance(), fields, Search_Subjects.PERSONS);
     }
 
-    private SearchPanel mainPanel;
+    /**
+     * Registers the {@link SearchTableListener} in the {@link SearchPanel} s.
+     * 
+     * @param searchTableListener
+     *            the {@link SearchTableListener}
+     */
+    private void register(final SearchTableListener searchTableListener) {
+	for (final SearchPanel searchPanel : searchPanels.values()) {
+	    searchPanel.register(searchTableListener);
+	}
+    }
+
+    /**
+     * Selects a panel.
+     * 
+     * @param searchPanelIndex
+     *            the index of the panel
+     */
+    private void selectPanel(final int searchPanelIndex) {
+	if (view != null) {
+	    view.removeAll();
+	}
+	view.add(searchPanels.get(searchPanelIndex));
+	view.repaint();
+    }
+
+    /**
+     * Unregisters the {@link SearchTableListener} from the {@link SearchPanel}
+     * s.
+     * 
+     * @param searchTableListener
+     *            the {@link SearchTableListener}
+     */
+    private void unregister(final SearchTableListener searchTableListener) {
+	for (final SearchPanel searchPanel : searchPanels.values()) {
+	    searchPanel.unregister(searchTableListener);
+	}
+    }
+
     private final String[] sarchSubjects;
     private final HashMap<Integer, SearchPanel> searchPanels;
+    private final JPanel view;
 }

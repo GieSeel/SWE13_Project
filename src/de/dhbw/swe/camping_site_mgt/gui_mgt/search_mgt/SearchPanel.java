@@ -13,6 +13,7 @@ import de.dhbw.swe.camping_site_mgt.common.Delegate;
 import de.dhbw.swe.camping_site_mgt.common.Euro;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.ColumnInfo;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.Gui;
 
 public class SearchPanel extends JPanel {
 
@@ -136,7 +137,7 @@ public class SearchPanel extends JPanel {
 	    final String[] sarchSubjects) {
 
 	final int defaultHeight = new JButton(" ").getPreferredSize().height;
-	final int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
+	final int screenWidth = Gui.screenSize.width;
 
 	final DefaultTableColumnModel dtColumnModel = new DefaultTableColumnModel();
 	final CampingTable headTable = new CampingTable(new CampingTableModel(
@@ -261,6 +262,7 @@ public class SearchPanel extends JPanel {
 	    @Override
 	    public void actionPerformed(final ActionEvent arg0) {
 		delegate.getDelegator().subjectChangedTo(combo.getSelectedIndex());
+		combo.setSelectedIndex(comboIndex);
 	    }
 	});
 	panLeftFoot.add(combo);

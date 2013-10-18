@@ -1,19 +1,13 @@
 package de.dhbw.swe.camping_site_mgt.gui_mgt;
 
-import java.util.HashMap;
-
 import de.dhbw.swe.camping_site_mgt.common.LanguageListener;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.ColumnInfo;
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageMgr;
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageProperties;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.edit.EditDialog;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.MapPanelController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.MapController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map_info.MapInformationController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.options.OptionController;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt.*;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt.SearchPanelController;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt.SearchTableListener;
 
 public class GuiController {
     /** The {@link LanguageMgr}. */
@@ -62,30 +56,6 @@ public class GuiController {
     }
 
     /**
-     * Adds the {@link SearchTableListener}.
-     */
-    private void addSearchTableListener() {
-	searchPanelController.register(new SearchTableListener() {
-
-	    @Override
-	    public void editRow(final HashMap<Integer, ColumnInfo> columns,
-		    final HashMap<Integer, Object> values) {
-		final EditDialog editDialog = new EditDialog(columns, values);
-	    }
-
-	    @Override
-	    public void subjectChangedTo(final int index) {
-		searchPanelController.selectPanel(index);
-		// TODO ??
-		// Was muss man tun, damit das neu ausgewählte Panel dargestellt
-		// wird?
-		// --> getGuiSnippet und den tab ersetzten?
-		// view.repaint();
-	    }
-	});
-    }
-
-    /**
      *
      */
     private void init() {
@@ -103,8 +73,6 @@ public class GuiController {
 
 	initAdministration();
 	initView();
-
-	addSearchTableListener();
     }
 
     @SuppressWarnings("static-access")
