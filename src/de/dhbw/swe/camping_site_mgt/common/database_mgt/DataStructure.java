@@ -124,7 +124,7 @@ public class DataStructure {
 			EmployeeRole.class),
 		new ColumnInfo("userName", String.class, lm.get(lp.DM_USER_NAME)),
 		new ColumnInfo("password", String.class, lm.get(lp.DM_PASSWORD)),
-		new ColumnInfo("blocked", Integer.class, lm.get(lp.DM_IS_BLOCKED)),
+		new ColumnInfo("blocked", Boolean.class, lm.get(lp.DM_IS_BLOCKED)),
 		new ColumnInfo("chipCard_ID", Integer.class, ChipCard.class) });
 
 	// "employeelist"
@@ -232,7 +232,7 @@ public class DataStructure {
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
 			new ColumnInfo("pitch_ID", Integer.class, Pitch.class),
-			new ColumnInfo("electricity", Integer.class,
+			new ColumnInfo("electricity", Boolean.class,
 				lm.get(lp.DM_ELECTRICITY)) });
 
 	// "pitchbookinglist"

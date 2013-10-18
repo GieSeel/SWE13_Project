@@ -1,6 +1,7 @@
 package de.dhbw.swe.camping_site_mgt.place_mgt;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
@@ -38,23 +39,11 @@ public class SiteMgr extends BaseDataObjectMgr {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#entry2object(java.util.HashMap)
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
      */
     @Override
-    protected DataObject entry2object(final HashMap<String, Object> entry) {
-	int id;
-	String description;
-	String labeling;
-	String openingHours;
-	Site_Type type;
-
-	id = (int) entry.get("id");
-	description = (String) entry.get("description");
-	labeling = (String) entry.get("labeling");
-	openingHours = (String) entry.get("openingHours");
-	type = Site_Type.values()[(int) entry.get("type")];
-
-	return new Site(id, description, labeling, openingHours, type);
+    public String getTableName() {
+	return new Site().getTableName();
     }
 
     /**
@@ -80,10 +69,29 @@ public class SiteMgr extends BaseDataObjectMgr {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getSubMgr()
      */
     @Override
-    protected String getTableName() {
-	return new Site().getTableName();
+    protected Vector<BaseDataObjectMgr> getSubMgr() {
+	return null;
+    }
+
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#map2DataObject(java.util.HashMap)
+     */
+    @Override
+    protected DataObject map2DataObject(final HashMap<String, Object> map) {
+	int id = 0;
+	if (map.containsKey("id")) {
+	    id = (int) map.get("id");
+	}
+	final String description = (String) map.get("description");
+	final String labeling = (String) map.get("labeling");
+	final String openingHours = (String) map.get("openingHours");
+	final Site_Type type = Site_Type.values()[(int) map.get("type")];
+
+	return new Site(id, description, labeling, openingHours, type);
     }
 }

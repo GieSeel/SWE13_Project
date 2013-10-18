@@ -19,6 +19,7 @@
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
@@ -35,6 +36,9 @@ import de.dhbw.swe.camping_site_mgt.place_mgt.SiteMgr;
 public class ExtraBookingMgr extends BaseDataObjectMgr {
     /** The singleton instance. */
     private static ExtraBookingMgr instance;
+
+    /** The {@link SiteMgr}. */
+    private static SiteMgr siteMgr = SiteMgr.getInstance();
 
     /**
      * Returns the instance.
@@ -56,27 +60,13 @@ public class ExtraBookingMgr extends BaseDataObjectMgr {
     }
 
     /**
-     * Parses a database entry to an object.
+     * {@inheritDoc}.
      * 
-     * @param entry
-     *            the entry
-     * @return the prepared {@link ExtraBooking} object
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
      */
     @Override
-    protected DataObject entry2object(final HashMap<String, Object> entry) {
-	final String tableName = getTableName();
-	int id;
-	String labeling;
-	String name;
-	Site site;
-
-	id = (int) entry.get("id");
-	labeling = (String) entry.get("labeling");
-	name = (String) entry.get("name");
-	site = (Site) SiteMgr.getInstance().objectGet((int) entry.get("site"),
-		tableName, id);
-
-	return new ExtraBooking(id, labeling, name, site);
+    public String getTableName() {
+	return new ExtraBooking().getTableName();
     }
 
     /**
@@ -102,82 +92,31 @@ public class ExtraBookingMgr extends BaseDataObjectMgr {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getSubMgr()
      */
     @Override
-    protected String getTableName() {
-	return new ExtraBooking().getTableName();
+    protected Vector<BaseDataObjectMgr> getSubMgr() {
+	final Vector<BaseDataObjectMgr> subMgr = new Vector<>();
+	subMgr.add(siteMgr);
+	return subMgr;
     }
 
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectAdd(int,
-     *      de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#map2DataObject(java.util.HashMap)
      */
     @Override
-    protected void subObjectAdd(final int id, final DataObject dataObject) {
-	final ExtraBooking object = castObject(dataObject);
-	final String tableName = object.getTableName();
+    protected DataObject map2DataObject(final HashMap<String, Object> map) {
+	int id = 0;
+	if (map.containsKey("id")) {
+	    id = (int) map.get("id");
+	}
+	final String labeling = (String) map.get("labeling");
+	final String name = (String) map.get("name");
 
-	object.getSite().addUsage(tableName, id);
-    }
+	final Site site = (Site) map.get("site");
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectInsert(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
-    @Override
-    protected void subObjectInsert(final DataObject dataObject) {
-	final ExtraBooking object = castObject(dataObject);
-
-	SiteMgr.getInstance().objectInsert(object.getSite());
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectRemove(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
-    @Override
-    protected void subObjectRemove(final DataObject dataObject) {
-	final ExtraBooking object = castObject(dataObject);
-	final int id = object.getId();
-	final String tableName = object.getTableName();
-
-	final Site site = object.getSite();
-	site.delUsage(tableName, id);
-	SiteMgr.getInstance().objectRemove(site);
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#subObjectUpdate(de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject,
-     *      de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject)
-     */
-    @Override
-    protected void subObjectUpdate(final DataObject dataObject,
-	    final DataObject newDataObject) {
-	final ExtraBooking object = castObject(dataObject);
-	final ExtraBooking newObject = castObject(newDataObject);
-	final int id = object.getId();
-	final String tableName = object.getTableName();
-
-	final Site site = object.getSite();
-	site.delUsage(tableName, id);
-	SiteMgr.getInstance().objectUpdate(site, newObject.getSite());
-    }
-
-    /**
-     * Cast {@link DataObject} to {@link ExtraBooking} object.
-     * 
-     * @param dataObject
-     *            the {@link DataObject}
-     * @return the {@link ExtraBooking} object
-     */
-    private ExtraBooking castObject(final DataObject dataObject) {
-	return (ExtraBooking) dataObject;
+	return new ExtraBooking(id, labeling, name, site);
     }
 }

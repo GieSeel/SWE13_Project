@@ -103,6 +103,8 @@ public interface LanguageProperties {
     /** The selected property. */
     String SELECTED = "selected";
     String SIZE = "Size";
+    String SUBJECT_BOOKINGS = "Bookings";
+    String SUBJECT_GUESTS = "Guests";
     String TYPE_EQUIPMENT_BIKE = "Bike";
     String TYPE_EQUIPMENT_BOAT = "Boat";
     String TYPE_EQUIPMENT_CAMPER = "Camper";
@@ -122,9 +124,9 @@ public interface LanguageProperties {
     String TYPE_SITE_OTHER = "Other";
     String TYPE_SITE_RECEPTION = "Reception";
     String TYPE_SITE_SALE = "Sale";
+
     String TYPE_SITE_SANITARYFACILLITIES = "Sanitary Facillities";
     String TYPE_SITE_SERVICE = "Service";
-
     String TYPE_SITE_UTILLITYROOM = "Utillityroom";
     /** The yes property. */
     String YES = "yes";

@@ -19,6 +19,7 @@
 package de.dhbw.swe.camping_site_mgt.common;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
@@ -55,19 +56,11 @@ public class TownMgr extends BaseDataObjectMgr {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#entry2object(java.util.HashMap)
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
      */
     @Override
-    protected DataObject entry2object(final HashMap<String, Object> entry) {
-	int id;
-	String name;
-	String postalCode;
-
-	id = (int) entry.get("id");
-	postalCode = (String) entry.get("postalCode");
-	name = (String) entry.get("name");
-
-	return new Town(id, name, postalCode);
+    public String getTableName() {
+	return new Town().getTableName();
     }
 
     /**
@@ -93,10 +86,28 @@ public class TownMgr extends BaseDataObjectMgr {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getSubMgr()
      */
     @Override
-    protected String getTableName() {
-	return new Town().getTableName();
+    protected Vector<BaseDataObjectMgr> getSubMgr() {
+	return null;
+    }
+
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#map2DataObject(java.util.HashMap)
+     */
+    @Override
+    protected DataObject map2DataObject(final HashMap<String, Object> map) {
+	int id;
+	String name;
+	String postalCode;
+
+	id = (int) map.get("id");
+	postalCode = (String) map.get("postalCode");
+	name = (String) map.get("name");
+
+	return new Town(id, name, postalCode);
     }
 }

@@ -18,6 +18,9 @@
  */
 package de.dhbw.swe.camping_site_mgt.common;
 
+import java.sql.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -32,13 +35,15 @@ import de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt.CampingTable;
  * @version 1.0
  */
 public abstract class BaseDataObjectMgr {
+
     /** The {@link DatabaseMgr}. */
     private final static DatabaseMgr db = DatabaseMgr.getInstance();
 
     protected BaseDataObjectMgr() {
 	data = new HashMap<>();
 	logger = getLogger();
-	checkForSubObjects();
+	tableName = getTableName();
+	subMgr = getSubMgr();
 	load(); // Load all data from database
     }
 
@@ -55,6 +60,11 @@ public abstract class BaseDataObjectMgr {
 	}
 	return null;
     }
+
+    /**
+     * @return the table name.
+     */
+    abstract public String getTableName();
 
     /**
      * Gets the {@link DataObject}.
@@ -89,7 +99,7 @@ public abstract class BaseDataObjectMgr {
 	// If object already exists just save that id
 	int id = isObjectExisting(dataObject);
 	if (id == 0) {
-	    id = db.insertEntryInto(getTableName(), object2entry(dataObject));
+	    id = db.insertEntryInto(tableName, object2entry(dataObject));
 	}
 
 	// Add or replace object in object list
@@ -113,8 +123,73 @@ public abstract class BaseDataObjectMgr {
 	    // logger.error("Object is still in use!");
 	    return false;
 	}
-	db.removeEntryFrom(getTableName(), object2entry(dataObject));
+	db.removeEntryFrom(tableName, object2entry(dataObject));
 	return remove(id);
+    }
+
+    /**
+     * Saves an object for the display data for the {@link CampingTable}.
+     * 
+     * @param columns
+     *            the columns that will be displayed
+     * @param dataObject
+     *            the {@link DataObject}
+     * @param displayData
+     *            the return list item
+     */
+    public void objects2DisplayIn(final HashMap<Integer, Object> displayData,
+	    final HashMap<Integer, ColumnInfo> columns, final DataObject dataObject) {
+	int columnKey;
+	ColumnInfo columnValue;
+	Class<? extends Object> dbTyp;
+	Object object;
+	for (final Entry<Integer, ColumnInfo> columnEntry : columns.entrySet()) {
+	    columnKey = columnEntry.getKey();
+	    columnValue = columnEntry.getValue();
+	    if (columnValue.getClassName().equals(tableName)) {
+		dbTyp = columnValue.getDbType();
+		object = ObjectFieldAccess.getValueOf(columnValue.getFieldName(),
+			dataObject);
+
+		if (dbTyp.equals(Boolean.class)) {
+		    // Boolean
+		    displayData.put(columnKey, object);
+		} else if (dbTyp.equals(Integer.class)) {
+		    // Integer
+		    displayData.put(columnKey, object);
+		} else if (dbTyp.equals(Float.class)) {
+		    // Float
+		    displayData.put(columnKey, object);
+		} else if (dbTyp.equals(Euro.class)) {
+		    // Euro
+		    displayData.put(columnKey, ((Euro) object).returnValue());
+		} else if (dbTyp.equals(String.class)) {
+		    // String
+		    displayData.put(columnKey, object);
+		} else if (dbTyp.equals(Array.class)) {
+		    // Array
+		    logger.error("Unexpected typ while parsing object data to display data (Array)");
+		} else if (dbTyp.equals(Date.class)) {
+		    // Date
+		    // TODO DATE
+		    displayData.put(columnKey,
+			    new SimpleDateFormat("dd. MM yyyy").format(object));
+		} else if (dbTyp.equals(Enum.class)) {
+		    // Enum
+		    displayData.put(columnKey, object.toString());
+		} else {
+		    logger.error("Unexpected typ while parsing object data to display data!");
+		}
+
+	    }
+	}
+	// Save the sub objects
+	subObjects2DisplayIn(displayData, columns, dataObject);
+
+	// Save id of the object
+	displayData.put(displayData.size() * -1,
+		tableName + "_" + dataObject.getId());
+
     }
 
     /**
@@ -145,49 +220,141 @@ public abstract class BaseDataObjectMgr {
 	} else {
 	    // Update object in object list and database
 	    add(id, newObject);
-	    db.updateEntryIn(getTableName(), object2entry(newObject));
+	    db.updateEntryIn(tableName, object2entry(newObject));
 	}
     }
 
     /**
-     * Saves the display data for the {@link CampingTable}.
+     * Saves an object from display data from the {@link CampingTable}.
      * 
+     * @param columns
+     *            the columns that were displayed
+     * @param displayData
+     *            the data from the table
+     */
+    public DataObject saveDisplay2Object(
+	    final HashMap<Integer, ColumnInfo> columns,
+	    final HashMap<Integer, Object> values) {
+
+	String val;
+	int valueKey;
+	ColumnInfo columnInfo;
+	Class<? extends Object> dbTyp;
+	final HashMap<String, Object> objects = new HashMap<>();
+	for (final Entry<Integer, Object> value : values.entrySet()) {
+	    valueKey = value.getKey();
+	    val = value.getValue().toString();
+
+	    if (valueKey < 0) {
+		// Get id of the object
+		final String[] classId = val.split("_");
+		if (classId[0].equals(tableName)) {
+		    objects.put("id", new Integer(classId[1]));
+		}
+	    } else {
+		// Get values of the object
+		columnInfo = columns.get(valueKey);
+		if (columnInfo.getClassName().equals(tableName)) {
+		    dbTyp = columns.get(valueKey).getDbType();
+
+		    // Parse value and save it
+		    if (dbTyp.equals(Boolean.class)) {
+			// Boolean
+			objects.put(columnInfo.getFieldName(), new Boolean(val));
+		    } else if (dbTyp.equals(Integer.class)) {
+			// Integer
+			objects.put(columnInfo.getFieldName(), new Integer(val));
+		    } else if (dbTyp.equals(Float.class)) {
+			// Float
+			objects.put(columnInfo.getFieldName(), new Float(val));
+		    } else if (dbTyp.equals(Euro.class)) {
+			// Euro
+			objects.put(columnInfo.getFieldName(), new Euro(val));
+		    } else if (dbTyp.equals(String.class)) {
+			// String
+			objects.put(columnInfo.getFieldName(), val);
+		    } else if (dbTyp.equals(Array.class)) {
+			// Array
+			logger.error("Unexpected typ while parsing display data to object data (Array)");
+		    } else if (dbTyp.equals(Date.class)) {
+			// Date
+			try {
+			    objects.put(columnInfo.getFieldName(),
+				    new SimpleDateFormat("dd. MM yyyy").parse(val));
+			} catch (final ParseException e) {
+			    logger.error("Date-Parse exception while parsing display data to object data!");
+			}
+		    } else if (dbTyp.equals(Enum.class)) {
+			// Enum
+			objects.put(columnInfo.getFieldName(), new Integer(val));
+		    } else {
+			logger.error("Unexpected typ while parsing display data to object data!");
+		    }
+		}
+	    }
+	}
+	// Sub objects
+	subDisplay2ObjectIn(objects, columns, values);
+
+	// Create object
+	return display2Object(objects);
+    }
+
+    /**
+     * Saves a list of objects for the display data in the {@link CampingTable}.
+     * 
+     * @param displayDataList
+     *            return list
      * @param columns
      *            the columns that will be displayed
      * @return a {@link Vector} with all needed data
      */
-    public Vector<HashMap<Integer, Object>> saveDisplayDataTo(
+    public void saveObjects2DisplayIn(
+	    final Vector<HashMap<Integer, Object>> displayDataList,
 	    final HashMap<Integer, ColumnInfo> columns) {
-	final Vector<HashMap<Integer, Object>> displayDataList = new Vector<>();
-	int columnKey;
-	String className, fieldName;
-	DataObject objectValue;
 	HashMap<Integer, Object> displayData;
-
-	for (final Entry<Integer, DataObject> objectEntry : data.entrySet()) {
-	    objectValue = objectEntry.getValue();
+	for (final DataObject dataObject : data.values()) {
 	    displayData = new HashMap<>();
-	    for (final Entry<Integer, ColumnInfo> columnEntry : columns.entrySet()) {
-		columnKey = columnEntry.getKey();
-		fieldName = columnEntry.getValue().getFieldName();
-		className = columnEntry.getValue().getClassName();
-		if (className.equals(getTableName())) {
-		    // Save object field value
-		    displayData.put(columnKey,
-			    ObjectFieldAccess.getValueOf(fieldName, objectValue));
-		} else {
-		    // Save sub object field value
-		    displayData.put(columnKey,
-			    subSaveDisplayData(className, fieldName, objectValue));
-		}
-	    }
-	    if (displayData != null) {
-		displayData.put(displayData.size(), objectValue.getId());
-		displayDataList.add(displayData);
-	    }
+	    objects2DisplayIn(displayData, columns, dataObject);
+	    displayDataList.add(displayData);
 	}
-	return displayDataList;
     }
+
+    /**
+     * Parses a database entry to an {@link DataObject}.
+     * 
+     * @param entry
+     *            the entry of the database
+     * @return the prepared {@link DataObject}
+     */
+    protected DataObject entry2object(final HashMap<String, Object> entry) {
+	subEntry2ObjectIn(entry);
+	return map2DataObject(entry);
+    }
+
+    /**
+     * @return true if the object should update even it is still in use.
+     */
+    abstract protected boolean evenUpdateInUse();
+
+    /**
+     * @return the {@link CampingLogger}.
+     */
+    abstract protected CampingLogger getLogger();
+
+    /**
+     * @return the manager of the sub objects.
+     */
+    abstract protected Vector<BaseDataObjectMgr> getSubMgr();
+
+    /**
+     * Converts the map to an {@link DataObject}. TODO
+     * 
+     * @param map
+     *            the map
+     * @return the object
+     */
+    abstract protected DataObject map2DataObject(final HashMap<String, Object> map);
 
     /**
      * Adds or updates the {@link DataObject} to/in data list.
@@ -197,7 +364,7 @@ public abstract class BaseDataObjectMgr {
      * @param dataObject
      *            the {@link DataObject}
      */
-    protected void add(final int id, final DataObject dataObject) {
+    private void add(final int id, final DataObject dataObject) {
 	// Sub objects
 	subObjectAdd(id, dataObject);
 
@@ -206,30 +373,15 @@ public abstract class BaseDataObjectMgr {
     }
 
     /**
-     * Parses a database entry to an {@link DataObject}.
+     * Returns an object for the display data for the {@link CampingTable}.
      * 
-     * TODO TODO
-     * 
-     * @param entry
-     *            the entry of the database
-     * @return the prepared {@link DataObject}
+     * @param objects
+     *            the map of all object entries
+     * @return the object
      */
-    protected abstract DataObject entry2object(final HashMap<String, Object> entry);
-
-    /**
-     * @return true if the object should update even it is still in use.
-     */
-    protected abstract boolean evenUpdateInUse();
-
-    /**
-     * @return the {@link CampingLogger}.
-     */
-    abstract protected CampingLogger getLogger();
-
-    /**
-     * @return the table name.
-     */
-    abstract protected String getTableName();
+    private DataObject display2Object(final HashMap<String, Object> objects) {
+	return map2DataObject(objects);
+    }
 
     /**
      * Checks if the DataObject already exists.
@@ -238,7 +390,7 @@ public abstract class BaseDataObjectMgr {
      *            the {@link DataObject}
      * @return the id of the {@link DataObject}
      */
-    protected int isObjectExisting(final DataObject dataObject) {
+    private int isObjectExisting(final DataObject dataObject) {
 	if (data.containsValue(dataObject)) {
 	    return dataObject.getId();
 	}
@@ -252,8 +404,19 @@ public abstract class BaseDataObjectMgr {
      *            the {@link DataObject}
      * @return true if object is still in use
      */
-    protected boolean isObjectInUse(final DataObject dataObject) {
+    private boolean isObjectInUse(final DataObject dataObject) {
 	return dataObject.isInUse();
+    }
+
+    /**
+     * Loads the {@link DataObject}s from the database.
+     */
+    private void load() {
+	DataObject dataObject;
+	for (final HashMap<String, Object> entry : db.getAllEntriesOf(tableName)) {
+	    dataObject = entry2object(entry);
+	    add(dataObject.getId(), dataObject);
+	}
     }
 
     /**
@@ -265,10 +428,10 @@ public abstract class BaseDataObjectMgr {
      *            the {@link DataObject}
      * @return the prepared entry
      */
-    protected HashMap<String, Object> object2entry(final DataObject dataObject) {
+    private HashMap<String, Object> object2entry(final DataObject dataObject) {
 	final HashMap<String, Object> entry = new HashMap<>();
 	Object tmpObj;
-	for (final ColumnInfo column : DataStructure.getStructureFor(getTableName())) {
+	for (final ColumnInfo column : DataStructure.getStructureFor(tableName)) {
 	    tmpObj = ObjectFieldAccess.getValueOf(column.getFieldName(), dataObject);
 	    if (column.getReleationToColumn() == null) {
 		entry.put(column.getFieldName(), tmpObj);
@@ -288,12 +451,51 @@ public abstract class BaseDataObjectMgr {
      *            the {@link DataObject} id
      * @return true if it was successful
      */
-    protected boolean remove(final int id) {
+    private boolean remove(final int id) {
 	if (data.containsKey(id)) {
 	    data.remove(id);
 	    return true;
 	}
 	return false;
+    }
+
+    /**
+     * Saves sub objects from display data from the {@link CampingTable}.
+     * 
+     * @param objects
+     *            the return list
+     * @param columns
+     *            the displayed columns
+     * @param values
+     *            the displayed data
+     */
+    private void subDisplay2ObjectIn(final HashMap<String, Object> objects,
+	    final HashMap<Integer, ColumnInfo> columns,
+	    final HashMap<Integer, Object> values) {
+	if (subMgr != null) {
+	    for (final BaseDataObjectMgr subManager : subMgr) {
+		objects.put(subManager.getTableName(),
+			subManager.saveDisplay2Object(columns, values));
+	    }
+	}
+    }
+
+    /**
+     * Parses a database entry to an {@link DataObject}.
+     * 
+     * @param entry
+     *            the entry of the database
+     */
+    private void subEntry2ObjectIn(final HashMap<String, Object> entry) {
+	String subTableName;
+	if (subMgr != null) {
+	    for (final BaseDataObjectMgr subManager : subMgr) {
+		subTableName = subManager.getTableName();
+		entry.put(subTableName, subManager.objectGet(
+			(int) entry.get(subTableName), getTableName(),
+			(int) entry.get("id")));
+	    }
+	}
     }
 
     /**
@@ -304,10 +506,13 @@ public abstract class BaseDataObjectMgr {
      * @param dataObject
      *            the {@link DataObject}
      */
-    protected void subObjectAdd(final int id, final DataObject dataObject) {
-	// Initially left empty
-	if (hasSubObjects) {
-	    logger.error("Forgott to implement 'subObjectAdd' methode");
+    private void subObjectAdd(final int id, final DataObject dataObject) {
+	if (subMgr != null) {
+	    for (final BaseDataObjectMgr subManager : subMgr) {
+		((DataObject) ObjectFieldAccess.getValueOf(
+			subManager.getTableName(), dataObject)).addUsage(tableName,
+			id);
+	    }
 	}
     }
 
@@ -317,10 +522,12 @@ public abstract class BaseDataObjectMgr {
      * @param dataObject
      *            the {@link DataObject}
      */
-    protected void subObjectInsert(final DataObject dataObject) {
-	// Initially left empty
-	if (hasSubObjects) {
-	    logger.error("Forgott to implement 'subObjectInsert' methode");
+    private void subObjectInsert(final DataObject dataObject) {
+	if (subMgr != null) {
+	    for (final BaseDataObjectMgr subManager : subMgr) {
+		subManager.objectInsert((DataObject) ObjectFieldAccess.getValueOf(
+			subManager.getTableName(), dataObject));
+	    }
 	}
     }
 
@@ -332,10 +539,36 @@ public abstract class BaseDataObjectMgr {
      *            the {@link DataObject}
      * @return true if it was successful
      */
-    protected void subObjectRemove(final DataObject dataObject) {
-	// Initially left empty
-	if (hasSubObjects) {
-	    logger.error("Forgott to implement 'subObjectRemove' methode");
+    private void subObjectRemove(final DataObject dataObject) {
+	if (subMgr != null) {
+	    for (final BaseDataObjectMgr subManager : subMgr) {
+		final DataObject subObject = (DataObject) ObjectFieldAccess.getValueOf(
+			subManager.getTableName(), dataObject);
+		((BaseDataObject) subObject).delUsage(tableName, dataObject.getId());
+		subManager.objectRemove(subObject);
+	    }
+	}
+    }
+
+    /**
+     * Saves the sub objects for the display data for the {@link CampingTable}.
+     * 
+     * @param displayData
+     *            return list
+     * @param columns
+     *            the columns that will be displayed
+     * @param dataObject
+     */
+    private void subObjects2DisplayIn(final HashMap<Integer, Object> displayData,
+	    final HashMap<Integer, ColumnInfo> columns, final DataObject dataObject) {
+	if (subMgr != null) {
+	    for (final BaseDataObjectMgr subManager : subMgr) {
+		subManager.objects2DisplayIn(
+			displayData,
+			columns,
+			(DataObject) ObjectFieldAccess.getValueOf(
+				subManager.getTableName(), dataObject));
+	    }
 	}
     }
 
@@ -347,66 +580,30 @@ public abstract class BaseDataObjectMgr {
      * @param newDataObject
      *            the new {@link DataObject}
      */
-    protected void subObjectUpdate(final DataObject dataObject,
+    private void subObjectUpdate(final DataObject dataObject,
 	    final DataObject newDataObject) {
-	// Initially left empty
-	if (hasSubObjects) {
-	    logger.error("Forgott to implement 'subObjectUpdate' methode");
-	}
-    }
-
-    /**
-     * Saves the value of the field of one of the sub objects.
-     * 
-     * @param className
-     *            the name of the subclass
-     * @param fieldName
-     *            the name of the field
-     * @param object
-     *            the object that is parent of the other objects
-     * @return
-     */
-    protected Object subSaveDisplayData(final String className,
-	    final String fieldName, final DataObject object) {
-	// Initially left empty
-	if (hasSubObjects) {
-	    logger.error("Forgott to implement 'subSaveDisplayData' methode");
-	}
-	return null;
-    }
-
-    /**
-     * Checks if the object has sub objects.
-     */
-    private void checkForSubObjects() {
-	hasSubObjects = false;
-	for (final ColumnInfo column : DataStructure.getStructureFor(getTableName())) {
-	    if (column.getReleationToColumn() != null
-		    && column.getDbType() != Enum.class) {
-		hasSubObjects = true;
+	if (subMgr != null) {
+	    for (final BaseDataObjectMgr subManager : subMgr) {
+		final DataObject subObject = (DataObject) ObjectFieldAccess.getValueOf(
+			subManager.getTableName(), dataObject);
+		((BaseDataObject) subObject).delUsage(tableName, dataObject.getId());
+		subManager.objectUpdate(
+			subObject,
+			(DataObject) ObjectFieldAccess.getValueOf(
+				subManager.getTableName(), newDataObject));
 	    }
 	}
     }
 
-    /**
-     * Loads the {@link DataObject}s from the database.
-     */
-    private void load() {
-	DataObject dataObject;
-	for (final HashMap<String, Object> entry : db.getAllEntriesOf(getTableName())) {
-	    dataObject = entry2object(entry);
-	    add(dataObject.getId(), dataObject);
-	}
-    }
-
-    // Sub objects
-    final Vector<HashMap<String, Object>> subDataList = new Vector<>();
-    // subSaveDisplayDataTo(subDataList, subColumns);
-
     /** The {@link CampingLogger}. */
     protected final CampingLogger logger;
+
     /** All {@link DataObject} of one table. */
     private final HashMap<Integer, DataObject> data;
-    /** If the {@link DataObject} has sub objects. */
-    private boolean hasSubObjects;
+
+    /** The manager of the sub objects (null if there are no sub objects). */
+    private final Vector<BaseDataObjectMgr> subMgr;
+
+    /** The table name. */
+    private final String tableName;
 }

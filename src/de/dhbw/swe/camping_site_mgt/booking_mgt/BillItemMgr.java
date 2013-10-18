@@ -19,6 +19,7 @@
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
 import de.dhbw.swe.camping_site_mgt.common.Euro;
@@ -55,25 +56,13 @@ public class BillItemMgr extends BaseDataObjectMgr {
     }
 
     /**
-     * Parses a database entry to an object.
+     * {@inheritDoc}.
      * 
-     * @param entry
-     *            the entry
-     * @return the prepared {@link BillItem} object
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
      */
     @Override
-    protected DataObject entry2object(final HashMap<String, Object> entry) {
-	int id;
-	BillItem_Labeling labeling;
-	Euro priceBusySeason;
-	Euro priceLowSeason;
-
-	id = (int) entry.get("id");
-	labeling = BillItem_Labeling.values()[(int) entry.get("labeling")];
-	priceBusySeason = (Euro) entry.get("priceBusySeason");
-	priceLowSeason = (Euro) entry.get("priceLowSeason");
-
-	return new BillItem(id, labeling, priceBusySeason, priceLowSeason);
+    public String getTableName() {
+	return new BillItem().getTableName();
     }
 
     /**
@@ -99,10 +88,28 @@ public class BillItemMgr extends BaseDataObjectMgr {
     /**
      * {@inheritDoc}.
      * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getSubMgr()
      */
     @Override
-    protected String getTableName() {
-	return new BillItem().getTableName();
+    protected Vector<BaseDataObjectMgr> getSubMgr() {
+	return null;
+    }
+
+    /**
+     * {@inheritDoc}.
+     * 
+     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#map2DataObject(java.util.HashMap)
+     */
+    @Override
+    protected DataObject map2DataObject(final HashMap<String, Object> map) {
+	int id = 0;
+	if (map.containsKey("id")) {
+	    id = (int) map.get("id");
+	}
+	final BillItem_Labeling labeling = BillItem_Labeling.values()[(int) map.get("labeling")];
+	final Euro priceBusySeason = (Euro) map.get("priceBusySeason");
+	final Euro priceLowSeason = (Euro) map.get("priceLowSeason");
+
+	return new BillItem(id, labeling, priceBusySeason, priceLowSeason);
     }
 }
