@@ -25,11 +25,15 @@ public class Gui extends JFrame {
 	    }
 	}
 
+	public void remove() {
+	    Toolkit.getDefaultToolkit().removeAWTEventListener(this);
+	}
+
 	private void keyTyped(final KeyEvent e) {
 	    if (e.getKeyCode() == keyCode) {
 		final int n = JOptionPane.showConfirmDialog(null,
-			lm.get(LanguageProperties.QUESTION_CLOSE_APPLICATION),
-			lm.get(LanguageProperties.GUI_CLOSE_DIALOG_TITLE),
+			LM.get(LanguageProperties.QUESTION_CLOSE_APPLICATION),
+			LM.get(LanguageProperties.GUI_CLOSE_DIALOG_TITLE),
 			JOptionPane.YES_NO_OPTION);
 		if (n == 0) {
 		    closeApp();
@@ -40,8 +44,11 @@ public class Gui extends JFrame {
 	private final int keyCode;
     }
 
+    /** The screen size. */
+    public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
     /** The {@link LanguageMgr}. */
-    private final static LanguageMgr lm = LanguageMgr.getInstance();
+    private final static LanguageMgr LM = LanguageMgr.getInstance();
 
     /** The {@link CampingLogger}. */
     private static CampingLogger logger = CampingLogger.getLogger(Gui.class);
@@ -53,14 +60,15 @@ public class Gui extends JFrame {
      * Constructor.
      */
     public Gui() {
-	super(lm.get(LanguageProperties.GUI_MAINFRAME_TITLE));
 	logger.info("Initialize GUI ...");
 	initDisplay();
 	logger.info("Initialize GUI successful");
     }
 
-    public void addAdministration(final CampingplaceAdministrationTabbedPane thePane) {
-	add(thePane, BorderLayout.CENTER);
+    @Override
+    public void dispose() {
+	super.dispose();
+	closeListener.remove();
     }
 
     public void register(final ApplicationClosedListener appClosedListener) {
@@ -104,6 +112,7 @@ public class Gui extends JFrame {
      * Initializes the display.
      */
     private void initDisplay() {
+	setTitle(LM.get(LanguageProperties.GUI_MAINFRAME_TITLE));
 	sizeFrame();
 
 	setLayout(new BorderLayout());
@@ -122,7 +131,7 @@ public class Gui extends JFrame {
      *            the keys key code
      */
     private void setCloseAppOn(final int keyCode) {
-	new GlobalKeyCloseListener(keyCode);
+	closeListener = new GlobalKeyCloseListener(keyCode);
     }
 
     /**
@@ -134,6 +143,8 @@ public class Gui extends JFrame {
 	final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	setBounds(0, 0, screenSize.width, screenSize.height);
     }
+
+    private GlobalKeyCloseListener closeListener;
 
     private final Delegate<ApplicationClosedListener> delegate = new Delegate<>(
 	    ApplicationClosedListener.class);

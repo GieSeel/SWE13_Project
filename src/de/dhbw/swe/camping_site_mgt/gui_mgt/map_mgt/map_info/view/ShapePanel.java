@@ -4,6 +4,9 @@ import java.awt.*;
 
 import javax.swing.JPanel;
 
+import de.dhbw.swe.camping_site_mgt.gui_mgt.Gui;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.view.MapPanelInterface;
+
 public class ShapePanel extends JPanel {
     /** The serial version UID. */
     private static final long serialVersionUID = 1L;
@@ -46,11 +49,13 @@ public class ShapePanel extends JPanel {
     }
 
     public void setPolygon(final Polygon polygon) {
+	final int mapInfoComponentWidth = (int) ((1f - MapPanelInterface.MAP_SCREEN_COVERAGE) * Gui.screenSize.width);
+	final int multiplicator = mapInfoComponentWidth / polygon.getBounds().width;
 	final int[] xPoints = polygon.xpoints;
 	final int[] yPoints = polygon.ypoints;
 	for (int i = 0; i < xPoints.length; i++) {
-	    xPoints[i] = xPoints[i] * 5;
-	    yPoints[i] = yPoints[i] * 5;
+	    xPoints[i] = xPoints[i] * multiplicator;
+	    yPoints[i] = yPoints[i] * multiplicator;
 	}
 
 	this.polygon = new Polygon(xPoints, yPoints, xPoints.length);

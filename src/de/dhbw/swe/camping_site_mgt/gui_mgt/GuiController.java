@@ -2,12 +2,14 @@ package de.dhbw.swe.camping_site_mgt.gui_mgt;
 
 import java.util.HashMap;
 
+import de.dhbw.swe.camping_site_mgt.common.LanguageListener;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.ColumnInfo;
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.edit.EditDialog;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.MapPanelController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.MapController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map_info.MapInformationController;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.options.OptionController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt.*;
 
 public class GuiController {
@@ -35,19 +37,7 @@ public class GuiController {
     }
 
     public GuiController() {
-	view = new Gui();
-	adminTabsCtrl = new AdministrationTabsController();
-	searchPanelController = new SearchPanelController();
-
-	final MapController mapController;
-	mapController = new MapController("map/Valalta_BigMap_v8.png");
-	final MapInformationController mapInfoController = new MapInformationController();
-	mapPanelCtrl = new MapPanelController(mapController, mapInfoController);
-
-	initAdministration();
-	initView();
-
-	addSearchTableListener();
+	init();
     }
 
     public void register(final ApplicationClosedListener appClosedListener) {
@@ -56,6 +46,16 @@ public class GuiController {
 
     public void unregister(final ApplicationClosedListener appClosedListener) {
 	view.unregister(appClosedListener);
+    }
+
+    private void addlanguageListener() {
+	optionController.register(new LanguageListener() {
+
+	    @Override
+	    public void languageChanged() {
+		repaintGui();
+	    }
+	});
     }
 
     /**
@@ -72,13 +72,37 @@ public class GuiController {
 	});
     }
 
+    /**
+     *
+     */
+    private void init() {
+	view = new Gui();
+	adminTabsCtrl = new AdministrationTabsController();
+	searchPanelController = new SearchPanelController();
+
+	final MapController mapController;
+	mapController = new MapController("map/Valalta_BigMap_v8.png");
+	final MapInformationController mapInfoController = new MapInformationController();
+	mapPanelCtrl = new MapPanelController(mapController, mapInfoController);
+
+	optionController = new OptionController();
+	addlanguageListener();
+
+	initAdministration();
+	initView();
+
+	addSearchTableListener();
+    }
+
     @SuppressWarnings("static-access")
     private void initAdministration() {
-	adminTabsCtrl.addTab(lm.get(lp.MAP), mapPanelCtrl.getGuiSnippet());
-	adminTabsCtrl.addTab(lm.get(lp.SEARCH),
+	adminTabsCtrl.addTab(lm.get(lp.MAP), "icon/map.png",
+		mapPanelCtrl.getGuiSnippet());
+	adminTabsCtrl.addTab(lm.get(lp.SEARCH), "icon/search.png",
 		searchPanelController.getGuiSnippet());
 	// TODO other ad other tabs with controllers
-	adminTabsCtrl.addTab(lm.get(lp.GUI_TAB_OPTIONS), new OptionsPanel());
+	adminTabsCtrl.addTab(lm.get(lp.GUI_TAB_OPTIONS), "icon/settings.png",
+		optionController.getGuiSnippet());
     }
 
     private void initView() {
@@ -86,18 +110,26 @@ public class GuiController {
 	view.setVisible();
     }
 
+    private void repaintGui() {
+	view.dispose();
+	view = null;
+	init();
+    }
+
     /** The {@link AdministrationTabsController}. */
-    private final AdministrationTabsController adminTabsCtrl;
+    private AdministrationTabsController adminTabsCtrl;
 
     /** The {@link LanguageProperties}. */
     private LanguageProperties lp;
 
     /** The {@link MapPanelController}. */
-    private final MapPanelController mapPanelCtrl;
+    private MapPanelController mapPanelCtrl;
+
+    private OptionController optionController;
 
     /** The {@link SearchPanelController}. */
-    private final SearchPanelController searchPanelController;
+    private SearchPanelController searchPanelController;
 
     /** The {@link Gui}. */
-    private final Gui view;
+    private Gui view = null;
 }
