@@ -53,7 +53,9 @@ public class CampingSiteManagement {
 
 	    @Override
 	    public void closedApplication() {
-		dbMgr.disconnect();
+		if (connectedWithDb) {
+		    dbMgr.disconnect();
+		}
 	    }
 	});
     }
@@ -63,12 +65,12 @@ public class CampingSiteManagement {
      */
     private void configDatabaseMgr() {
 	dbMgr = DatabaseMgr.getInstance();
-	dbMgr.connect("jdbc:mysql://" + HOST_NAME + "/" + DATABASE_NAME, "willi",
-		"bald");
+	connectedWithDb = dbMgr.connect("jdbc:mysql://" + HOST_NAME + "/"
+		+ DATABASE_NAME, "willi", "bald");
     }
 
     private BookingMgr bookingManager;
-
+    private boolean connectedWithDb;
     /** The {@link DatabaseController}. */
     private DatabaseMgr dbMgr;
     private EmployeeMgr employeeManager;

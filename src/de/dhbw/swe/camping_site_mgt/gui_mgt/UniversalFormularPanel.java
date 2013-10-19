@@ -17,6 +17,8 @@ public class UniversalFormularPanel extends JPanel {
 	gbc.insets = new Insets(3, 1, 5, 2);
 
 	currentLine = 0;
+	// gbc.weighty = 1;
+	// gbc.anchor = GridBagConstraints.NORTH;
     }
 
     /**
@@ -38,6 +40,7 @@ public class UniversalFormularPanel extends JPanel {
      *            the position from {@link GridBagConstraints}
      */
     public void add(final JComponent object, final int position) {
+
 	gbc.gridy = currentLine;
 	gbc.gridx = 0;
 	gbc.weightx = 0.0;
@@ -45,6 +48,7 @@ public class UniversalFormularPanel extends JPanel {
 	gbc.gridwidth = 2;
 	gbc.anchor = position;
 	add(object, gbc);
+
 	currentLine++;
     }
 

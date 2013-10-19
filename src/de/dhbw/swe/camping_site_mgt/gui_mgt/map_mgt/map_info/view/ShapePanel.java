@@ -50,8 +50,9 @@ public class ShapePanel extends JPanel {
 
     public void setPolygon(final Polygon polygon) {
 	final int mapInfoComponentWidth = (int) ((1f - MapPanelInterface.MAP_SCREEN_COVERAGE) * Gui.screenSize.width);
+
 	final Rectangle bounds = polygon.getBounds();
-	final int multiplicator = mapInfoComponentWidth / bounds.width;
+	final int multiplicator = (mapInfoComponentWidth - 16) / bounds.width;
 	setPreferredSize(new Dimension(bounds.width * multiplicator + 1,
 		bounds.height * multiplicator + 3));
 	final int[] xPoints = polygon.xpoints;
