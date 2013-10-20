@@ -1,13 +1,12 @@
 package de.dhbw.swe.camping_site_mgt.common.database_mgt;
 
 import java.lang.reflect.Array;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 import de.dhbw.swe.camping_site_mgt.booking_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.*;
-import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageMgr;
-import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageProperties;
+import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
+import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 import de.dhbw.swe.camping_site_mgt.person_mgt.*;
 import de.dhbw.swe.camping_site_mgt.place_mgt.*;
 import de.dhbw.swe.camping_site_mgt.service_mgt.Service;
@@ -18,10 +17,11 @@ import de.dhbw.swe.camping_site_mgt.service_mgt.Service;
  * @author Benny
  * 
  */
+@SuppressWarnings("static-access")
 public class DataStructure {
-    static LanguageMgr lm = LanguageMgr.getInstance();
+    static LanguageMgr LM = LanguageMgr.getInstance();
 
-    static LanguageProperties lp;
+    static LanguageProperties LP;
 
     static private HashMap<String, ColumnInfo[]> sqlObjects = null;
 
@@ -30,52 +30,51 @@ public class DataStructure {
 	    initObjects();
 	}
 	if (!sqlObjects.containsKey(key)) {
-	    // TODO logger
+	    CampingLogger.getLogger(DataStructure.class).warn(
+		    "Data structure does not contain '" + key + "'!");
 	    return null;
 	}
 	return sqlObjects.get(key);
     }
 
-    static private void initObjects() {
-	sqlObjects = new HashMap<>();
-
-	// "address"
+    private static void initAddress() {
 	sqlObjects.put(
 		"address",
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
 			new ColumnInfo("street", String.class,
-				lm.get(lp.COLUMN_STREET)),
+				LM.get(LP.COLUMN_STREET)),
 			new ColumnInfo("houseNumber", String.class,
-				lm.get(lp.COLUMN_HOUSENR)),
+				LM.get(LP.COLUMN_HOUSENR)),
 			new ColumnInfo("town_ID", Integer.class, Town.class) });
+    }
 
-	// TODO alle languageproperties noch einfügen und verwenden..
-
-	// "bill"
+    private static void initBill() {
 	sqlObjects.put(
 		"bill",
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
 			new ColumnInfo("number", Integer.class,
-				lm.get(lp.DM_NUMBER)),
+				LM.get(LP.DM_NUMBER)),
 			new ColumnInfo("billItem_ID", Integer.class, BillItem.class),
 			new ColumnInfo("multiplier", Integer.class,
-				lm.get(lp.DM_MULTIPLIER)) });
+				LM.get(LP.DM_MULTIPLIER)) });
+    }
 
-	// "billitem"
+    private static void initBillitem() {
 	sqlObjects.put(
 		"billitem",
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
 			new ColumnInfo("labeling", Enum.class,
-				lm.get(lp.DM_LABELING), BillItem_Labeling.class),
+				LM.get(LP.DM_LABELING), BillItem_Labeling.class),
 			new ColumnInfo("priceBusySeason", Euro.class,
-				lm.get(lp.DM_PRICE_BUSY_SEASON)),
+				LM.get(LP.DM_PRICE_BUSY_SEASON)),
 			new ColumnInfo("priceLowSeason", Euro.class,
-				lm.get(lp.DM_PRICE_LOW_SEASON)) });
+				LM.get(LP.DM_PRICE_LOW_SEASON)) });
+    }
 
-	// "booking"
+    private static void initBooking() {
 	sqlObjects.put("booking", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
 		new ColumnInfo("responsibleGuest_ID", Integer.class, null,
@@ -88,170 +87,219 @@ public class DataStructure {
 		new ColumnInfo("extraBookings", Array.class, "Extra Bookings"),
 		new ColumnInfo("bill_number", Integer.class, Bill.class),
 		new ColumnInfo("chipCards", Array.class, "Chip Cards") });
-	// TODO BILL??
+    }
 
-	// "bookinglist"
+    private static void initBookinglist() {
 	sqlObjects.put("bookinglist", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("number", Integer.class, lm.get(lp.DM_NUMBER)),
+		new ColumnInfo("number", Integer.class, LM.get(LP.DM_NUMBER)),
 		new ColumnInfo("booking_ID", Integer.class, Booking.class) });
+    }
 
-	// "chipcard"
+    private static void initChipcard() {
 	sqlObjects.put("chipcard", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("validFrom", Date.class, lm.get(lp.DM_VALIDE_FROM)),
-		new ColumnInfo("validTo", Date.class, lm.get(lp.DM_VALIDE_TO)) });
+		new ColumnInfo("validFrom", Date.class, LM.get(LP.DM_VALIDE_FROM)),
+		new ColumnInfo("validTo", Date.class, LM.get(LP.DM_VALIDE_TO)) });
+    }
 
-	// "chipcardlist"
+    private static void initChipcardlist() {
 	sqlObjects.put("chipcardlist", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("number", Integer.class, lm.get(lp.DM_NUMBER)),
+		new ColumnInfo("number", Integer.class, LM.get(LP.DM_NUMBER)),
 		new ColumnInfo("chipCard_ID", Integer.class, ChipCard.class) });
+    }
 
-	// "country"
+    private static void initCountry() {
 	sqlObjects.put("country", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("name", String.class, lm.get(lp.DM_COUNTRY)),
-		new ColumnInfo("acronym", String.class, lm.get(lp.DM_ACRONYM)) });
+		new ColumnInfo("name", String.class, LM.get(LP.DM_COUNTRY)),
+		new ColumnInfo("acronym", String.class, LM.get(LP.DM_ACRONYM)) });
+    }
 
-	// "employee"
-	sqlObjects.put("employee",
-
-	new ColumnInfo[] {
+    private static void initEmployee() {
+	sqlObjects.put("employee", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
 		new ColumnInfo("person_ID", Integer.class, Person.class),
 		new ColumnInfo("employeeRole_ID", Integer.class, null, "role",
 			EmployeeRole.class),
-		new ColumnInfo("userName", String.class, lm.get(lp.DM_USER_NAME)),
-		new ColumnInfo("password", String.class, lm.get(lp.DM_PASSWORD)),
-		new ColumnInfo("blocked", Boolean.class, lm.get(lp.DM_IS_BLOCKED)),
+		new ColumnInfo("userName", String.class, LM.get(LP.DM_USER_NAME)),
+		new ColumnInfo("password", String.class, LM.get(LP.DM_PASSWORD)),
+		new ColumnInfo("blocked", Boolean.class, LM.get(LP.DM_IS_BLOCKED)),
 		new ColumnInfo("chipCard_ID", Integer.class, ChipCard.class) });
+    }
 
-	// "employeelist"
+    private static void initEmployeelist() {
 	sqlObjects.put("employeelist", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("number", Integer.class, lm.get(lp.DM_NUMBER)),
+		new ColumnInfo("number", Integer.class, LM.get(LP.DM_NUMBER)),
 		new ColumnInfo("employee_ID", Integer.class, Employee.class) });
+    }
 
-	// "employeerole"
+    private static void initEmployeerole() {
 	sqlObjects.put(
 		"employeerole",
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
 			new ColumnInfo("labeling", Enum.class,
-				lm.get(lp.DM_LABELING), EmployeeRole_Labeling.class),
+				LM.get(LP.DM_LABELING), EmployeeRole_Labeling.class),
 			new ColumnInfo("arrangement", Enum.class,
-				lm.get(lp.DM_ARRANGEMENT),
+				LM.get(LP.DM_ARRANGEMENT),
 				EmployeeRole_Arrangement.class) });
+    }
 
-	// "equipment"
+    private static void initEquipment() {
 	sqlObjects.put(
 		"equipment",
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
-			new ColumnInfo("type", Enum.class, lm.get(lp.DM_TYPE),
+			new ColumnInfo("type", Enum.class, LM.get(LP.DM_TYPE),
 				Equipment_Type.class),
-			new ColumnInfo("size", String.class, lm.get(lp.DM_SIZE)),
+			new ColumnInfo("size", String.class, LM.get(LP.DM_SIZE)),
 			new ColumnInfo("identification", String.class,
-				lm.get(lp.DM_IDENTIFICATION)) });
+				LM.get(LP.DM_IDENTIFICATION)) });
+    }
 
-	// "equipmentlist"
+    private static void initEquipmentlist() {
 	sqlObjects.put("equipmentlist", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("number", Integer.class, lm.get(lp.DM_NUMBER)),
+		new ColumnInfo("number", Integer.class, LM.get(LP.DM_NUMBER)),
 		new ColumnInfo("equipment_ID", Integer.class, Equipment.class) });
+    }
 
-	// "extrabooking"
+    private static void initExtrabooking() {
 	sqlObjects.put("extrabooking", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("name", String.class, lm.get(lp.DM_EXTRABOOKING)),
-		new ColumnInfo("labeling", String.class, lm.get(lp.DM_LABELING)),
+		new ColumnInfo("name", String.class, LM.get(LP.DM_EXTRABOOKING)),
+		new ColumnInfo("labeling", String.class, LM.get(LP.DM_LABELING)),
 		new ColumnInfo("site_ID", Integer.class, Site.class) });
+    }
 
-	// "extrabookinglist"
+    private static void initExtrabookinglist() {
 	sqlObjects.put("extrabookinglist", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("number", Integer.class, lm.get(lp.DM_NUMBER)),
+		new ColumnInfo("number", Integer.class, LM.get(LP.DM_NUMBER)),
 		new ColumnInfo("site_ID", Integer.class, Site.class) });
+    }
 
-	// "guest"
+    private static void initGuest() {
 	sqlObjects.put("guest", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
 		new ColumnInfo("person_ID", Integer.class, Person.class),
 		new ColumnInfo("visitorsTaxClass_ID", Integer.class,
 			VisitorsTaxClass.class) });
+    }
 
-	// "guestlist"
+    private static void initGuestlist() {
 	sqlObjects.put("guestlist", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("number", Integer.class, lm.get(lp.DM_NUMBER)),
+		new ColumnInfo("number", Integer.class, LM.get(LP.DM_NUMBER)),
 		new ColumnInfo("guest_ID", Integer.class, Guest.class) });
+    }
 
-	// "person"
+    static private void initObjects() {
+	sqlObjects = new HashMap<>();
+
+	initAddress();
+	initBill();
+	initBillitem();
+	initBooking();
+	initBookinglist();
+	initChipcard();
+	initChipcardlist();
+	initCountry();
+	initEmployee();
+	initEmployeelist();
+	initEmployeerole();
+	initEquipment();
+	initEquipmentlist();
+	initExtrabooking();
+	initExtrabookinglist();
+	initGuest();
+	initGuestlist();
+	initPerson();
+	initPitch();
+	initPitchbooking();
+	initPitchbookinglist();
+	initPitchlist();
+	initService();
+	initServicelist();
+	initSite();
+	initSitelist();
+	initTown();
+	initVisitorstaxclass();
+    }
+
+    private static void initPerson() {
 	sqlObjects.put(
 		"person",
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
 			new ColumnInfo("identificationNumber", String.class,
-				lm.get(lp.DM_IDENTIFICATION_NUMBER)),
-			new ColumnInfo("name", String.class, lm.get(lp.DM_NAME)),
+				LM.get(LP.DM_IDENTIFICATION_NUMBER)),
+			new ColumnInfo("name", String.class, LM.get(LP.DM_NAME)),
 			new ColumnInfo("firstName", String.class,
-				lm.get(lp.DM_FIRST_NAME)),
-			new ColumnInfo("street", String.class, lm.get(lp.DM_STREET)),
+				LM.get(LP.DM_FIRST_NAME)),
+			new ColumnInfo("street", String.class, LM.get(LP.DM_STREET)),
 			new ColumnInfo("houseNumber", String.class,
-				lm.get(lp.DM_HOUSE_NUMBER)),
+				LM.get(LP.DM_HOUSE_NUMBER)),
 			new ColumnInfo("town_ID", Integer.class, Town.class),
 			new ColumnInfo("country_ID", Integer.class, Country.class),
 			new ColumnInfo("dateOfBirth", Date.class,
-				lm.get(lp.DM_DATE_OF_BIRTH)) });
+				LM.get(LP.DM_DATE_OF_BIRTH)) });
+    }
 
-	// "pitch"
+    private static void initPitch() {
 	sqlObjects.put(
 		"pitch",
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
-			new ColumnInfo("area", String.class, lm.get(lp.DM_AREA)),
-			new ColumnInfo("type", Enum.class, lm.get(lp.DM_TYPE),
+			new ColumnInfo("area", String.class, LM.get(LP.DM_AREA)),
+			new ColumnInfo("type", Enum.class, LM.get(LP.DM_TYPE),
 				Pitch_Type.class),
 			new ColumnInfo("height", Integer.class,
-				lm.get(lp.DM_LENGTH)),
-			new ColumnInfo("width", Integer.class, lm.get(lp.DM_WIDTH)),
+				LM.get(LP.DM_LENGTH)),
+			new ColumnInfo("width", Integer.class, LM.get(LP.DM_WIDTH)),
 			new ColumnInfo("natureOfSoil", Enum.class,
-				lm.get(lp.DM_NATURE_OF_SOIL),
+				LM.get(LP.DM_NATURE_OF_SOIL),
 				Pitch_NatureOfSoil.class),
 			new ColumnInfo("deliveryPoint_ID", Integer.class, null,
 				"deliveryPoint", Site.class),
 			new ColumnInfo("characteristics", String.class,
-				lm.get(lp.DM_CHARACTERISTICS)),
+				LM.get(LP.DM_CHARACTERISTICS)),
 			new ColumnInfo("xCoords", Array.class),
 			new ColumnInfo("yCoords", Array.class) });
+    }
 
-	// "pitchbooking"
+    private static void initPitchbooking() {
 	sqlObjects.put(
 		"pitchbooking",
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
 			new ColumnInfo("pitch_ID", Integer.class, Pitch.class),
 			new ColumnInfo("electricity", Boolean.class,
-				lm.get(lp.DM_ELECTRICITY)) });
+				LM.get(LP.DM_ELECTRICITY)) });
+    }
 
-	// "pitchbookinglist"
+    private static void initPitchbookinglist() {
 	sqlObjects.put(
 		"pitchbookinglist",
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
 			new ColumnInfo("number", Integer.class,
-				lm.get(lp.DM_NUMBER)),
+				LM.get(LP.DM_NUMBER)),
 			new ColumnInfo("pitchBooking_ID", Integer.class,
 				PitchBooking.class) });
+    }
 
-	// "pitchlist"
+    private static void initPitchlist() {
 	sqlObjects.put("pitchlist", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("number", Integer.class, lm.get(lp.DM_NUMBER)),
+		new ColumnInfo("number", Integer.class, LM.get(LP.DM_NUMBER)),
 		new ColumnInfo("pitch_ID", Integer.class, Pitch.class) });
+    }
 
-	// "service"
+    private static void initService() {
 	sqlObjects.put(
 		"service",
 		new ColumnInfo[] {
@@ -261,55 +309,58 @@ public class DataStructure {
 			new ColumnInfo("employeeRole_ID", Integer.class,
 				EmployeeRole.class),
 			new ColumnInfo("description", String.class,
-				lm.get(lp.DM_DESCRIPTION)),
+				LM.get(LP.DM_DESCRIPTION)),
 			new ColumnInfo("creationDate", Date.class,
-				lm.get(lp.DM_CREATION_DATE)),
+				LM.get(LP.DM_CREATION_DATE)),
 			new ColumnInfo("priority", Integer.class,
-				lm.get(lp.DM_PRIORITY)),
+				LM.get(LP.DM_PRIORITY)),
 			new ColumnInfo("doneDate", Date.class,
-				lm.get(lp.DM_DONE_DATE)) });
+				LM.get(LP.DM_DONE_DATE)) });
+    }
 
-	// "servicelist"
+    private static void initServicelist() {
 	sqlObjects.put("servicelist", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("number", Integer.class, lm.get(lp.DM_NUMBER)),
+		new ColumnInfo("number", Integer.class, LM.get(LP.DM_NUMBER)),
 		new ColumnInfo("service_ID", Integer.class, Service.class) });
+    }
 
-	// "site"
+    private static void initSite() {
 	sqlObjects.put(
 		"site",
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
 			new ColumnInfo("labeling", String.class,
-				lm.get(lp.DM_LABELING)),
+				LM.get(LP.DM_LABELING)),
 			new ColumnInfo("type", String.class, "Type"),
 			new ColumnInfo("openingHours", String.class,
-				lm.get(lp.DM_OPENING_HOURS)),
+				LM.get(LP.DM_OPENING_HOURS)),
 			new ColumnInfo("description", String.class,
-				lm.get(lp.DM_DESCRIPTION)) });
+				LM.get(LP.DM_DESCRIPTION)) });
+    }
 
-	// "sitelist"
+    private static void initSitelist() {
 	sqlObjects.put("sitelist", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("number", Integer.class, lm.get(lp.DM_NUMBER)),
+		new ColumnInfo("number", Integer.class, LM.get(LP.DM_NUMBER)),
 		new ColumnInfo("site_ID", Integer.class, Site.class) });
+    }
 
-	// "town"
+    private static void initTown() {
 	sqlObjects.put(
 		"town",
 		new ColumnInfo[] {
 			new ColumnInfo("id", Integer.class),
-			new ColumnInfo("name", String.class, lm.get(lp.DM_TOWN)),
+			new ColumnInfo("name", String.class, LM.get(LP.DM_TOWN)),
 			new ColumnInfo("postalCode", String.class,
-				lm.get(lp.DM_POSTAL_CODE)) });
+				LM.get(LP.DM_POSTAL_CODE)) });
+    }
 
-	// "visitorstaxclass"
-	sqlObjects.put("visitorstaxclass",
-
-	new ColumnInfo[] {
+    private static void initVisitorstaxclass() {
+	sqlObjects.put("visitorstaxclass", new ColumnInfo[] {
 		new ColumnInfo("id", Integer.class),
-		new ColumnInfo("labeling", Enum.class, lm.get(lp.DM_LABELING),
+		new ColumnInfo("labeling", Enum.class, LM.get(LP.DM_LABELING),
 			VisitorsTaxClass_Labeling.class),
-		new ColumnInfo("price", Euro.class, lm.get(lp.DM_PRICE)) });
+		new ColumnInfo("price", Euro.class, LM.get(LP.DM_PRICE)) });
     }
 }

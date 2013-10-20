@@ -21,6 +21,7 @@ public class ColumnInfo {
      */
     public ColumnInfo(final String dbName, final Class<? extends Object> dbType,
 	    final Class<? extends Object> releationToColumn) {
+	// TODO consistency
 	this(dbName, dbType, null, releationToColumn.getSimpleName().toLowerCase(),
 		releationToColumn);
     }
