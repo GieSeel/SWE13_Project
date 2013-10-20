@@ -19,8 +19,7 @@
 package de.dhbw.swe.camping_site_mgt.common;
 
 import java.sql.Array;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -36,15 +35,10 @@ import de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt.CampingTable;
  */
 public abstract class BaseDataObjectMgr {
 
-    /** The {@link DatabaseMgr}. */
-    private final static DatabaseMgr db = DatabaseMgr.getInstance();
-
-    protected BaseDataObjectMgr() {
+    protected BaseDataObjectMgr(final AccessableDatabase db) {
+	this.db = db;
 	data = new HashMap<>();
-	logger = getLogger();
-	tableName = getTableName();
-	subMgr = getSubMgr();
-	load(); // Load all data from database
+	// load(); // Load all data from database
     }
 
     /**
@@ -65,6 +59,19 @@ public abstract class BaseDataObjectMgr {
      * @return the table name.
      */
     abstract public String getTableName();
+
+    /**
+     * Loads the {@link DataObject}s from the database.
+     */
+    public void load() {
+	DataObject dataObject;
+	final String tableName = getTableName();
+	for (final HashMap<String, Object> entry : db.getAllEntriesOf(tableName)) {
+	    final Object[] keys = entry.keySet().toArray();
+	    dataObject = entry2object(entry);
+	    add(dataObject.getId(), dataObject);
+	}
+    }
 
     /**
      * Gets the {@link DataObject}.
@@ -99,7 +106,7 @@ public abstract class BaseDataObjectMgr {
 	// If object already exists just save that id
 	int id = isObjectExisting(dataObject);
 	if (id == 0) {
-	    id = db.insertEntryInto(tableName, object2entry(dataObject));
+	    id = db.insertEntryInto(getTableName(), object2entry(dataObject));
 	}
 
 	// Add or replace object in object list
@@ -123,7 +130,7 @@ public abstract class BaseDataObjectMgr {
 	    // logger.error("Object is still in use!");
 	    return false;
 	}
-	db.removeEntryFrom(tableName, object2entry(dataObject));
+	db.removeEntryFrom(getTableName(), object2entry(dataObject));
 	return remove(id);
     }
 
@@ -146,7 +153,7 @@ public abstract class BaseDataObjectMgr {
 	for (final Entry<Integer, ColumnInfo> columnEntry : columns.entrySet()) {
 	    columnKey = columnEntry.getKey();
 	    columnValue = columnEntry.getValue();
-	    if (columnValue.getClassName().equals(tableName)) {
+	    if (columnValue.getClassName().equals(getTableName())) {
 		dbTyp = columnValue.getDbType();
 		object = ObjectFieldAccess.getValueOf(columnValue.getFieldName(),
 			dataObject);
@@ -168,7 +175,8 @@ public abstract class BaseDataObjectMgr {
 		    displayData.put(columnKey, object);
 		} else if (dbTyp.equals(Array.class)) {
 		    // Array
-		    logger.error("Unexpected typ while parsing object data to display data (Array)");
+		    getLogger().error(
+			    "Unexpected typ while parsing object data to display data (Array)");
 		} else if (dbTyp.equals(Date.class)) {
 		    // Date
 		    // TODO DATE
@@ -178,7 +186,8 @@ public abstract class BaseDataObjectMgr {
 		    // Enum
 		    displayData.put(columnKey, object.toString());
 		} else {
-		    logger.error("Unexpected typ while parsing object data to display data!");
+		    getLogger().error(
+			    "Unexpected typ while parsing object data to display data!");
 		}
 
 	    }
@@ -188,7 +197,7 @@ public abstract class BaseDataObjectMgr {
 
 	// Save id of the object
 	displayData.put(displayData.size() * -1,
-		tableName + "_" + dataObject.getId());
+		getTableName() + "_" + dataObject.getId());
 
     }
 
@@ -220,7 +229,7 @@ public abstract class BaseDataObjectMgr {
 	} else {
 	    // Update object in object list and database
 	    add(id, newObject);
-	    db.updateEntryIn(tableName, object2entry(newObject));
+	    db.updateEntryIn(getTableName(), object2entry(newObject));
 	}
     }
 
@@ -248,13 +257,13 @@ public abstract class BaseDataObjectMgr {
 	    if (valueKey < 0) {
 		// Get id of the object
 		final String[] classId = val.split("_");
-		if (classId[0].equals(tableName)) {
+		if (classId[0].equals(getTableName())) {
 		    objects.put("id", new Integer(classId[1]));
 		}
 	    } else {
 		// Get values of the object
 		columnInfo = columns.get(valueKey);
-		if (columnInfo.getClassName().equals(tableName)) {
+		if (columnInfo.getClassName().equals(getTableName())) {
 		    dbTyp = columns.get(valueKey).getDbType();
 
 		    // Parse value and save it
@@ -275,20 +284,23 @@ public abstract class BaseDataObjectMgr {
 			objects.put(columnInfo.getFieldName(), val);
 		    } else if (dbTyp.equals(Array.class)) {
 			// Array
-			logger.error("Unexpected typ while parsing display data to object data (Array)");
+			getLogger().error(
+				"Unexpected typ while parsing display data to object data (Array)");
 		    } else if (dbTyp.equals(Date.class)) {
 			// Date
 			try {
 			    objects.put(columnInfo.getFieldName(),
 				    new SimpleDateFormat("dd. MM yyyy").parse(val));
 			} catch (final ParseException e) {
-			    logger.error("Date-Parse exception while parsing display data to object data!");
+			    getLogger().error(
+				    "Date-Parse exception while parsing display data to object data!");
 			}
 		    } else if (dbTyp.equals(Enum.class)) {
 			// Enum
 			objects.put(columnInfo.getFieldName(), new Integer(val));
 		    } else {
-			logger.error("Unexpected typ while parsing display data to object data!");
+			getLogger().error(
+				"Unexpected typ while parsing display data to object data!");
 		    }
 		}
 	    }
@@ -409,17 +421,6 @@ public abstract class BaseDataObjectMgr {
     }
 
     /**
-     * Loads the {@link DataObject}s from the database.
-     */
-    private void load() {
-	DataObject dataObject;
-	for (final HashMap<String, Object> entry : db.getAllEntriesOf(tableName)) {
-	    dataObject = entry2object(entry);
-	    add(dataObject.getId(), dataObject);
-	}
-    }
-
-    /**
      * Parses a {@link DataObject} to a database entry.
      * 
      * @param id
@@ -431,7 +432,7 @@ public abstract class BaseDataObjectMgr {
     private HashMap<String, Object> object2entry(final DataObject dataObject) {
 	final HashMap<String, Object> entry = new HashMap<>();
 	Object tmpObj;
-	for (final ColumnInfo column : DataStructure.getStructureFor(tableName)) {
+	for (final ColumnInfo column : DataStructure.getStructureFor(getTableName())) {
 	    tmpObj = ObjectFieldAccess.getValueOf(column.getFieldName(), dataObject);
 	    if (column.getReleationToColumn() == null) {
 		entry.put(column.getFieldName(), tmpObj);
@@ -472,11 +473,13 @@ public abstract class BaseDataObjectMgr {
     private void subDisplay2ObjectIn(final HashMap<String, Object> objects,
 	    final HashMap<Integer, ColumnInfo> columns,
 	    final HashMap<Integer, Object> values) {
-	if (subMgr != null) {
-	    for (final BaseDataObjectMgr subManager : subMgr) {
-		objects.put(subManager.getTableName(),
-			subManager.saveDisplay2Object(columns, values));
-	    }
+	if (getSubMgr() == null) {
+	    return;
+	}
+
+	for (final BaseDataObjectMgr subManager : getSubMgr()) {
+	    objects.put(subManager.getTableName(),
+		    subManager.saveDisplay2Object(columns, values));
 	}
     }
 
@@ -487,14 +490,16 @@ public abstract class BaseDataObjectMgr {
      *            the entry of the database
      */
     private void subEntry2ObjectIn(final HashMap<String, Object> entry) {
+	if (getSubMgr() == null) {
+	    return;
+	}
+
 	String subTableName;
-	if (subMgr != null) {
-	    for (final BaseDataObjectMgr subManager : subMgr) {
-		subTableName = subManager.getTableName();
-		entry.put(subTableName, subManager.objectGet(
-			(int) entry.get(subTableName), getTableName(),
-			(int) entry.get("id")));
-	    }
+	for (final BaseDataObjectMgr subManager : getSubMgr()) {
+	    subTableName = subManager.getTableName();
+	    entry.put(subTableName, subManager.objectGet(
+		    (int) entry.get(subTableName), getTableName(),
+		    (int) entry.get("id")));
 	}
     }
 
@@ -507,12 +512,15 @@ public abstract class BaseDataObjectMgr {
      *            the {@link DataObject}
      */
     private void subObjectAdd(final int id, final DataObject dataObject) {
-	if (subMgr != null) {
-	    for (final BaseDataObjectMgr subManager : subMgr) {
-		((DataObject) ObjectFieldAccess.getValueOf(
-			subManager.getTableName(), dataObject)).addUsage(tableName,
-			id);
-	    }
+	if (getSubMgr() == null) {
+	    return;
+	}
+
+	for (final BaseDataObjectMgr subManager : getSubMgr()) {
+	    final DataObject daObject = (DataObject) ObjectFieldAccess.getValueOf(
+		    subManager.getTableName(), dataObject);
+	    // TODO null for VisitoTaxClass
+	    daObject.addUsage(getTableName(), id);
 	}
     }
 
@@ -523,11 +531,13 @@ public abstract class BaseDataObjectMgr {
      *            the {@link DataObject}
      */
     private void subObjectInsert(final DataObject dataObject) {
-	if (subMgr != null) {
-	    for (final BaseDataObjectMgr subManager : subMgr) {
-		subManager.objectInsert((DataObject) ObjectFieldAccess.getValueOf(
-			subManager.getTableName(), dataObject));
-	    }
+	if (getSubMgr() == null) {
+	    return;
+	}
+
+	for (final BaseDataObjectMgr subManager : getSubMgr()) {
+	    subManager.objectInsert((DataObject) ObjectFieldAccess.getValueOf(
+		    subManager.getTableName(), dataObject));
 	}
     }
 
@@ -540,13 +550,16 @@ public abstract class BaseDataObjectMgr {
      * @return true if it was successful
      */
     private void subObjectRemove(final DataObject dataObject) {
-	if (subMgr != null) {
-	    for (final BaseDataObjectMgr subManager : subMgr) {
-		final DataObject subObject = (DataObject) ObjectFieldAccess.getValueOf(
-			subManager.getTableName(), dataObject);
-		((BaseDataObject) subObject).delUsage(tableName, dataObject.getId());
-		subManager.objectRemove(subObject);
-	    }
+	if (getSubMgr() == null) {
+	    return;
+	}
+
+	for (final BaseDataObjectMgr subManager : getSubMgr()) {
+	    final DataObject subObject = (DataObject) ObjectFieldAccess.getValueOf(
+		    subManager.getTableName(), dataObject);
+	    ((BaseDataObject) subObject).delUsage(getTableName(),
+		    dataObject.getId());
+	    subManager.objectRemove(subObject);
 	}
     }
 
@@ -561,14 +574,17 @@ public abstract class BaseDataObjectMgr {
      */
     private void subObjects2DisplayIn(final HashMap<Integer, Object> displayData,
 	    final HashMap<Integer, ColumnInfo> columns, final DataObject dataObject) {
-	if (subMgr != null) {
-	    for (final BaseDataObjectMgr subManager : subMgr) {
-		subManager.objects2DisplayIn(
-			displayData,
-			columns,
-			(DataObject) ObjectFieldAccess.getValueOf(
-				subManager.getTableName(), dataObject));
-	    }
+	if (getSubMgr() == null) {
+	    return;
+	}
+
+	for (final BaseDataObjectMgr subManager : getSubMgr()) {
+	    subManager.objects2DisplayIn(
+		    displayData,
+		    columns,
+		    (DataObject) ObjectFieldAccess.getValueOf(
+			    subManager.getTableName(), dataObject));
+
 	}
     }
 
@@ -582,28 +598,26 @@ public abstract class BaseDataObjectMgr {
      */
     private void subObjectUpdate(final DataObject dataObject,
 	    final DataObject newDataObject) {
-	if (subMgr != null) {
-	    for (final BaseDataObjectMgr subManager : subMgr) {
-		final DataObject subObject = (DataObject) ObjectFieldAccess.getValueOf(
-			subManager.getTableName(), dataObject);
-		((BaseDataObject) subObject).delUsage(tableName, dataObject.getId());
-		subManager.objectUpdate(
-			subObject,
-			(DataObject) ObjectFieldAccess.getValueOf(
-				subManager.getTableName(), newDataObject));
-	    }
+	if (getSubMgr() == null) {
+	    return;
+	}
+
+	for (final BaseDataObjectMgr subManager : getSubMgr()) {
+	    final DataObject subObject = (DataObject) ObjectFieldAccess.getValueOf(
+		    subManager.getTableName(), dataObject);
+	    ((BaseDataObject) subObject).delUsage(getTableName(),
+		    dataObject.getId());
+	    subManager.objectUpdate(
+		    subObject,
+		    (DataObject) ObjectFieldAccess.getValueOf(
+			    subManager.getTableName(), newDataObject));
 	}
     }
-
-    /** The {@link CampingLogger}. */
-    protected final CampingLogger logger;
 
     /** All {@link DataObject} of one table. */
     private final HashMap<Integer, DataObject> data;
 
-    /** The manager of the sub objects (null if there are no sub objects). */
-    private final Vector<BaseDataObjectMgr> subMgr;
+    /** The {@link AccessableDatabase}. */
+    private final AccessableDatabase db;
 
-    /** The table name. */
-    private final String tableName;
 }

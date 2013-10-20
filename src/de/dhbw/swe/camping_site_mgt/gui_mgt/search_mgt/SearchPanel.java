@@ -9,8 +9,7 @@ import java.util.Map.Entry;
 import javax.swing.*;
 import javax.swing.table.*;
 
-import de.dhbw.swe.camping_site_mgt.common.Delegate;
-import de.dhbw.swe.camping_site_mgt.common.Euro;
+import de.dhbw.swe.camping_site_mgt.common.*;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.ColumnInfo;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.Gui;
@@ -286,7 +285,7 @@ public class SearchPanel extends JPanel {
 	add(panFoot, BorderLayout.SOUTH);
     }
 
-    Vector<RowFilter<Object, Object>> rowFilterList = null;
     private final Delegate<SearchTableListener> delegate = new Delegate<>(
 	    SearchTableListener.class);
+    private Vector<RowFilter<Object, Object>> rowFilterList = null;
 }

@@ -20,7 +20,7 @@ package de.dhbw.swe.camping_site_mgt.common;
 
 import java.util.*;
 
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
@@ -30,73 +30,38 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
  * @version 1.0
  */
 public class ChipCardMgr extends BaseDataObjectMgr {
-    /** The singleton instance. */
-    private static ChipCardMgr instance;
 
     /**
-     * Returns the instance.
+     * Constructor.
      * 
-     * @return the singleton instance.
+     * @param db
+     *            the {@link AccessableDatabase}
      */
-    public static synchronized ChipCardMgr getInstance() {
-	if (instance == null) {
-	    instance = new ChipCardMgr();
-	}
-	return instance;
+    public ChipCardMgr(final AccessableDatabase db) {
+	super(db);
+	load();
     }
 
-    /**
-     * Private constructor. Singleton.
-     */
-    private ChipCardMgr() {
-	super();
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
-     */
     @Override
     public String getTableName() {
 	return new ChipCard().getTableName();
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#evenUpdateInUse()
-     */
     @Override
     protected boolean evenUpdateInUse() {
 	return true;
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getLogger()
-     */
     @Override
     protected CampingLogger getLogger() {
 	return CampingLogger.getLogger(getClass());
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getSubMgr()
-     */
     @Override
     protected Vector<BaseDataObjectMgr> getSubMgr() {
 	return null;
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#map2DataObject(java.util.HashMap)
-     */
     @Override
     protected DataObject map2DataObject(final HashMap<String, Object> map) {
 	int id = 0;

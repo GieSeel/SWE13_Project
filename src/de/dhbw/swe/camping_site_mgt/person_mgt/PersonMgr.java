@@ -21,7 +21,7 @@ package de.dhbw.swe.camping_site_mgt.person_mgt;
 import java.util.*;
 
 import de.dhbw.swe.camping_site_mgt.common.*;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
@@ -32,69 +32,39 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
  */
 public class PersonMgr extends BaseDataObjectMgr {
 
-    /** The {@link CountryMgr} */
-    private static CountryMgr countryMgr = CountryMgr.getInstance();
-
-    /** The singleton instance. */
-    private static PersonMgr instance;
-
-    /** The {@link TownMgr} */
-    private static TownMgr townMgr = TownMgr.getInstance();
-
     /**
-     * Returns the instance.
+     * Constructor.
      * 
-     * @return the singleton instance.
+     * @param db
+     *            the {@link AccessableDatabase}
+     * @param thecCountryMgr
+     *            the {@link CountryMgr}
+     * @param theTownMgr
+     *            the {@link TownMgr}
      */
-    public static synchronized PersonMgr getInstance() {
-	if (instance == null) {
-	    instance = new PersonMgr();
-	}
-	return instance;
+    public PersonMgr(final AccessableDatabase db, final CountryMgr thecCountryMgr,
+	    final TownMgr theTownMgr) {
+	super(db);
+	countryMgr = thecCountryMgr;
+	townMgr = theTownMgr;
+	load();
     }
 
-    /**
-     * Private constructor. Singleton.
-     */
-    private PersonMgr() {
-	super();
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
-     */
     @Override
     public String getTableName() {
 	return new Person().getTableName();
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#evenUpdateInUse()
-     */
     @Override
     protected boolean evenUpdateInUse() {
 	return true;
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getLogger()
-     */
     @Override
     protected CampingLogger getLogger() {
 	return CampingLogger.getLogger(getClass());
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getSubMgr()
-     */
     @Override
     protected Vector<BaseDataObjectMgr> getSubMgr() {
 	final Vector<BaseDataObjectMgr> subMgr = new Vector<>();
@@ -103,13 +73,6 @@ public class PersonMgr extends BaseDataObjectMgr {
 	return subMgr;
     }
 
-    /**
-     * Converts the map to an {@link DataObject}.
-     * 
-     * @param map
-     *            the map
-     * @return the object
-     */
     @Override
     protected DataObject map2DataObject(final HashMap<String, Object> map) {
 	int id = 0;
@@ -129,4 +92,10 @@ public class PersonMgr extends BaseDataObjectMgr {
 	return new Person(id, identificationNumber, firstName, name, dateOfBirth,
 		street, houseNumber, town, country);
     }
+
+    /** The {@link CountryMgr} */
+    private final CountryMgr countryMgr;
+
+    /** The {@link TownMgr} */
+    private final TownMgr townMgr;
 }

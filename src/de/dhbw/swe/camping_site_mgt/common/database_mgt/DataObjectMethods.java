@@ -68,7 +68,7 @@ public class DataObjectMethods {
 
 	final DataObject dataObject = (DataObject) object;
 
-	final DatabaseController db = DatabaseController.getInstance();
+	// final DatabaseController db = DatabaseController.getInstance();
 	// If id=0 the object is new
 	if (dataObject.getId() == 0) {
 	    // Check if object already exists

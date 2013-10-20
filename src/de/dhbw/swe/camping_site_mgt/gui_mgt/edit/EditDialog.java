@@ -18,14 +18,14 @@
  */
 package de.dhbw.swe.camping_site_mgt.gui_mgt.edit;
 
-import java.util.HashMap;
+import java.awt.event.*;
+import java.util.*;
 import java.util.Map.Entry;
 
-import javax.swing.JFrame;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.ColumnInfo;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.BaseFormularPanel;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.UniversalFormularPanel;
 
 /**
  * A frame to edit object data.
@@ -48,12 +48,24 @@ public class EditDialog extends JFrame {
      */
     public EditDialog(final HashMap<Integer, ColumnInfo> columns,
 	    final HashMap<Integer, Object> values) {
-	final BaseFormularPanel baseFormularPanel = new BaseFormularPanel();
+	final UniversalFormularPanel formularPanel = new UniversalFormularPanel();
+
 	for (final Entry<Integer, ColumnInfo> column : columns.entrySet()) {
-	    baseFormularPanel.add(column.getValue().getDisplayName(),
-		    new JTextField(values.get(column.getKey()).toString()));
+	    formularPanel.add(column.getValue().getDisplayName(), new JTextField(
+		    values.get(column.getKey()).toString()));
 	}
-	add(baseFormularPanel);
+
+	formularPanel.add(new JButton("Add"));
+	final JButton cancelBtn = new JButton("Cancel");
+	cancelBtn.addActionListener(new ActionListener() {
+	    @Override
+	    public void actionPerformed(final ActionEvent e) {
+		dispose();
+	    }
+	});
+	formularPanel.add(cancelBtn);
+
+	add(formularPanel);
 	pack();
 	setLocationRelativeTo(null);
 	setVisible(true);

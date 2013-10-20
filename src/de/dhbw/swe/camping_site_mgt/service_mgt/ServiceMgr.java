@@ -3,10 +3,9 @@ package de.dhbw.swe.camping_site_mgt.service_mgt;
 import java.util.*;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
-import de.dhbw.swe.camping_site_mgt.person_mgt.EmployeeRole;
-import de.dhbw.swe.camping_site_mgt.person_mgt.EmployeeRoleMgr;
+import de.dhbw.swe.camping_site_mgt.person_mgt.*;
 import de.dhbw.swe.camping_site_mgt.place_mgt.*;
 
 /**
@@ -16,72 +15,39 @@ import de.dhbw.swe.camping_site_mgt.place_mgt.*;
  * @version 1.0
  */
 public class ServiceMgr extends BaseDataObjectMgr {
-    /** The {@link EmployeeRoleMgr} */
-    private static EmployeeRoleMgr employeeRoleMgr = EmployeeRoleMgr.getInstance();
-
-    /** The singleton instance. */
-    private static ServiceMgr instance;
-
-    /** The {@link PitchMgr} */
-    private static PitchMgr pitchMgr = PitchMgr.getInstance();
-
-    /** The {@link SiteMgr} */
-    private static SiteMgr siteMgr = SiteMgr.getInstance();
-
     /**
-     * Returns the instance.
+     * Constructor.
      * 
-     * @return the singleton instance.
+     * @param db
+     *            the {@link AccessableDatabase}
+     * @param thePitchMgr
+     *            the {@link PitchMgr}
+     * @param theSiteMgr
+     *            the {@link SiteMgr}
      */
-    public static synchronized ServiceMgr getInstance() {
-	if (instance == null) {
-	    instance = new ServiceMgr();
-	}
-	return instance;
+    public ServiceMgr(final AccessableDatabase db, final PitchMgr thePitchMgr,
+	    final SiteMgr theSiteMgr) {
+	super(db);
+	pitchMgr = thePitchMgr;
+	siteMgr = theSiteMgr;
+	load();
     }
 
-    /**
-     * Private constructor. Singleton.
-     */
-    private ServiceMgr() {
-	super();
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
-     */
     @Override
     public String getTableName() {
 	return new Service().getTableName();
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#evenUpdateInUse()
-     */
     @Override
     protected boolean evenUpdateInUse() {
 	return false;
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getLogger()
-     */
     @Override
     protected CampingLogger getLogger() {
 	return CampingLogger.getLogger(getClass());
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getSubMgr()
-     */
     @Override
     protected Vector<BaseDataObjectMgr> getSubMgr() {
 	final Vector<BaseDataObjectMgr> subMgr = new Vector<>();
@@ -91,11 +57,6 @@ public class ServiceMgr extends BaseDataObjectMgr {
 	return subMgr;
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#map2DataObject(java.util.HashMap)
-     */
     @Override
     protected DataObject map2DataObject(final HashMap<String, Object> map) {
 	int id = 0;
@@ -115,4 +76,13 @@ public class ServiceMgr extends BaseDataObjectMgr {
 	return new Service(id, creationDate, description, doneDate, employeeRole,
 		pitch, priority, serviceNumber, site);
     }
+
+    /** The {@link EmployeeRoleMgr} */
+    private EmployeeRoleMgr employeeRoleMgr;
+
+    /** The {@link PitchMgr} */
+    private final PitchMgr pitchMgr;
+
+    /** The {@link SiteMgr} */
+    private final SiteMgr siteMgr;
 }

@@ -18,14 +18,12 @@
  */
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.*;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
-import de.dhbw.swe.camping_site_mgt.place_mgt.Pitch;
-import de.dhbw.swe.camping_site_mgt.place_mgt.PitchMgr;
+import de.dhbw.swe.camping_site_mgt.place_mgt.*;
 
 /**
  * The manager class for the {@link PitchBooking} objects.
@@ -34,66 +32,33 @@ import de.dhbw.swe.camping_site_mgt.place_mgt.PitchMgr;
  * @version 1.0
  */
 public class PitchBookingMgr extends BaseDataObjectMgr {
-    /** The singleton instance. */
-    private static PitchBookingMgr instance;
-
-    /** The {@link PitchMgr}. */
-    private static PitchMgr pitchMgr = PitchMgr.getInstance();
 
     /**
-     * Returns the instance.
+     * Constructor.
      * 
-     * @return the singleton instance.
+     * @param db
+     *            the {@link AccessableDatabase}
      */
-    public static synchronized PitchBookingMgr getInstance() {
-	if (instance == null) {
-	    instance = new PitchBookingMgr();
-	}
-	return instance;
+    public PitchBookingMgr(final AccessableDatabase db) {
+	super(db);
+	load();
     }
 
-    /**
-     * Private constructor. Singleton.
-     */
-    private PitchBookingMgr() {
-	super();
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
-     */
     @Override
     public String getTableName() {
 	return new PitchBooking().getTableName();
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#evenUpdateInUse()
-     */
     @Override
     protected boolean evenUpdateInUse() {
 	return false;
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getLogger()
-     */
     @Override
     protected CampingLogger getLogger() {
 	return CampingLogger.getLogger(getClass());
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getSubMgr()
-     */
     @Override
     protected Vector<BaseDataObjectMgr> getSubMgr() {
 	final Vector<BaseDataObjectMgr> subMgr = new Vector<>();
@@ -101,11 +66,6 @@ public class PitchBookingMgr extends BaseDataObjectMgr {
 	return subMgr;
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#map2DataObject(java.util.HashMap)
-     */
     @Override
     protected DataObject map2DataObject(final HashMap<String, Object> map) {
 	int id = 0;
@@ -117,4 +77,7 @@ public class PitchBookingMgr extends BaseDataObjectMgr {
 
 	return new PitchBooking(id, electricity, pitch);
     }
+
+    /** The {@link PitchMgr}. */
+    private PitchMgr pitchMgr;
 }

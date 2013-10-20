@@ -18,12 +18,10 @@
  */
 package de.dhbw.swe.camping_site_mgt.person_mgt;
 
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.*;
 
-import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
-import de.dhbw.swe.camping_site_mgt.common.Euro;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
+import de.dhbw.swe.camping_site_mgt.common.*;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
@@ -33,80 +31,48 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
  * @version 1.0
  */
 public class VisitorsTaxClassMgr extends BaseDataObjectMgr {
-    /** The singleton instance. */
-    private static VisitorsTaxClassMgr instance;
 
     /**
-     * Returns the instance.
+     * Constructor.
      * 
-     * @return the singleton instance.
+     * @param db
+     *            the {@link AccessableDatabase}
      */
-    public static synchronized VisitorsTaxClassMgr getInstance() {
-	if (instance == null) {
-	    instance = new VisitorsTaxClassMgr();
-	}
-	return instance;
+    public VisitorsTaxClassMgr(final AccessableDatabase db) {
+	super(db);
+	load();
     }
 
-    /**
-     * Private constructor. Singleton.
-     */
-    private VisitorsTaxClassMgr() {
-	super();
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
-     */
     @Override
     public String getTableName() {
 	return new VisitorsTaxClass().getTableName();
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#evenUpdateInUse()
-     */
     @Override
     protected boolean evenUpdateInUse() {
 	return false;
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getLogger()
-     */
     @Override
     protected CampingLogger getLogger() {
 	return CampingLogger.getLogger(getClass());
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getSubMgr()
-     */
     @Override
     protected Vector<BaseDataObjectMgr> getSubMgr() {
 	return null;
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#map2DataObject(java.util.HashMap)
-     */
     @Override
     protected DataObject map2DataObject(final HashMap<String, Object> map) {
 	int id = 0;
 	if (map.containsKey("id")) {
 	    id = (int) map.get("id");
 	}
-	final VisitorsTaxClass_Labeling labeling = VisitorsTaxClass_Labeling.values()[(int) map.get("labeling")];
+	final VisitorsTaxClass_Labeling labeling;
+	final int labelingOrdinal = (int) map.get("labeling");
+	labeling = VisitorsTaxClass_Labeling.values()[labelingOrdinal];
+
 	final Euro price = (Euro) map.get("price");
 
 	return new VisitorsTaxClass(id, labeling, price);

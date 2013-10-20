@@ -18,14 +18,12 @@
  */
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.*;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
-import de.dhbw.swe.camping_site_mgt.place_mgt.Site;
-import de.dhbw.swe.camping_site_mgt.place_mgt.SiteMgr;
+import de.dhbw.swe.camping_site_mgt.place_mgt.*;
 
 /**
  * The manager class for the {@link ExtraBooking} objects.
@@ -34,29 +32,22 @@ import de.dhbw.swe.camping_site_mgt.place_mgt.SiteMgr;
  * @version 1.0
  */
 public class ExtraBookingMgr extends BaseDataObjectMgr {
-    /** The singleton instance. */
-    private static ExtraBookingMgr instance;
 
     /** The {@link SiteMgr}. */
-    private static SiteMgr siteMgr = SiteMgr.getInstance();
+    private static SiteMgr siteMgr;
 
     /**
-     * Returns the instance.
+     * Constructor.
      * 
-     * @return the singleton instance.
+     * @param db
+     *            the {@link AccessableDatabase}
+     * @param theSiteMgr
+     *            the {@link SiteMgr}
      */
-    public static synchronized ExtraBookingMgr getInstance() {
-	if (instance == null) {
-	    instance = new ExtraBookingMgr();
-	}
-	return instance;
-    }
-
-    /**
-     * Private constructor. Singleton.
-     */
-    private ExtraBookingMgr() {
-	super();
+    public ExtraBookingMgr(final AccessableDatabase db, final SiteMgr theSiteMgr) {
+	super(db);
+	siteMgr = theSiteMgr;
+	load();
     }
 
     /**

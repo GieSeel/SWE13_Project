@@ -19,16 +19,12 @@
 package de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt;
 
 import java.awt.BorderLayout;
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.*;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
+import javax.swing.*;
 
-import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
-import de.dhbw.swe.camping_site_mgt.common.CountryMgr;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.ColumnInfo;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataStructure;
+import de.dhbw.swe.camping_site_mgt.common.*;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.Displayable;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.edit.EditDialog;
 import de.dhbw.swe.camping_site_mgt.person_mgt.PersonMgr;
@@ -44,7 +40,10 @@ public class SearchPanelController implements Displayable {
      * Constructor.
      * 
      */
-    public SearchPanelController() {
+    public SearchPanelController(final CountryMgr theCountryMgr,
+	    final PersonMgr thePersonMgr) {
+	countryMgr = theCountryMgr;
+	personMgr = thePersonMgr;
 	view = new JPanel(new BorderLayout());
 	searchPanels = new HashMap<>();
 
@@ -85,11 +84,6 @@ public class SearchPanelController implements Displayable {
 	    @Override
 	    public void subjectChangedTo(final int index) {
 		selectPanel(index);
-		// TODO ??
-		// Was muss man tun, damit das neu ausgewählte Panel dargestellt
-		// wird?
-		// --> getGuiSnippet und den tab ersetzten?
-		// view.repaint();
 	    }
 	});
     }
@@ -127,7 +121,7 @@ public class SearchPanelController implements Displayable {
 	fields.add("country_name");
 	fields.add("country_acronym");
 
-	makePanel(CountryMgr.getInstance(), fields, Search_Subjects.COUNTRIES);
+	makePanel(countryMgr, fields, Search_Subjects.COUNTRIES);
     }
 
     /**
@@ -195,7 +189,7 @@ public class SearchPanelController implements Displayable {
 	fields.add("country_acronym");
 	fields.add("country_name");
 
-	makePanel(PersonMgr.getInstance(), fields, Search_Subjects.PERSONS);
+	makePanel(personMgr, fields, Search_Subjects.PERSONS);
     }
 
     /**
@@ -236,6 +230,10 @@ public class SearchPanelController implements Displayable {
 	    searchPanel.unregister(searchTableListener);
 	}
     }
+
+    private final CountryMgr countryMgr;
+
+    private final PersonMgr personMgr;
 
     private final String[] sarchSubjects;
     private final HashMap<Integer, SearchPanel> searchPanels;

@@ -1,12 +1,9 @@
 package de.dhbw.swe.camping_site_mgt;
 
-import de.dhbw.swe.camping_site_mgt.booking_mgt.BookingMgr;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabaseMgr;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabasController;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
+import de.dhbw.swe.camping_site_mgt.data_mgt.DataMgr;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.*;
-import de.dhbw.swe.camping_site_mgt.person_mgt.EmployeeMgr;
-import de.dhbw.swe.camping_site_mgt.place_mgt.*;
-import de.dhbw.swe.camping_site_mgt.service_mgt.ServiceMgr;
 
 public class CampingSiteManagement {
 
@@ -43,8 +40,13 @@ public class CampingSiteManagement {
      * 
      */
     public CampingSiteManagement() {
-	configDatabaseMgr();
-	guiCtrl = new GuiController();
+	dbCtrl = new DatabasController();
+	final String dbAddress = "jdbc:mysql://" + HOST_NAME + "/" + DATABASE_NAME;
+	dbCtrl.connect(dbAddress, "willi", "bald");
+
+	final DataMgr dataMgr = new DataMgr(dbCtrl);
+
+	guiCtrl = new GuiController(dataMgr.getDataObjectMgrs());
 	addApplicationClosedListener();
     }
 
@@ -53,31 +55,14 @@ public class CampingSiteManagement {
 
 	    @Override
 	    public void closedApplication() {
-		if (connectedWithDb) {
-		    dbMgr.disconnect();
-		}
+		dbCtrl.disconnect();
 	    }
 	});
     }
 
-    /**
-     * Configuring the {@link DatabaseMgr}.
-     */
-    private void configDatabaseMgr() {
-	dbMgr = DatabaseMgr.getInstance();
-	connectedWithDb = dbMgr.connect("jdbc:mysql://" + HOST_NAME + "/"
-		+ DATABASE_NAME, "willi", "bald");
-    }
-
-    private BookingMgr bookingManager;
-    private boolean connectedWithDb;
-    /** The {@link DatabaseController}. */
-    private DatabaseMgr dbMgr;
-    private EmployeeMgr employeeManager;
+    /** The {@link DatabasController}. */
+    private final DatabasController dbCtrl;
     /** The {@link GuiController}. */
     private final GuiController guiCtrl;
-    private PitchMgr pitchManager;
-    private ServiceMgr serviceManager;
-    private SiteMgr siteManager;
 
 }

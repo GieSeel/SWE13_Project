@@ -1,13 +1,15 @@
 package de.dhbw.swe.camping_site_mgt.gui_mgt;
 
-import de.dhbw.swe.camping_site_mgt.common.LanguageListener;
-import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageMgr;
-import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageProperties;
+import java.util.HashMap;
+
+import de.dhbw.swe.camping_site_mgt.common.*;
+import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.MapPanelController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.MapController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map_info.MapInformationController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.options.OptionController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt.SearchPanelController;
+import de.dhbw.swe.camping_site_mgt.person_mgt.PersonMgr;
 
 public class GuiController {
     /** The {@link LanguageMgr}. */
@@ -33,7 +35,9 @@ public class GuiController {
 	scaleFactor = theScaleFactor;
     }
 
-    public GuiController() {
+    public GuiController(
+	    final HashMap<Class<?>, BaseDataObjectMgr> theDataObjectMgrs) {
+	dataObjectMgr = theDataObjectMgrs;
 	init();
     }
 
@@ -61,7 +65,9 @@ public class GuiController {
     private void init() {
 	view = new Gui();
 	adminTabsCtrl = new AdministrationTabsController();
-	searchPanelController = new SearchPanelController();
+	searchPanelController = new SearchPanelController(
+		(CountryMgr) dataObjectMgr.get(CountryMgr.class),
+		(PersonMgr) dataObjectMgr.get(PersonMgr.class));
 
 	final MapController mapController;
 	mapController = new MapController("map/Valalta_BigMap_v8.png");
@@ -99,6 +105,8 @@ public class GuiController {
 
     /** The {@link AdministrationTabsController}. */
     private AdministrationTabsController adminTabsCtrl;
+
+    private final HashMap<Class<?>, BaseDataObjectMgr> dataObjectMgr;
 
     /** The {@link LanguageProperties}. */
     private LanguageProperties lp;

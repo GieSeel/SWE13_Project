@@ -19,6 +19,7 @@ public interface LanguageProperties {
     String CLICK_TO_SELECT = "click to select";
     String COLUMN_HOUSENR = "House Number";
     String COLUMN_STREET = "Street";
+    String DB_NOT_CONNECTED = "Not connected with database!";
     /** Delivery point property. */
     String DELIVERY_POINT = "Delivery Point";
     String DM_ACRONYM = "Acroym";
@@ -123,8 +124,8 @@ public interface LanguageProperties {
     String TYPE_SITE_FIREPLACE = "Fireplace";
     String TYPE_SITE_OTHER = "Other";
     String TYPE_SITE_RECEPTION = "Reception";
-    String TYPE_SITE_SALE = "Sale";
 
+    String TYPE_SITE_SALE = "Sale";
     String TYPE_SITE_SANITARYFACILLITIES = "Sanitary Facillities";
     String TYPE_SITE_SERVICE = "Service";
     String TYPE_SITE_UTILLITYROOM = "Utillityroom";

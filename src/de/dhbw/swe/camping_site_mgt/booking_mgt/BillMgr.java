@@ -18,11 +18,10 @@
  */
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.*;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
@@ -32,66 +31,36 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
  * @version 1.0
  */
 public class BillMgr extends BaseDataObjectMgr {
-    /** The {@link BillItemMgr}. */
-    private static BillItemMgr billItemMgr = BillItemMgr.getInstance();
-
-    /** The singleton instance. */
-    private static BillMgr instance;
 
     /**
-     * Returns the instance.
+     * Constructor.
      * 
-     * @return the singleton instance.
+     * @param db
+     *            the {@link AccessableDatabase}
+     * @param theBillItemMgr
+     *            the {@link BillItemMgr}
      */
-    public static synchronized BillMgr getInstance() {
-	if (instance == null) {
-	    instance = new BillMgr();
-	}
-	return instance;
+    public BillMgr(final AccessableDatabase db, final BillItemMgr theBillItemMgr) {
+	super(db);
+	billItemMgr = theBillItemMgr;
+	load();
     }
 
-    /**
-     * Private constructor. Singleton.
-     */
-    private BillMgr() {
-	super();
-    }
-
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getTableName()
-     */
     @Override
     public String getTableName() {
 	return new Bill().getTableName();
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#evenUpdateInUse()
-     */
     @Override
     protected boolean evenUpdateInUse() {
 	return false;
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getLogger()
-     */
     @Override
     protected CampingLogger getLogger() {
 	return CampingLogger.getLogger(getClass());
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#getSubMgr()
-     */
     @Override
     protected Vector<BaseDataObjectMgr> getSubMgr() {
 	final Vector<BaseDataObjectMgr> subMgr = new Vector<>();
@@ -99,11 +68,6 @@ public class BillMgr extends BaseDataObjectMgr {
 	return subMgr;
     }
 
-    /**
-     * {@inheritDoc}.
-     * 
-     * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr#map2DataObject(java.util.HashMap)
-     */
     @Override
     protected DataObject map2DataObject(final HashMap<String, Object> map) {
 	int id = 0;
@@ -117,4 +81,6 @@ public class BillMgr extends BaseDataObjectMgr {
 
 	return new Bill(id, number, billItem, multiplier);
     }
+
+    private final BillItemMgr billItemMgr;
 }

@@ -1,7 +1,6 @@
 package de.dhbw.swe.camping_site_mgt.common.database_mgt;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
@@ -12,6 +11,8 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
  * @version 1.0
  */
 public class ObjectFieldAccess {
+
+    private static AccessableDatabase db;
 
     private static CampingLogger logger;
 
@@ -52,7 +53,6 @@ public class ObjectFieldAccess {
 	logger = CampingLogger.getLogger(object.getClass());
 
 	final String methodName = "querySelect" + object.getClass();
-	final DatabaseController db = DatabaseController.getInstance();
 
 	for (final Method method : object.getClass().getMethods()) {
 	    if (method.getName().toLowerCase().equals(methodName.toLowerCase())) {
@@ -67,6 +67,10 @@ public class ObjectFieldAccess {
 	    }
 	}
 	logger.error("Class doesn't contain method: " + methodName);
+    }
+
+    public static void setDb(final AccessableDatabase theDb) {
+	db = theDb;
     }
 
     /**

@@ -22,8 +22,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
-import de.dhbw.swe.camping_site_mgt.common.Euro;
-import de.dhbw.swe.camping_site_mgt.common.IntArrayParser;
+import de.dhbw.swe.camping_site_mgt.common.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
@@ -32,28 +31,9 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
  * @author GieSeel
  * @version 1.0
  */
-public class DatabaseMgr {
-    /** The singleton instance. */
-    private static DatabaseMgr instance;
-    private static CampingLogger logger = CampingLogger.getLogger(DatabaseMgr.class);
-
-    /**
-     * Returns the instance.
-     * 
-     * @return the singleton instance.
-     */
-    public static synchronized DatabaseMgr getInstance() {
-	if (instance == null) {
-	    instance = new DatabaseMgr();
-	}
-	return instance;
-    }
-
-    /**
-     * Private constructor. Singleton.
-     */
-    private DatabaseMgr() {
-    }
+public class DatabaseConnector implements AccessableDatabase {
+    /** The {@link CampingLogger}. */
+    private static CampingLogger logger = CampingLogger.getLogger(DatabaseConnector.class);
 
     /**
      * Connects to database.
@@ -74,7 +54,6 @@ public class DatabaseMgr {
 	} catch (InstantiationException | IllegalAccessException
 		| ClassNotFoundException e) {
 	    logger.error("There is an error while trying to connect with database!");
-	    // e.printStackTrace();
 	    return false;
 	}
 
@@ -127,13 +106,7 @@ public class DatabaseMgr {
 	return true;
     }
 
-    /**
-     * Gets all entries of the given table.
-     * 
-     * @param table
-     *            the table
-     * @return the database objects
-     */
+    @Override
     public List<HashMap<String, Object>> getAllEntriesOf(final String table) {
 	PreparedStatement statement;
 	final String query = "SELECT * FROM " + table + ";";
@@ -197,15 +170,7 @@ public class DatabaseMgr {
 	return entries;
     }
 
-    /**
-     * Saves an entry into database.
-     * 
-     * @param string
-     *            table where the entry will be saved
-     * @param dbObject
-     *            the prepared object
-     * @return
-     */
+    @Override
     public int insertEntryInto(final String table,
 	    final HashMap<String, Object> dbObject) {
 	final ColumnInfo[] columnInfos = DataStructure.getStructureFor(table);
@@ -240,14 +205,7 @@ public class DatabaseMgr {
 	return 0;
     }
 
-    /**
-     * Removes an entry from database.
-     * 
-     * @param table
-     *            the table where the entry will be removed
-     * @param dbObject
-     *            the prepared object
-     */
+    @Override
     public void removeEntryFrom(final String table,
 	    final HashMap<String, Object> dbObject) {
 	final String query = "DELETE FROM " + table + " WHERE id = ?";
@@ -261,15 +219,7 @@ public class DatabaseMgr {
 
     }
 
-    /**
-     * Saves an entry into database.
-     * 
-     * @param table
-     *            table where the entry will be saved
-     * @param dbObject
-     *            the prepared object
-     * @return
-     */
+    @Override
     public void updateEntryIn(final String table,
 	    final HashMap<String, Object> dbObject) {
 	final ColumnInfo[] columnInfos = DataStructure.getStructureFor(table);
