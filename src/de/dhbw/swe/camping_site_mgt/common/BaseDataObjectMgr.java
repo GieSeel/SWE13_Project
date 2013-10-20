@@ -519,7 +519,6 @@ public abstract class BaseDataObjectMgr {
 	for (final BaseDataObjectMgr subManager : getSubMgr()) {
 	    final DataObject daObject = (DataObject) ObjectFieldAccess.getValueOf(
 		    subManager.getTableName(), dataObject);
-	    // TODO null for VisitoTaxClass
 	    daObject.addUsage(getTableName(), id);
 	}
     }

@@ -62,6 +62,7 @@ public class GuestMgr extends BaseDataObjectMgr {
 	    id = (int) map.get("id");
 	}
 	final Person person = (Person) map.get("person");
+	// TODO consistency
 	final VisitorsTaxClass visitorsTaxClass = (VisitorsTaxClass) map.get("visitorstaxclass");
 
 	return new Guest(id, person, visitorsTaxClass);
