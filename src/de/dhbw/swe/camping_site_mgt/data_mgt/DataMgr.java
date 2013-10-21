@@ -6,7 +6,8 @@ import de.dhbw.swe.camping_site_mgt.booking_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.*;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.AccessableDatabase;
 import de.dhbw.swe.camping_site_mgt.person_mgt.*;
-import de.dhbw.swe.camping_site_mgt.place_mgt.*;
+import de.dhbw.swe.camping_site_mgt.place_mgt.PitchMgr;
+import de.dhbw.swe.camping_site_mgt.place_mgt.SiteMgr;
 import de.dhbw.swe.camping_site_mgt.service_mgt.ServiceMgr;
 
 public class DataMgr {

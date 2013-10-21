@@ -3,18 +3,24 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 14. Okt 2013 um 12:05
+-- Erstellungszeit: 22. Okt 2013 um 01:04
 -- Server Version: 5.5.32
 -- PHP-Version: 5.4.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
 --
--- Datenbank: `camping`
+-- Datenbank: `swe_gieselseel`
 --
-CREATE DATABASE IF NOT EXISTS `camping` DEFAULT CHARACTER SET latin1 COLLATE latin1_german1_ci;
-USE `camping`;
+CREATE DATABASE IF NOT EXISTS `swe_gieselseel` DEFAULT CHARACTER SET latin1 COLLATE latin1_german1_ci;
+USE `swe_gieselseel`;
 
 -- --------------------------------------------------------
 
@@ -29,14 +35,6 @@ CREATE TABLE IF NOT EXISTS `address` (
   `town_ID` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=4 ;
-
---
--- Daten für Tabelle `address`
---
-
-INSERT INTO `address` (`id`, `street`, `houseNumber`, `town_ID`) VALUES
-(1, 'Schlehenweg', '3', 1),
-(3, 'Neue Straße', '5', 2);
 
 -- --------------------------------------------------------
 
@@ -71,13 +69,13 @@ CREATE TABLE IF NOT EXISTS `billitem` (
 --
 
 INSERT INTO `billitem` (`id`, `labeling`, `priceBusySeason`, `priceLowSeason`) VALUES
-(1, 3, 18.7, 12.5),
-(2, 1, 33.4, 25.3),
-(3, 2, 13.6, 8.5),
-(4, 4, 2, 1.2),
-(5, 5, 0.5, 0.3),
-(6, 6, 4.3, 0),
-(7, 7, 9.9, 5.1);
+(1, 2, 18.7, 12.5),
+(2, 0, 33.4, 25.3),
+(3, 1, 13.6, 8.5),
+(4, 3, 2, 1.2),
+(5, 4, 0.5, 0.3),
+(6, 5, 4.3, 0),
+(7, 6, 9.9, 5.1);
 
 -- --------------------------------------------------------
 
@@ -110,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `chipcard` (
   `validFrom` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `validTo` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -123,14 +121,16 @@ CREATE TABLE IF NOT EXISTS `country` (
   `name` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `acronym` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=24 ;
 
 --
 -- Daten für Tabelle `country`
 --
 
 INSERT INTO `country` (`id`, `name`, `acronym`) VALUES
-(1, 'Deutschland', 'DE');
+(1, 'Deutschland', 'DE'),
+(17, 'Wunderland', 'WL'),
+(22, 'Spanien', 'ES');
 
 -- --------------------------------------------------------
 
@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `employeerole` (
   `labeling` int(11) NOT NULL,
   `arrangement` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -201,14 +201,7 @@ CREATE TABLE IF NOT EXISTS `guest` (
   `person_ID` int(11) NOT NULL,
   `visitorsTaxClass_ID` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=2 ;
-
---
--- Daten für Tabelle `guest`
---
-
-INSERT INTO `guest` (`id`, `person_ID`, `visitorsTaxClass_ID`) VALUES
-(1, 1, 2);
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -227,15 +220,16 @@ CREATE TABLE IF NOT EXISTS `person` (
   `country_ID` int(11) NOT NULL DEFAULT '0',
   `dateOfBirth` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=46 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=51 ;
 
 --
 -- Daten für Tabelle `person`
 --
 
 INSERT INTO `person` (`id`, `identificationNumber`, `name`, `firstName`, `street`, `houseNumber`, `town_ID`, `country_ID`, `dateOfBirth`) VALUES
-(1, '123456789', 'Giesel', 'Benedikt', 'Schlehenweg', '3', 1, 1, '1992-02-23 23:00:00'),
-(43, '0123456789D', 'Seel', 'Florian', 'Buchenweg', '22/2', 9, 1, '1992-06-26 23:00:00');
+(1, '123456789D', 'Giesel', 'Benedikt', 'Tenneseeallee', 'X23', 2, 1, '1992-02-23 23:00:00'),
+(50, '020252309339', 'Musterman', 'Max', 'Schillerstraße', '5', 12, 22, '1985-05-01 22:00:00'),
+(2, '0123456789D', 'Seel', 'Florian', 'Buchenweg', '22/2', 11, 1, '1992-06-27 22:00:00');
 
 -- --------------------------------------------------------
 
@@ -250,12 +244,20 @@ CREATE TABLE IF NOT EXISTS `pitch` (
   `height` int(11) NOT NULL,
   `width` int(11) NOT NULL,
   `natureOfSoil` int(11) NOT NULL,
-  `deliveryPoint_ID` int(11) NOT NULL,
+  `site_ID` int(11) NOT NULL,
   `characteristics` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `xCoords` text COLLATE latin1_german1_ci NOT NULL,
   `yCoords` text COLLATE latin1_german1_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+--
+-- Daten für Tabelle `pitch`
+--
+
+INSERT INTO `pitch` (`id`, `area`, `type`, `height`, `width`, `natureOfSoil`, `site_ID`, `characteristics`, `xCoords`, `yCoords`) VALUES
+(1, 'A', 0, 100, 100, 0, 278, 'In the west!\\nJust one direkt neighbour!', '[7, 21, 39, 24]', '[1354, 1336, 1351, 1369]'),
+(2, 'A', 1, 100, 100, 1, 278, 'In the west!\\nJust two direkt neighbour!', '[23, 36, 53, 40]', '[1335, 1319, 1333, 1349]');
 
 -- --------------------------------------------------------
 
@@ -301,7 +303,14 @@ CREATE TABLE IF NOT EXISTS `site` (
   `openingHours` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `description` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=279 ;
+
+--
+-- Daten für Tabelle `site`
+--
+
+INSERT INTO `site` (`id`, `labeling`, `type`, `openingHours`, `description`) VALUES
+(278, 'Delivery Point', 1, '0-24', 'Electircity and Water');
 
 -- --------------------------------------------------------
 
@@ -314,16 +323,16 @@ CREATE TABLE IF NOT EXISTS `town` (
   `name` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   `postalCode` varchar(255) COLLATE latin1_german1_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=13 ;
 
 --
 -- Daten für Tabelle `town`
 --
 
 INSERT INTO `town` (`id`, `name`, `postalCode`) VALUES
-(1, 'Öhringen', '74613'),
 (2, 'Karlsruhe', '76131'),
-(9, 'Haigerloch', '72401');
+(11, 'Stetten', '72405'),
+(12, 'Mustercity', '420815');
 
 -- --------------------------------------------------------
 
@@ -336,7 +345,7 @@ CREATE TABLE IF NOT EXISTS `visitorstaxclass` (
   `labeling` int(11) NOT NULL,
   `price` float NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci AUTO_INCREMENT=5 ;
 
 --
 -- Daten für Tabelle `visitorstaxclass`
@@ -347,3 +356,7 @@ INSERT INTO `visitorstaxclass` (`id`, `labeling`, `price`) VALUES
 (2, 1, 1),
 (3, 2, 1.5),
 (4, 3, 0.5);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

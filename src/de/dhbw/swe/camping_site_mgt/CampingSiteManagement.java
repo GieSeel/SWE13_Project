@@ -3,12 +3,13 @@ package de.dhbw.swe.camping_site_mgt;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DatabasController;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 import de.dhbw.swe.camping_site_mgt.data_mgt.DataMgr;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.*;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.ApplicationClosedListener;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.GuiController;
 
 public class CampingSiteManagement {
 
     /** The (default) database name. */
-    private static String DATABASE_NAME = "camping";
+    private static String DATABASE_NAME = "swe_gieselseel";
 
     /** The (default) host name. */
     private static String HOST_NAME = "localhost";

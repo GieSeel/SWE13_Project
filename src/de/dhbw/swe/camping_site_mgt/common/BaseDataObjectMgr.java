@@ -209,7 +209,7 @@ public abstract class BaseDataObjectMgr {
 			// Date
 			try {
 			    objects.put(columnInfo.getFieldName(),
-				    new SimpleDateFormat("dd. MM yyyy").parse(val));
+				    new SimpleDateFormat("dd.MM.yyyy").parse(val));
 			} catch (final ParseException e) {
 			    getLogger().error(
 				    "Date-Parse exception while parsing display data to object data!");
@@ -466,7 +466,7 @@ public abstract class BaseDataObjectMgr {
 		    // Date
 		    displayData.put(
 			    columnKey,
-			    new SimpleDateFormat("dd. MM yyyy").format((Date) object));
+			    new SimpleDateFormat("dd.MM.yyyy").format((Date) object));
 		} else if (dbTyp.equals(Enum.class)) {
 		    // Enum
 		    displayData.put(columnKey, object.toString());

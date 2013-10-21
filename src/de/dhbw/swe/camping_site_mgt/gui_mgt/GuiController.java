@@ -2,7 +2,6 @@ package de.dhbw.swe.camping_site_mgt.gui_mgt;
 
 import java.util.HashMap;
 
-import de.dhbw.swe.camping_site_mgt.booking_mgt.BookingMgr;
 import de.dhbw.swe.camping_site_mgt.common.*;
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageMgr;
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageProperties;
@@ -70,9 +69,13 @@ public class GuiController {
 	view = new Gui();
 	adminTabsCtrl = new AdministrationTabsController();
 	searchPanelController = new SearchPanelController(
-		(CountryMgr) dataObjectMgr.get(CountryMgr.class),
-		(BookingMgr) dataObjectMgr.get(BookingMgr.class),
-		(PersonMgr) dataObjectMgr.get(PersonMgr.class));
+		(PersonMgr) dataObjectMgr.get(PersonMgr.class),
+		(CountryMgr) dataObjectMgr.get(CountryMgr.class));
+	// searchPanelController = new SearchPanelController(
+	// (BookingMgr) dataObjectMgr.get(BookingMgr.class),
+	// (EmployeeMgr) dataObjectMgr.get(EmployeeMgr.class),
+	// (GuestMgr) dataObjectMgr.get(GuestMgr.class),
+	// (ServiceMgr) dataObjectMgr.get(ServiceMgr.class));
 
 	final MapController mapController;
 	mapController = new MapController("map/Valalta_BigMap_v8.png",

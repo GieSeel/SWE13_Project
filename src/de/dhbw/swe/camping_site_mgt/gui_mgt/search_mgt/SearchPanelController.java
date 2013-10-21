@@ -25,7 +25,6 @@ import java.util.Vector;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import de.dhbw.swe.camping_site_mgt.booking_mgt.BookingMgr;
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
 import de.dhbw.swe.camping_site_mgt.common.CountryMgr;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
@@ -45,14 +44,22 @@ public class SearchPanelController implements Displayable {
      * Constructor.
      * 
      */
-    public SearchPanelController(final CountryMgr theCountryMgr,
-	    final BookingMgr theBookingMgr, final PersonMgr thePersonMgr) {
-	countryMgr = theCountryMgr;
-	bookingMgr = theBookingMgr;
+    public SearchPanelController(final PersonMgr thePersonMgr,
+	    final CountryMgr theCountryMgr) {
+	// final GuestMgr theGuestMgr) {
+	// public SearchPanelController(final BookingMgr theBookingMgr,
+	// final EmployeeMgr theEmployeeMgr, final GuestMgr theGuestMgr,
+	// final ServiceMgr theServiceMgr) {
+	// bookingMgr = theBookingMgr;
+	// employeeMgr = theEmployeeMgr;
+	// guestMgr = theGuestMgr;
+	// serviceMgr = theServiceMgr;
 	personMgr = thePersonMgr;
+	countryMgr = theCountryMgr;
+
 	view = new JPanel(new BorderLayout());
 	searchPanels = new HashMap<>();
-	activSubject = Search_Subjects.COUNTRIES;
+	activSubject = Search_Subjects.values()[0];
 
 	// Save search subjects
 	final Search_Subjects[] search_Subjects = Search_Subjects.values();
@@ -104,10 +111,23 @@ public class SearchPanelController implements Displayable {
 
 			// Get type of the object
 			final Search_Subjects searchSubject = Search_Subjects.values()[(int) newValues.get(-1)];
-			if (searchSubject.equals(Search_Subjects.COUNTRIES)) {
-			    dataMgr = countryMgr;
-			} else if (searchSubject.equals(Search_Subjects.PERSONS)) {
+			// if (searchSubject.equals(Search_Subjects.BOOKINGS)) {
+			// dataMgr = bookingMgr;
+			// } else
+			// if (searchSubject.equals(Search_Subjects.EMPLOYEES))
+			// {
+			// dataMgr = employeeMgr;
+			// } else
+			// if (searchSubject.equals(Search_Subjects.GUESTS)) {
+			// dataMgr = guestMgr;
+			if (searchSubject.equals(Search_Subjects.PERSONS)) {
 			    dataMgr = personMgr;
+			} else if (searchSubject.equals(Search_Subjects.COUNTRIES)) {
+			    dataMgr = countryMgr;
+			    // } else if
+			    // (searchSubject.equals(Search_Subjects.SERVICES))
+			    // {
+			    // dataMgr = serviceMgr;
 			} else {
 			    // TODO error unerwartetes search subject
 			}
@@ -125,10 +145,6 @@ public class SearchPanelController implements Displayable {
 				displayDataList);
 			;
 			// TODO evtl. nur removeOneEntry and insertOneEntry?
-
-			// makeCountriesPanel();
-			// refreshPanel();
-			// TODO daten aktuallisieren
 		    }
 		});
 	    }
@@ -144,10 +160,12 @@ public class SearchPanelController implements Displayable {
      * Initialize the search panels.
      */
     private void initPanels() {
+	// makeBookingsPanel();
+	// makeEmployeesPanel();
 	// makeGuestsPanel();
 	makePersonsPanel();
 	makeCountriesPanel();
-	// makeBookingsPanel();
+	// makeServicesPanel();
 
 	selectPanel(activSubject.ordinal());
 
@@ -159,16 +177,17 @@ public class SearchPanelController implements Displayable {
      */
     private void makeBookingsPanel() {
 	final Vector<String> fields = new Vector<>();
-	fields.add("booking_id");
-	fields.add("booking_chipCards");
-	fields.add("booking_equipments");
-	fields.add("booking_extraBookings");
-	fields.add("booking_fellowGuests");
-	fields.add("booking_from");
-	fields.add("booking_pitchBookings");
 	fields.add("person_firstName");
 	fields.add("person_name");
+
+	fields.add("booking_fellowGuests");
+	fields.add("booking_from");
 	fields.add("booking_until");
+	fields.add("booking_equipments");
+	fields.add("booking_pitchBookings");
+	fields.add("booking_extraBookings");
+	fields.add("booking_chipCards");
+
 	fields.add("bill");
 
 	// makePanel(bookingMgr, fields, Search_Subjects.BOOKINGS);
@@ -179,8 +198,8 @@ public class SearchPanelController implements Displayable {
      */
     private void makeCountriesPanel() {
 	final Vector<String> fields = new Vector<>();
-	fields.add("country_name");
 	fields.add("country_acronym");
+	fields.add("country_name");
 
 	makePanel(countryMgr, fields, Search_Subjects.COUNTRIES);
     }
@@ -188,11 +207,56 @@ public class SearchPanelController implements Displayable {
     /**
      * Save fields that will be displayed.
      */
+    private void makeEmployeesPanel() {
+	// final Vector<String> fields = new Vector<>();
+	// fields.add("person_identificationNumber");
+	// fields.add("person_name");
+	// fields.add("person_firstName");
+	// fields.add("person_dateOfBirth");
+	// fields.add("person_street");
+	// fields.add("person_houseNumber");
+	//
+	// fields.add("town_postalCode");
+	// fields.add("town_name");
+	//
+	// fields.add("country_acronym");
+	// fields.add("country_name");
+	//
+	// fields.add("employee_userName");
+	// fields.add("employee_password");
+	// fields.add("employee_blocked");
+	//
+	// fields.add("employeeRole_labeling");
+	// fields.add("employeeRole_arrangement");
+	//
+	// fields.add("chipCard_validFrom");
+	// fields.add("chipCard_validTo");
+	//
+	// makePanel(employeeMgr, fields, Search_Subjects.EMPLOYEES);
+    }
+
+    /**
+     * Save fields that will be displayed.
+     */
     private void makeGuestsPanel() {
 	final Vector<String> fields = new Vector<>();
-	// fields.add("country_name");
+	fields.add("person_identificationNumber");
+	fields.add("person_name");
+	fields.add("person_firstName");
+	fields.add("person_dateOfBirth");
+	fields.add("person_street");
+	fields.add("person_houseNumber");
 
-	// makePanel(GuestMgr.getInstance(), fields, Search_Subjects.GUESTS);
+	fields.add("town_postalCode");
+	fields.add("town_name");
+
+	fields.add("country_acronym");
+	fields.add("country_name");
+
+	fields.add("visitorstaxclass_labeling");
+	fields.add("visitorstaxclass_price");
+
+	// makePanel(guestMgr, fields, Search_Subjects.GUESTS);
     }
 
     /**
@@ -254,6 +318,36 @@ public class SearchPanelController implements Displayable {
     }
 
     /**
+     * Save fields that will be displayed.
+     */
+    private void makeServicesPanel() {
+	// final Vector<String> fields = new Vector<>();
+	// fields.add("service_description");
+	// fields.add("service_creationDate");
+	// fields.add("service_priority");
+	// fields.add("service_doneDate");
+	//
+	// fields.add("employeeRole_labeling");
+	// fields.add("employeeRole_arrangement");
+	//
+	// fields.add("site_labeling");
+	// fields.add("site_type");
+	// fields.add("site_openingHours");
+	// fields.add("site_description");
+	//
+	// fields.add("pitch_id");
+	// fields.add("pitch_area");
+	// fields.add("pitch_type");
+	// fields.add("pitch_height");
+	// fields.add("pitch_width");
+	// fields.add("pitch_natureOfSoil");
+	// fields.add("pitch_characteristics");
+	//
+	// makePanel(serviceMgr, fields, Search_Subjects.SERVICES);
+
+    }
+
+    /**
      * Registers the {@link SearchTableListener} in the {@link SearchPanel} s.
      * 
      * @param searchTableListener
@@ -296,10 +390,16 @@ public class SearchPanelController implements Displayable {
 
     private SearchPanel activeSearchPanel;
     private Search_Subjects activSubject;
-    private final BookingMgr bookingMgr;
+
     private final CountryMgr countryMgr;
+    // private final GuestMgr guestMgr;
+    // private final ServiceMgr serviceMgr;
+    // private final BookingMgr bookingMgr;
+    // private final EmployeeMgr employeeMgr;
     private final PersonMgr personMgr;
+
     private final String[] sarchSubjects;
+
     private final HashMap<Integer, SearchPanel> searchPanels;
     private final JPanel view;
 }
