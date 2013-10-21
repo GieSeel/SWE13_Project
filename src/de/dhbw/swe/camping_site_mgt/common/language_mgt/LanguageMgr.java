@@ -31,7 +31,7 @@ public class LanguageMgr {
     private static final CampingLogger logger = CampingLogger.getLogger(LanguageMgr.class);
 
     private static String PROGRAM_PROPERTY_DIR = System.getProperty("user.home")
-	    + "/Documents/Campinplatzverwaltung/";
+	    + "/Documents/CampingSiteManager/";
 
     static public LanguageMgr getInstance() {
 	if (languageMgr == null) {
