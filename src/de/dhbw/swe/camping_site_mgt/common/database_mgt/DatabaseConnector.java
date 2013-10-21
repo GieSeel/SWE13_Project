@@ -22,7 +22,8 @@ import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
-import de.dhbw.swe.camping_site_mgt.common.*;
+import de.dhbw.swe.camping_site_mgt.common.Euro;
+import de.dhbw.swe.camping_site_mgt.common.IntArrayParser;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
@@ -147,7 +148,7 @@ public class DatabaseConnector implements AccessableDatabase {
 		    } else if (dbTyp.equals(String.class)) {
 			// String
 			entry.put(fieldName, result.getString(dbName));
-		    } else if (dbTyp.equals(Array.class)) {
+		    } else if (dbTyp.equals(java.lang.reflect.Array.class)) {
 			// Array
 			entry.put(fieldName,
 				IntArrayParser.parseArray(result.getString(dbName)));
@@ -297,7 +298,7 @@ public class DatabaseConnector implements AccessableDatabase {
 		} catch (final SQLException e) {
 		    logger.error("SQL-Exception (fill String)" + e.getMessage());
 		}
-	    } else if (dbTyp.equals(Array.class)) {
+	    } else if (dbTyp.equals(java.lang.reflect.Array.class)) {
 		// Array
 		try {
 		    statement.setString(

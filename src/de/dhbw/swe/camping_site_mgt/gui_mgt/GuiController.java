@@ -2,14 +2,18 @@ package de.dhbw.swe.camping_site_mgt.gui_mgt;
 
 import java.util.HashMap;
 
+import de.dhbw.swe.camping_site_mgt.booking_mgt.BookingMgr;
 import de.dhbw.swe.camping_site_mgt.common.*;
-import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
+import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageMgr;
+import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageProperties;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.MapPanelController;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.area.MapAreas;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.MapController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map_info.MapInformationController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.options.OptionController;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt.SearchPanelController;
 import de.dhbw.swe.camping_site_mgt.person_mgt.PersonMgr;
+import de.dhbw.swe.camping_site_mgt.place_mgt.PitchMgr;
 
 public class GuiController {
     /** The {@link LanguageMgr}. */
@@ -67,10 +71,13 @@ public class GuiController {
 	adminTabsCtrl = new AdministrationTabsController();
 	searchPanelController = new SearchPanelController(
 		(CountryMgr) dataObjectMgr.get(CountryMgr.class),
+		(BookingMgr) dataObjectMgr.get(BookingMgr.class),
 		(PersonMgr) dataObjectMgr.get(PersonMgr.class));
 
 	final MapController mapController;
-	mapController = new MapController("map/Valalta_BigMap_v8.png");
+	mapController = new MapController("map/Valalta_BigMap_v8.png",
+		new MapAreas().getAreas(),
+		(PitchMgr) dataObjectMgr.get(PitchMgr.class));
 	final MapInformationController mapInfoController = new MapInformationController();
 	mapPanelCtrl = new MapPanelController(mapController, mapInfoController);
 

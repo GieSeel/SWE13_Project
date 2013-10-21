@@ -45,7 +45,7 @@ public class Pitch extends BaseDataObject implements PitchInterface {
 	super(id);
 	this.type = type;
 	this.areaName = area;
-	this.deliveryPoint = deliveryPoint;
+	this.site = deliveryPoint;
 	this.characteristics = characteristics;
 	this.natureOfSoil = natureOfSoil;
 	this.width = width;
@@ -66,7 +66,7 @@ public class Pitch extends BaseDataObject implements PitchInterface {
 	final Pitch object = (Pitch) dataObject;
 	if (this.areaName.equals(object.getArea())
 		&& this.characteristics.equals(object.getCharacteristics())
-		&& this.deliveryPoint.equals(object.getDeliveryPoint())
+		&& this.site.equals(object.getDeliveryPoint())
 		&& this.height == object.getHeight()
 		&& this.natureOfSoil.equals(object.getNatureOfSoil())
 		&& this.shape.equals(object.getShape())
@@ -89,7 +89,7 @@ public class Pitch extends BaseDataObject implements PitchInterface {
 
     @Override
     public Site getDeliveryPoint() {
-	return deliveryPoint;
+	return getSite();
     }
 
     @Override
@@ -129,6 +129,10 @@ public class Pitch extends BaseDataObject implements PitchInterface {
 	    shiftedYPoints[i] = yPoints[i] - yShift;
 	}
 	return new Polygon(shiftedXPoints, shiftedYPoints, shiftedXPoints.length);
+    }
+
+    public Site getSite() {
+	return site;
     }
 
     @Override
@@ -175,14 +179,14 @@ public class Pitch extends BaseDataObject implements PitchInterface {
     private final String areaName;
     /** The characteristics. */
     private final String characteristics;
-    /** The delivery point {@link Site} */
-    private final Site deliveryPoint;
     /** The height/depth of the pitch. */
     private final int height;
     /** The nature of the pitch soil. */
     private final Pitch_NatureOfSoil natureOfSoil;
     /** The shape of the pitch area. */
     private final Polygon shape;
+    /** The delivery point {@link Site} */
+    private final Site site;
     /** The type of the pitch. */
     private final Pitch_Type type;
     /** The width of the pitch. */

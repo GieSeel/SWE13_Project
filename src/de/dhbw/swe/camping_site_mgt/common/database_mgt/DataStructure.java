@@ -1,11 +1,13 @@
 package de.dhbw.swe.camping_site_mgt.common.database_mgt;
 
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
 
 import de.dhbw.swe.camping_site_mgt.booking_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.*;
-import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
+import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageMgr;
+import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageProperties;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 import de.dhbw.swe.camping_site_mgt.person_mgt.*;
 import de.dhbw.swe.camping_site_mgt.place_mgt.*;
@@ -263,8 +265,8 @@ public class DataStructure {
 			new ColumnInfo("natureOfSoil", Enum.class,
 				LM.get(LP.DM_NATURE_OF_SOIL),
 				Pitch_NatureOfSoil.class),
-			new ColumnInfo("deliveryPoint_ID", Integer.class, null,
-				"deliveryPoint", Site.class),
+			new ColumnInfo("site_ID", Integer.class, null, "site",
+				Site.class),
 			new ColumnInfo("characteristics", String.class,
 				LM.get(LP.DM_CHARACTERISTICS)),
 			new ColumnInfo("xCoords", Array.class),
@@ -332,7 +334,7 @@ public class DataStructure {
 			new ColumnInfo("id", Integer.class),
 			new ColumnInfo("labeling", String.class,
 				LM.get(LP.DM_LABELING)),
-			new ColumnInfo("type", String.class, "Type"),
+			new ColumnInfo("type", Enum.class, "Type"),
 			new ColumnInfo("openingHours", String.class,
 				LM.get(LP.DM_OPENING_HOURS)),
 			new ColumnInfo("description", String.class,

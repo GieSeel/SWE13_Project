@@ -79,17 +79,16 @@ public class CampingTable extends JTable {
 
     /**
      * Inserts an empty row.
+     * 
+     * @param comboIndex
      */
-    public void insertEmptyRow() {
-	tableModel.insertEmptyRow();
+    public void insertEmptyRow(final int comboIndex) {
+	tableModel.insertEmptyRow(comboIndex);
     }
 
-    /**
-     * Removes all data and inserts an empty row.
-     */
-    public void removeAllDataAndInsertAnEmptyRow() {
+    @Override
+    public void removeAll() {
 	tableModel.removeAll();
-	tableModel.insertEmptyRow();
     }
 
     /**

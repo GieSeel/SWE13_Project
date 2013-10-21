@@ -1,7 +1,6 @@
 package de.dhbw.swe.camping_site_mgt.gui_mgt.search_mgt;
 
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -30,6 +29,10 @@ public class CampingTableModel extends AbstractTableModel {
 
     @Override
     public Class<? extends Object> getColumnClass(final int column) {
+	if (columns.get(column).getDbType().equals(Date.class)) {
+	    // TODO anderst speichern
+	    return String.class;
+	}
 	return columns.get(column).getDbType();
     }
 
@@ -88,12 +91,16 @@ public class CampingTableModel extends AbstractTableModel {
 
     /**
      * Inserts an empty row.
+     * 
+     * @param comboIndex
      */
-    public void insertEmptyRow() {
+    public void insertEmptyRow(final int comboIndex) {
 	final HashMap<Integer, Object> newData = new HashMap<>();
 	for (final Integer columnKey : columns.keySet()) {
 	    newData.put(columnKey, "");
 	}
+	// TODO evtl. schoener mit comboIndex
+	newData.put(-1, comboIndex);
 	insertData(newData);
     }
 

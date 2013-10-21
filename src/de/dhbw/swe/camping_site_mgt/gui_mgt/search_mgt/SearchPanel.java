@@ -9,7 +9,8 @@ import java.util.Map.Entry;
 import javax.swing.*;
 import javax.swing.table.*;
 
-import de.dhbw.swe.camping_site_mgt.common.*;
+import de.dhbw.swe.camping_site_mgt.common.Delegate;
+import de.dhbw.swe.camping_site_mgt.common.Euro;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.ColumnInfo;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.Gui;
@@ -36,6 +37,17 @@ public class SearchPanel extends JPanel {
 
 	// TODO autovervollständigung (evtl. erst wenn nur noch ein eintrag
 	// gefiltert ist)
+    }
+
+    /**
+     * Refreshes all data from data table.
+     * 
+     * @param data
+     *            the object list
+     */
+    public void refreshData(final Vector<HashMap<Integer, Object>> data) {
+	bodyTable.removeAll();
+	bodyTable.insertData(data);
     }
 
     /**
@@ -141,13 +153,12 @@ public class SearchPanel extends JPanel {
 	final DefaultTableColumnModel dtColumnModel = new DefaultTableColumnModel();
 	final CampingTable headTable = new CampingTable(new CampingTableModel(
 		columns), dtColumnModel);
-	final CampingTable bodyTable = new CampingTable(new CampingTableModel(
-		columns), dtColumnModel);
+	bodyTable = new CampingTable(new CampingTableModel(columns), dtColumnModel);
 	headTable.setHeadTableSettings();
 	headTable.setRowHeight(defaultHeight);
 	bodyTable.setBodyTableSettings();
 
-	headTable.insertEmptyRow();
+	headTable.insertEmptyRow(comboIndex);
 	bodyTable.insertData(data);
 
 	final TableRowSorter<CampingTableModel> sorter = new TableRowSorter<CampingTableModel>(
@@ -223,7 +234,8 @@ public class SearchPanel extends JPanel {
 		if (editor != null) {
 		    editor.stopCellEditing();
 		}
-		headTable.removeAllDataAndInsertAnEmptyRow();
+		headTable.removeAll();
+		headTable.insertEmptyRow(comboIndex);
 
 		// Reset Filter
 		clearRowFilterList(columns);
@@ -285,6 +297,7 @@ public class SearchPanel extends JPanel {
 	add(panFoot, BorderLayout.SOUTH);
     }
 
+    private CampingTable bodyTable;
     private final Delegate<SearchTableListener> delegate = new Delegate<>(
 	    SearchTableListener.class);
     private Vector<RowFilter<Object, Object>> rowFilterList = null;

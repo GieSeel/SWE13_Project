@@ -21,7 +21,8 @@ package de.dhbw.swe.camping_site_mgt.person_mgt;
 import java.util.*;
 
 import de.dhbw.swe.camping_site_mgt.common.*;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.AccessableDatabase;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
@@ -47,7 +48,7 @@ public class PersonMgr extends BaseDataObjectMgr {
 	super(db);
 	countryMgr = thecCountryMgr;
 	townMgr = theTownMgr;
-	load();
+	load(); // TODO alle in baseMgr
     }
 
     @Override

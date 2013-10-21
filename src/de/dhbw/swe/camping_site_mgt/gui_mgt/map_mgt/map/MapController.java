@@ -1,33 +1,30 @@
 package de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map;
 
-import java.awt.Polygon;
 import java.util.HashMap;
 
 import javax.swing.JComponent;
 
 import de.dhbw.swe.camping_site_mgt.common.Delegate;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.Displayable;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.area.*;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.area.Area;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.view.Map;
-import de.dhbw.swe.camping_site_mgt.place_mgt.*;
+import de.dhbw.swe.camping_site_mgt.place_mgt.PitchInterface;
+import de.dhbw.swe.camping_site_mgt.place_mgt.PitchMgr;
 
 public class MapController implements Displayable {
 
-    public MapController(final String mapPath) {
-	final HashMap<String, Area> areas = new MapAreas().getAreas();
+    public MapController(final String mapPath,
+	    final HashMap<String, Area> theAreas, final PitchMgr thePitchMgr) {
+	pitchMgr = thePitchMgr;
+
 	final HashMap<Integer, PitchInterface> pitches = new HashMap<>();
-	final Site dev278 = new Site(278, "Electircity and Water",
-		"Delivery Point", "0-24", Site_Type.DELIVERYPOINT);
-	pitches.put(1, new Pitch(1, Pitch_Type.CAMPERPITCH, "A", dev278,
-		"In the west!\nJust one direkt neighbour!",
-		Pitch_NatureOfSoil.GRASS, 100, 100, new int[] { 7, 21, 39, 24 },
-		new int[] { 1354, 1336, 1351, 1369 }));
-	pitches.put(2, new Pitch(2, Pitch_Type.CAMPERPITCH, "A", dev278,
-		"In the west!\nJust two direkt neighbour!",
-		Pitch_NatureOfSoil.SAND, 100, 100, new Polygon(new int[] { 23, 36,
-			53, 40 }, new int[] { 1335, 1319, 1333, 1349 }, 4)));
-	calculateAreaPitchCounts(areas, pitches);
-	view = new Map(mapPath, areas, pitches);
+	for (final DataObject object : thePitchMgr.getAllObjects().values()) {
+	    pitches.put(object.getId(), (PitchInterface) object);
+	}
+
+	calculateAreaPitchCounts(theAreas, pitches);
+	view = new Map(mapPath, theAreas, pitches);
     }
 
     @Override
@@ -64,6 +61,9 @@ public class MapController implements Displayable {
 	    area.setPitchCount(pitchCount);
 	}
     }
+
+    /** The {@link PitchMgr}. */
+    private final PitchMgr pitchMgr;
 
     /** The view. */
     private final Map view;

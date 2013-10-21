@@ -180,13 +180,13 @@ public class Booking extends BaseDataObject {
 	return until;
     }
 
-    Bill bill;
-    int[] chipCards;
-    int[] equipments;
-    int[] extraBookings;
-    int[] fellowGuests;
-    Date from;
-    int[] pitchBookings;
-    Guest responsibleGuest;
-    Date until;
+    private final Bill bill;
+    private final int[] chipCards;
+    private final int[] equipments;
+    private final int[] extraBookings;
+    private final int[] fellowGuests;
+    private final Date from;
+    private final int[] pitchBookings;
+    private final Guest responsibleGuest;
+    private final Date until;
 }

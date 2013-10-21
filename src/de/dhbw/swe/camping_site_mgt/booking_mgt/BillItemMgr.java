@@ -18,10 +18,13 @@
  */
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Vector;
 
-import de.dhbw.swe.camping_site_mgt.common.*;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
+import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
+import de.dhbw.swe.camping_site_mgt.common.Euro;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.AccessableDatabase;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
@@ -72,7 +75,7 @@ public class BillItemMgr extends BaseDataObjectMgr {
 	// TODO Array vs. ordinal
 	final BillItem_Labeling labeling;
 	final int labelingOrdinal = (int) map.get("labeling");
-	labeling = BillItem_Labeling.values()[labelingOrdinal - 1];
+	labeling = BillItem_Labeling.values()[labelingOrdinal];
 
 	final Euro priceBusySeason = (Euro) map.get("priceBusySeason");
 	final Euro priceLowSeason = (Euro) map.get("priceLowSeason");

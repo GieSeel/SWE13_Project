@@ -1,9 +1,11 @@
 package de.dhbw.swe.camping_site_mgt.place_mgt;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Vector;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.AccessableDatabase;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
@@ -72,11 +74,11 @@ public class PitchMgr extends BaseDataObjectMgr {
 
 	final Pitch_Type type;
 	final int typeOrdinal = (int) map.get("type");
-	type = Pitch_Type.values()[typeOrdinal - 1];
+	type = Pitch_Type.values()[typeOrdinal];
 
 	final int width = (int) map.get("width");
 
-	final Site deliveryPoint = (Site) map.get("deliveryPoint");
+	final Site deliveryPoint = (Site) map.get("site");
 
 	return new Pitch(id, type, area, deliveryPoint, characteristics,
 		natureOfSoil, width, height, xCoords, yCoords);
