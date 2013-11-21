@@ -124,6 +124,8 @@ public interface LanguageProperties {
     String TYPE_SITE_FIREPLACE = "Fireplace";
     String TYPE_SITE_OTHER = "Other";
     String TYPE_SITE_RECEPTION = "Reception";
+    String LABELING_BILLITEM_VISITORSTAXCLASSS = "Visitorstaxclass";
+    String LABELING_BILLITEM_VISITORSTAXCLASSS_REDUCED = "Visitorstaxclass Reduced";
 
     String TYPE_SITE_SALE = "Sale";
     String TYPE_SITE_SANITARYFACILLITIES = "Sanitary Facillities";

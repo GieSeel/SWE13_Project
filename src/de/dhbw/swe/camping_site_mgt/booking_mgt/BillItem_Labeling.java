@@ -10,7 +10,9 @@ public enum BillItem_Labeling {
 	    LanguageProperties.LABELING_BILLITEM_ELECTRICITY), ICEBOX(
 	    LanguageProperties.LABELING_BILLITEM_ICEBOX), PARKINGPLACE(
 	    LanguageProperties.LABELING_BILLITEM_PARKINGPLACE), TENTPITCH(
-	    LanguageProperties.LABELING_BILLITEM_TENTPITCH);
+	    LanguageProperties.LABELING_BILLITEM_TENTPITCH), VISITORSTAXCLASSS(
+	    LanguageProperties.LABELING_BILLITEM_VISITORSTAXCLASSS), VISITORSTAXCLASSS_REDUCED(
+	    LanguageProperties.LABELING_BILLITEM_VISITORSTAXCLASSS_REDUCED);
 
     private BillItem_Labeling(final String value) {
 	this.value = LanguageMgr.getInstance().get(value);
