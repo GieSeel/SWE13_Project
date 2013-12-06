@@ -1,6 +1,7 @@
 package de.dhbw.swe.camping_site_mgt.place_mgt;
 
 import java.awt.Polygon;
+import java.util.Arrays;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObject;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
@@ -162,7 +163,7 @@ public class Pitch extends BaseDataObject implements PitchInterface {
      */
     @Override
     public String getxCoords() {
-	return xCoords;
+	return Arrays.toString(shape.xpoints);
     }
 
     /**
@@ -172,7 +173,7 @@ public class Pitch extends BaseDataObject implements PitchInterface {
      */
     @Override
     public String getyCoords() {
-	return yCoords;
+	return Arrays.toString(shape.ypoints);
     }
 
     /** The {@link Area} name. */
@@ -191,8 +192,4 @@ public class Pitch extends BaseDataObject implements PitchInterface {
     private final Pitch_Type type;
     /** The width of the pitch. */
     private final int width;
-    /** The x coordinates */
-    private String xCoords;
-    /** the */
-    private String yCoords;
 }
