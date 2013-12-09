@@ -1,25 +1,42 @@
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObject;
-import de.dhbw.swe.camping_site_mgt.common.Euro;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 
 public class BillItem extends BaseDataObject {
+    /**
+     * Constructor.
+     * 
+     */
     public BillItem() {
-	this(null, null, null);
+	this(0, new BillElement(), 0);
     }
 
-    public BillItem(final BillItem_Labeling labeling, final Euro priceBusySeason,
-	    final Euro priceLowSeason) {
-	this(0, labeling, priceBusySeason, priceLowSeason);
+    /**
+     * Constructor.
+     * 
+     * @param current_price
+     * @param billItem
+     * @param multiplier
+     */
+    public BillItem(final int current_price, final BillElement billItem, final int multiplier) {
+	this(0, current_price, billItem, multiplier);
     }
 
-    public BillItem(final int id, final BillItem_Labeling labeling,
-	    final Euro priceBusySeason, final Euro priceLowSeason) {
+    /**
+     * Constructor.
+     * 
+     * @param id
+     * @param current_price
+     * @param billItem
+     * @param multiplier
+     */
+    public BillItem(final int id, final int current_price, final BillElement billItem,
+	    final int multiplier) {
 	super(id);
-	this.labeling = labeling;
-	this.priceBusySeason = priceBusySeason;
-	this.priceLowSeason = priceLowSeason;
+	this.current_price = current_price;
+	this.billElement = billItem;
+	this.multiplier = multiplier;
     }
 
     /**
@@ -30,39 +47,34 @@ public class BillItem extends BaseDataObject {
     @Override
     public boolean equals(final DataObject dataObject) {
 	final BillItem object = (BillItem) dataObject;
-	if (this.labeling.equals(object.getLabeling())
-		&& this.priceBusySeason.equals(object.getPriceBusySeason())
-		&& this.priceLowSeason.equals(object.getPriceLowSeason())) {
+	if (this.billElement.equals(object.getBillItem())
+		&& this.multiplier == object.getMultiplier()
+		&& this.current_price == object.getCurrentPrice()) {
 	    return true;
 	}
 	return false;
     }
 
-    /**
-     * Returns the labeling.
-     * 
-     * @return the labeling
-     */
-    public BillItem_Labeling getLabeling() {
-	return labeling;
+    public BillElement getBillItem() {
+	return billElement;
     }
 
     /**
-     * Returns the priceBusySeason.
+     * Returns the multiplier.
      * 
-     * @return the priceBusySeason
+     * @return the multiplier
      */
-    public Euro getPriceBusySeason() {
-	return priceBusySeason;
+    public int getMultiplier() {
+	return multiplier;
     }
 
     /**
-     * Returns the priceLowSeason.
+     * Returns the current_price.
      * 
-     * @return the priceLowSeason
+     * @return the current_price
      */
-    public Euro getPriceLowSeason() {
-	return priceLowSeason;
+    public int getCurrentPrice() {
+	return current_price;
     }
 
     /**
@@ -72,10 +84,10 @@ public class BillItem extends BaseDataObject {
      */
     @Override
     public String getTableName() {
-	return "billitem";
+	return "booking_bill_item";
     }
 
-    private final BillItem_Labeling labeling;
-    private final Euro priceBusySeason;
-    private final Euro priceLowSeason;
+    private final BillElement billElement;
+    private final int multiplier;
+    private final int current_price;
 }

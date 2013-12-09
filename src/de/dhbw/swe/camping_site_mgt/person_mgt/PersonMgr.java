@@ -31,6 +31,7 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
  * @author GieSeel
  * @version 1.0
  */
+@Deprecated
 public class PersonMgr extends BaseDataObjectMgr {
 
     /**
@@ -43,10 +44,11 @@ public class PersonMgr extends BaseDataObjectMgr {
      * @param theTownMgr
      *            the {@link TownMgr}
      */
-    public PersonMgr(final AccessableDatabase db, final CountryMgr thecCountryMgr,
+    public PersonMgr(final AccessableDatabase db, AddressMgr theAddressMgr, final CountryMgr theCountryMgr,
 	    final TownMgr theTownMgr) {
 	super(db);
-	countryMgr = thecCountryMgr;
+	addressMgr = theAddressMgr;
+	countryMgr = theCountryMgr;
 	townMgr = theTownMgr;
 	load(); // TODO alle in baseMgr
     }
@@ -69,6 +71,7 @@ public class PersonMgr extends BaseDataObjectMgr {
     @Override
     protected Vector<BaseDataObjectMgr> getSubMgr() {
 	final Vector<BaseDataObjectMgr> subMgr = new Vector<>();
+	subMgr.add(addressMgr);
 	subMgr.add(countryMgr);
 	subMgr.add(townMgr);
 	return subMgr;
@@ -80,19 +83,19 @@ public class PersonMgr extends BaseDataObjectMgr {
 	if (map.containsKey("id")) {
 	    id = (int) map.get("id");
 	}
-	final Date dateOfBirth = (Date) map.get("dateOfBirth");
-	final String firstName = (String) map.get("firstName");
-	final String houseNumber = (String) map.get("houseNumber");
-	final String identificationNumber = (String) map.get("identificationNumber");
-	final String name = (String) map.get("name");
-	final String street = (String) map.get("street");
-
-	final Country country = (Country) map.get("country");
-	final Town town = (Town) map.get("town");
-
-	return new Person(id, identificationNumber, firstName, name, dateOfBirth,
-		street, houseNumber, town, country);
+	String identification_number = (String) map.get("identification_number");
+	String name = (String) map.get("name");
+	String first_name = (String) map.get("first_name");
+	Date date_of_birth = (Date) map.get("date_of_birth");
+	Address address = (Address) map.get("address");
+	Town town = (Town) map.get("town");
+	Country country = (Country) map.get("country");
+	
+	return new Person(id, identification_number, name, first_name, date_of_birth, address, town, country);
     }
+    
+    private AddressMgr addressMgr;
+
 
     /** The {@link CountryMgr} */
     private final CountryMgr countryMgr;

@@ -1,5 +1,5 @@
 /**
- * Comments for file ChipCardMgr.java
+ * Comments for file AddressMgr.java
  *
  * @author   GieSeel
  *
@@ -24,12 +24,12 @@ import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
- * The manager class for the {@link ChipCard} objects.
+ * The manager class for the {@link Address} objects.
  * 
  * @author GieSeel
  * @version 1.0
  */
-public class ChipCardMgr extends BaseDataObjectMgr {
+public class AddressMgr extends BaseDataObjectMgr {
 
     /**
      * Constructor.
@@ -37,19 +37,19 @@ public class ChipCardMgr extends BaseDataObjectMgr {
      * @param db
      *            the {@link AccessableDatabase}
      */
-    public ChipCardMgr(final AccessableDatabase db) {
+    public AddressMgr(final AccessableDatabase db) {
 	super(db);
 	load();
     }
 
     @Override
     public String getTableName() {
-	return new ChipCard().getTableName();
+	return new Address().getTableName();
     }
 
     @Override
     protected boolean evenUpdateInUse() {
-	return true;
+	return false;
     }
 
     @Override
@@ -64,13 +64,14 @@ public class ChipCardMgr extends BaseDataObjectMgr {
 
     @Override
     protected DataObject map2DataObject(final HashMap<String, Object> map) {
-	int id = 0;
-	if (map.containsKey("id")) {
-	    id = (int) map.get("id");
-	}
-	final Date validFrom = (Date) map.get("validFrom");
-	final Date validTo = (Date) map.get("validTo");
+	int id;
+	String houseNumber;
+	String street;
 
-	return new ChipCard(id, validFrom, validTo);
+	id = (int) map.get("id");
+	street = (String) map.get("street");
+	houseNumber = (String) map.get("houseNumber");
+
+	return new Address(id, street, houseNumber);
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Comments for file BillItemMgr.java
+ * Comments for file BillMgr.java
  *
  * @author   GieSeel
  *
@@ -18,13 +18,10 @@
  */
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.*;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
-import de.dhbw.swe.camping_site_mgt.common.Euro;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.AccessableDatabase;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
@@ -33,6 +30,8 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
  * @author GieSeel
  * @version 1.0
  */
+@Deprecated
+// Wird alles von Booking erledigt
 public class BillItemMgr extends BaseDataObjectMgr {
 
     /**
@@ -40,9 +39,12 @@ public class BillItemMgr extends BaseDataObjectMgr {
      * 
      * @param db
      *            the {@link AccessableDatabase}
+     * @param theBillItemMgr
+     *            the {@link BillElementMgr}
      */
-    public BillItemMgr(final AccessableDatabase db) {
+    public BillItemMgr(final AccessableDatabase db, final BillElementMgr theBillElementMgr) {
 	super(db);
+	billElementMgr = theBillElementMgr;
 	load();
     }
 
@@ -63,7 +65,9 @@ public class BillItemMgr extends BaseDataObjectMgr {
 
     @Override
     protected Vector<BaseDataObjectMgr> getSubMgr() {
-	return null;
+	final Vector<BaseDataObjectMgr> subMgr = new Vector<>();
+	subMgr.add(billElementMgr);
+	return subMgr;
     }
 
     @Override
@@ -72,14 +76,13 @@ public class BillItemMgr extends BaseDataObjectMgr {
 	if (map.containsKey("id")) {
 	    id = (int) map.get("id");
 	}
-	// TODO Array vs. ordinal
-	final BillItem_Labeling labeling;
-	final int labelingOrdinal = (int) map.get("labeling");
-	labeling = BillItem_Labeling.values()[labelingOrdinal];
+	final int multiplier = (int) map.get("multiplier");
+	final int number = (int) map.get("number");
 
-	final Euro priceBusySeason = (Euro) map.get("priceBusySeason");
-	final Euro priceLowSeason = (Euro) map.get("priceLowSeason");
+	final BillElement billItem = (BillElement) map.get("billItem");
 
-	return new BillItem(id, labeling, priceBusySeason, priceLowSeason);
+	return new BillItem(id, number, billItem, multiplier);
     }
+
+    private final BillElementMgr billElementMgr;
 }

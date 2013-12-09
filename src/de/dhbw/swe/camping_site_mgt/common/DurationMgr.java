@@ -1,5 +1,5 @@
 /**
- * Comments for file VisitorsTaxClassMgr.java
+ * Comments for file DurationMgr.java
  *
  * @author   GieSeel
  *
@@ -16,22 +16,20 @@
  * copied or distributed with electronic tools or by paper copy or 
  * any other process without written authorization of GieSeel.
  */
-package de.dhbw.swe.camping_site_mgt.person_mgt;
+package de.dhbw.swe.camping_site_mgt.common;
 
 import java.util.*;
 
-import de.dhbw.swe.camping_site_mgt.common.*;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
- * The manager class for the {@link VisitorsTaxClass} objects.
+ * The manager class for the {@link Duration} objects.
  * 
  * @author GieSeel
  * @version 1.0
  */
-@Deprecated
-public class VisitorsTaxClassMgr extends BaseDataObjectMgr {
+public class DurationMgr extends BaseDataObjectMgr {
 
     /**
      * Constructor.
@@ -39,14 +37,14 @@ public class VisitorsTaxClassMgr extends BaseDataObjectMgr {
      * @param db
      *            the {@link AccessableDatabase}
      */
-    public VisitorsTaxClassMgr(final AccessableDatabase db) {
+    public DurationMgr(final AccessableDatabase db) {
 	super(db);
 	load();
     }
 
     @Override
     public String getTableName() {
-	return new VisitorsTaxClass().getTableName();
+	return new Duration().getTableName();
     }
 
     @Override
@@ -66,16 +64,14 @@ public class VisitorsTaxClassMgr extends BaseDataObjectMgr {
 
     @Override
     protected DataObject map2DataObject(final HashMap<String, Object> map) {
-	int id = 0;
-	if (map.containsKey("id")) {
-	    id = (int) map.get("id");
-	}
-	final VisitorsTaxClass_Labeling labeling;
-	final int labelingOrdinal = (int) map.get("labeling");
-	labeling = VisitorsTaxClass_Labeling.values()[labelingOrdinal];
+	int id;
+	Date from;
+	Date until;
 
-	final Euro price = (Euro) map.get("price");
+	id = (int) map.get("id");
+	from = (Date) map.get("from");
+	until = (Date) map.get("until");
 
-	return new VisitorsTaxClass(id, labeling, price);
+	return new Duration(id, from, until);
     }
 }

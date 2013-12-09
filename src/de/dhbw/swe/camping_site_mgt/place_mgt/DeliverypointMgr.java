@@ -9,12 +9,12 @@ import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
 
 /**
- * The manager class for the {@link Site} objects.
+ * The manager class for the {@link Deliverypoint} objects.
  * 
  * @author GieSeel
  * @version 1.0
  */
-public class SiteMgr extends BaseDataObjectMgr {
+public class DeliverypointMgr extends BaseDataObjectMgr {
 
     /**
      * Constructor.
@@ -22,14 +22,14 @@ public class SiteMgr extends BaseDataObjectMgr {
      * @param db
      *            the {@link AccessableDatabase}
      */
-    public SiteMgr(final AccessableDatabase db) {
+    public DeliverypointMgr(final AccessableDatabase db) {
 	super(db);
 	load();
     }
 
     @Override
     public String getTableName() {
-	return new Site().getTableName();
+	return new Deliverypoint().getTableName();
     }
 
     @Override
@@ -54,10 +54,7 @@ public class SiteMgr extends BaseDataObjectMgr {
 	    id = (int) map.get("id");
 	}
 	final String description = (String) map.get("description");
-	final String labeling = (String) map.get("labeling");
-	final String opening_hours = (String) map.get("opening_hours");
-	final Site_Type type = Site_Type.values()[(int) map.get("type")];
 
-	return new Site(id, description, labeling, opening_hours, type);
+	return new Deliverypoint(id, description);
     }
 }

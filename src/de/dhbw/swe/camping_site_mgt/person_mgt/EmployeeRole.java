@@ -79,7 +79,7 @@ public class EmployeeRole extends BaseDataObject {
      */
     @Override
     public String getTableName() {
-	return "employeerole";
+	return "employee_role";
     }
 
     private final EmployeeRole_Arrangement arrangement;

@@ -2,7 +2,10 @@ package de.dhbw.swe.camping_site_mgt.person_mgt;
 
 import java.util.Date;
 
-import de.dhbw.swe.camping_site_mgt.common.*;
+import de.dhbw.swe.camping_site_mgt.common.Address;
+import de.dhbw.swe.camping_site_mgt.common.BaseDataObject;
+import de.dhbw.swe.camping_site_mgt.common.Country;
+import de.dhbw.swe.camping_site_mgt.common.Town;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 
 public class Person extends BaseDataObject implements PersonInterface {
@@ -12,7 +15,7 @@ public class Person extends BaseDataObject implements PersonInterface {
      * 
      */
     public Person() {
-	this(null, null, null, null, null, null, new Town(), new Country());
+    	this(null, null, null, null, null, null, null);
     }
 
     /**
@@ -20,34 +23,31 @@ public class Person extends BaseDataObject implements PersonInterface {
      * 
      * @param id
      *            the id
-     * @param identificationNumber
+     * @param identification_number
      *            identification number
-     * @param firstName
-     *            the first name
      * @param name
      *            the name
-     * @param dateOfBirth
+     * @param first_name
+     *            the first name
+     * @param date_of_birth
      *            the birth date
-     * @param street
-     *            the street
-     * @param houseNumber
-     *            the house number
+     * @param adress
+     * 			  the {@link Address}
      * @param town
      *            the {@link Town}
      * @param country
      *            the {@link Country}
      */
-    public Person(final int id, final String identificationNumber,
-	    final String firstName, final String name, final Date dateOfBirth,
-	    final String street, final String houseNumber, final Town town,
+    public Person(final int id, final String identification_number,
+	    final String name, final String first_name, final Date date_of_birth,
+	    final Address address, final Town town,
 	    final Country country) {
 	super(id);
-	this.identificationNumber = identificationNumber;
-	this.firstName = firstName;
+	this.identification_number = identification_number;
 	this.name = name;
-	this.dateOfBirth = dateOfBirth;
-	this.street = street;
-	this.houseNumber = houseNumber;
+	this.first_name = first_name;
+	this.date_of_birth = date_of_birth;
+	this.address = address;
 	this.town = town;
 	this.country = country;
     }
@@ -55,28 +55,26 @@ public class Person extends BaseDataObject implements PersonInterface {
     /**
      * Constructor.
      * 
-     * @param identificationNumber
+     * @param identification_number
      *            identification number
-     * @param firstName
-     *            the first name
      * @param name
      *            the name
-     * @param dateOfBirth
+     * @param first_name
+     *            the first name
+     * @param date_of_birth
      *            the birth date
-     * @param street
-     *            the street
-     * @param houseNumber
-     *            the house number
+     * @param adress
+     * 			  the {@link Address}
      * @param town
      *            the {@link Town}
      * @param country
      *            the {@link Country}
      */
-    public Person(final String identificationNumber, final String firstName,
-	    final String name, final Date dateOfBirth, final String street,
-	    final String houseNumber, final Town town, final Country country) {
-	this(0, identificationNumber, firstName, name, dateOfBirth, street,
-		houseNumber, town, country);
+    public Person(final String identification_number,
+    	    final String name, final String first_name, final Date date_of_birth,
+    	    final Address address, final Town town,
+    	    final Country country) {
+    	this(0, identification_number, name, first_name, date_of_birth, address, town, country);
     }
 
     /**
@@ -86,93 +84,72 @@ public class Person extends BaseDataObject implements PersonInterface {
      */
     @Override
     public boolean equals(final DataObject dataObject) {
-	final Person object = (Person) dataObject;
-	if (this.country.equals(object.getCountry())
-		&& this.dateOfBirth.equals(object.getDateOfBirth())
-		&& this.firstName.equals(object.getFirstName())
-		&& this.houseNumber.equals(object.getHouseNumber())
-		&& this.identificationNumber.equals(object.getIdentificationNumber())
-		&& this.name.equals(object.getName())
-		&& this.street.equals(object.getStreet())
-		&& this.town.equals(object.getTown())) {
-	    setId(object.getId());
-	    setUsage(object.getUsage());
-	    return true;
-	}
+//	final Person object = (Person) dataObject;
+//	if (this.country.equals(object.getCountry())
+//		&& this.dateOfBirth.equals(object.getDateOfBirth())
+//		&& this.firstName.equals(object.getFirstName())
+//		&& this.houseNumber.equals(object.getHouseNumber())
+//		&& this.identificationNumber.equals(object.getIdentificationNumber())
+//		&& this.name.equals(object.getName())
+//		&& this.street.equals(object.getStreet())
+//		&& this.town.equals(object.getTown())) {
+//	    setId(object.getId());
+//	    setUsage(object.getUsage());
+//	    return true;
+//	}
 	return false;
     }
 
     /**
-     * Returns the country.
-     * 
-     * @return the country
-     */
-    @Override
-    public Country getCountry() {
-	return country;
-    }
+	 * @return the identification_number
+	 */
+	public String getIdentificationNumber() {
+		return identification_number;
+	}
 
-    /**
-     * Returns the dateOfBirth.
-     * 
-     * @return the dateOfBirth
-     */
-    @Override
-    public Date getDateOfBirth() {
-	return dateOfBirth;
-    }
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * Returns the firstName.
-     * 
-     * @return the firstName
-     */
-    @Override
-    public String getFirstName() {
-	return firstName;
-    }
+	/**
+	 * @return the first_name
+	 */
+	public String getFirstName() {
+		return first_name;
+	}
 
-    /**
-     * Returns the houseNumber.
-     * 
-     * @return the houseNumber
-     */
-    @Override
-    public String getHouseNumber() {
-	return houseNumber;
-    }
+	/**
+	 * @return the date_of_birth
+	 */
+	public Date getDateOfBirth() {
+		return date_of_birth;
+	}
 
-    /**
-     * Returns the identificationNumber.
-     * 
-     * @return the identificationNumber
-     */
-    @Override
-    public String getIdentificationNumber() {
-	return identificationNumber;
-    }
+	/**
+	 * @return the address
+	 */
+	public Address getAddress() {
+		return address;
+	}
 
-    /**
-     * Returns the name.
-     * 
-     * @return the name
-     */
-    @Override
-    public String getName() {
-	return name;
-    }
+	/**
+	 * @return the town
+	 */
+	public Town getTown() {
+		return town;
+	}
 
-    /**
-     * Returns the street.
-     * 
-     * @return the street
-     */
-    @Override
-    public String getStreet() {
-	return street;
-    }
+	/**
+	 * @return the country
+	 */
+	public Country getCountry() {
+		return country;
+	}
 
-    /**
+	/**
      * {@inheritDoc}.
      * 
      * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#getTableName()
@@ -182,29 +159,11 @@ public class Person extends BaseDataObject implements PersonInterface {
 	return "person";
     }
 
-    /**
-     * Returns the town.
-     * 
-     * @return the town
-     */
-    @Override
-    public Town getTown() {
-	return town;
-    }
-
-    private final Country country;
-
-    private final Date dateOfBirth;
-
-    private final String firstName;
-
-    private final String houseNumber;
-
-    private final String identificationNumber;
-
+    private final String identification_number;
     private final String name;
-
-    private final String street;
-
+    private final String first_name;
+    private final Date date_of_birth;
+    private final Address address;
     private final Town town;
+    private final Country country;
 }

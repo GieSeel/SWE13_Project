@@ -224,7 +224,7 @@ public class SearchPanel extends JPanel {
 
 	// Add GUI elements
 	final JButton butClear = new JButton("Clear");
-	final JButton butSave = new JButton("Save");
+	final JButton butSave = new JButton("New");
 
 	butClear.addActionListener(new ActionListener() {
 	    @Override
@@ -277,11 +277,11 @@ public class SearchPanel extends JPanel {
 	    }
 	});
 	panLeftFoot.add(combo);
-	panLeftFoot.add(new JLabel("Filter:"));
-	final JTextField textFilter = new JTextField();
-
-	textFilter.setPreferredSize(new Dimension(screenWidth / 8, defaultHeight));
-	panLeftFoot.add(textFilter);
+//	panLeftFoot.add(new JLabel("Filter:"));
+//	final JTextField textFilter = new JTextField();
+//
+//	textFilter.setPreferredSize(new Dimension(screenWidth / 8, defaultHeight));
+//	panLeftFoot.add(textFilter);
 
 	final JPanel panBut = new JPanel(new FlowLayout(FlowLayout.TRAILING));
 	panBut.add(butClear);

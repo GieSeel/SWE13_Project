@@ -2,6 +2,7 @@ package de.dhbw.swe.camping_site_mgt.person_mgt;
 
 import java.util.Date;
 
+import de.dhbw.swe.camping_site_mgt.common.Address;
 import de.dhbw.swe.camping_site_mgt.common.Country;
 import de.dhbw.swe.camping_site_mgt.common.Town;
 
@@ -28,13 +29,6 @@ public interface PersonInterface {
     public String getFirstName();
 
     /**
-     * Returns the houseNumber.
-     * 
-     * @return the houseNumber
-     */
-    public String getHouseNumber();
-
-    /**
      * Returns the identificationNumber.
      * 
      * @return the identificationNumber
@@ -49,16 +43,16 @@ public interface PersonInterface {
     public String getName();
 
     /**
-     * Returns the street.
-     * 
-     * @return the street
-     */
-    public String getStreet();
-
-    /**
      * Returns the town.
      * 
      * @return the town
      */
     public Town getTown();
+
+    /**
+     * Returns the address.
+     * 
+     * @return the address
+     */
+    public Address getAddress();
 }

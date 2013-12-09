@@ -1,8 +1,11 @@
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
 import java.util.Date;
+import java.util.Vector;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObject;
+import de.dhbw.swe.camping_site_mgt.common.Chipcard;
+import de.dhbw.swe.camping_site_mgt.common.Duration;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 import de.dhbw.swe.camping_site_mgt.person_mgt.Guest;
 
@@ -13,58 +16,42 @@ public class Booking extends BaseDataObject {
      * 
      */
     public Booking() {
-	this(new Bill(), null, null, null, null, null, null, new Guest(), null);
+    	this(new Guest(), null, null);
     }
 
     /**
      * Constructor.
      * 
-     * @param bill
-     * @param chipCards
-     * @param equipments
-     * @param extraBookings
-     * @param fellowGuests
+     * @param guest
      * @param from
-     * @param pitchBookings
-     * @param responsibleGuest
      * @param until
      */
-    public Booking(final Bill bill, final int[] chipCards, final int[] equipments,
-	    final int[] extraBookings, final int[] fellowGuests, final Date from,
-	    final int[] pitchBookings, final Guest responsibleGuest,
-	    final Date until) {
-	this(0, bill, chipCards, equipments, extraBookings, fellowGuests, from,
-		pitchBookings, responsibleGuest, until);
+    public Booking(Guest guest, Date from, Date until) {
+    	this(0, guest, new Duration(from, until), null, null, null, null, null, null);
     }
 
     /**
      * Constructor.
      * 
-     * @param id
-     * @param bill
-     * @param chipCards
-     * @param equipments
-     * @param extraBookings
-     * @param fellowGuests
-     * @param from
-     * @param pitchBookings
-     * @param responsibleGuest
-     * @param until
+ 	 * @param Guest guest;
+	 * @param Duration duration;
+	 * @param Vector<PitchBooking> pitchBookings;
+	 * @param Vector<Guest> fellowGuests;
+	 * @param Vector<Equipment> equipments;
+	 * @param Vector<ExtraBooking> extraBookings;
+	 * @param Vector<Chipcard> chipcards;
+	 * @param Vector<BillItem> bill;
      */
-    public Booking(final int id, final Bill bill, final int[] chipCards,
-	    final int[] equipments, final int[] extraBookings,
-	    final int[] fellowGuests, final Date from, final int[] pitchBookings,
-	    final Guest responsibleGuest, final Date until) {
-	super(id);
-	this.bill = bill;
-	this.chipCards = chipCards;
-	this.equipments = equipments;
-	this.extraBookings = extraBookings;
-	this.fellowGuests = fellowGuests;
-	this.from = from;
-	this.pitchBookings = pitchBookings;
-	this.responsibleGuest = responsibleGuest;
-	this.until = until;
+    public Booking(final int id, Guest guest, Duration duration, Vector<PitchBooking> pitchBookings, Vector<Guest> fellowGuests, Vector<Equipment> equipments, Vector<ExtraBooking> extraBookings, Vector<Chipcard> chipcards, Vector<BillItem> bill) {
+		super(id);
+		this.guest = guest;
+		this.duration = duration;
+		this.pitchBookings = pitchBookings;
+		this.fellowGuests = fellowGuests;
+		this.equipments = equipments;
+		this.extraBookings = extraBookings;
+		this.chipcards = chipcards;
+		this.bill = bill;
     }
 
     /**
@@ -74,94 +61,78 @@ public class Booking extends BaseDataObject {
      */
     @Override
     public boolean equals(final DataObject dataObject) {
-	final Booking object = (Booking) dataObject;
-	if (this.responsibleGuest.equals(object.getResponsibleGuest())
-		&& this.fellowGuests.equals(object.getFellowGuests())
-		&& this.from.equals(object.getFrom())
-		&& this.until.equals(object.getUntil())
-		&& this.equipments.equals(object.getEquipments())
-		&& this.pitchBookings.equals(object.getPitchBookings())
-		&& this.extraBookings.equals(object.getExtraBookings())
-		&& this.bill.equals(object.getBill())
-		&& this.chipCards.equals(object.getChipCards())) {
-	    return true;
-	}
+    	// TODO
+//	final Booking object = (Booking) dataObject;
+//	if (this.responsibleGuest.equals(object.getResponsibleGuest())
+//		&& this.fellowGuests.equals(object.getFellowGuests())
+//		&& this.duration.equals(object.getDuration())
+//		&& this.equipments.equals(object.getEquipments())
+//		&& this.pitchBookings.equals(object.getPitchBookings())
+//		&& this.extraBookings.equals(object.getExtraBookings())
+//		&& this.bill.equals(object.getBill())
+//		&& this.chipcards.equals(object.getChipCards())) {
+//	    return true;
+//	}
 	return false;
     }
 
     /**
-     * Returns the bill.
-     * 
-     * @return the bill
-     */
-    public Bill getBill() {
-	return bill;
-    }
+	 * @return the guest
+	 */
+	public Guest getGuest() {
+		return guest;
+	}
 
-    /**
-     * Returns the chipCards.
-     * 
-     * @return the chipCards
-     */
-    public int[] getChipCards() {
-	return chipCards;
-    }
+	/**
+	 * @return the duration
+	 */
+	public Duration getDuration() {
+		return duration;
+	}
 
-    /**
-     * Returns the equipments.
-     * 
-     * @return the equipments
-     */
-    public int[] getEquipments() {
-	return equipments;
-    }
+	/**
+	 * @return the pitchBookings
+	 */
+	public Vector<PitchBooking> getPitchBookings() {
+		return pitchBookings;
+	}
 
-    /**
-     * Returns the extraBookings.
-     * 
-     * @return the extraBookings
-     */
-    public int[] getExtraBookings() {
-	return extraBookings;
-    }
+	/**
+	 * @return the fellowGuests
+	 */
+	public Vector<Guest> getFellowGuests() {
+		return fellowGuests;
+	}
 
-    /**
-     * Returns the fellowGuests.
-     * 
-     * @return the fellowGuests
-     */
-    public int[] getFellowGuests() {
-	return fellowGuests;
-    }
+	/**
+	 * @return the equipments
+	 */
+	public Vector<Equipment> getEquipments() {
+		return equipments;
+	}
 
-    /**
-     * Returns the from.
-     * 
-     * @return the from
-     */
-    public Date getFrom() {
-	return from;
-    }
+	/**
+	 * @return the extraBookings
+	 */
+	public Vector<ExtraBooking> getExtraBookings() {
+		return extraBookings;
+	}
 
-    /**
-     * Returns the pitchBookings.
-     * 
-     * @return the pitchBookings
-     */
-    public int[] getPitchBookings() {
-	return pitchBookings;
-    }
+	/**
+	 * @return the chipcards
+	 */
+	public Vector<Chipcard> getChipcards() {
+		return chipcards;
+	}
 
-    /**
-     * Returns the responsibleGuest.
-     * 
-     * @return the responsibleGuest
-     */
-    public Guest getResponsibleGuest() {
-	return responsibleGuest;
-    }
+	/**
+	 * @return the bill
+	 */
+	public Vector<BillItem> getBill() {
+		return bill;
+	}
 
-    /**
+	/**
      * {@inheritDoc}.
      * 
      * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#getTableName()
@@ -170,23 +141,44 @@ public class Booking extends BaseDataObject {
     public String getTableName() {
 	return "booking";
     }
+    
+    public Boolean alreadyExists(PitchBooking pitchBooking) { 
+    	return false;
+    	}
+    	public Boolean alreadyExists(Guest guest) { 
+    	return false;
+    	}
+    	public Boolean alreadyExists(Equipment equipment) { 
+    	return false;
+    	}
+    	public void addPitchBooking(PitchBooking pitchBooking) { 
+    	}
+    	public void addFellowGuest(Guest guest) { 
+    	}
+    	public void addEquipment(Equipment equipment) { 
+    	}
+    	public void addExtraBooking(ExtraBooking extraBooking) { 
+    	}
+    	public void addChipcard(Chipcard chipcard) { 
+    	}
+    	public Vector<BillItem> writeBill() { 
+    		return null;
+    	}
+    	public void removePitchBooking(PitchBooking pitchBooking) { 
+    	}
+    	public void removeFellowGuest(Guest guest) { 
+    	}
+    	public void removeEquipment(Equipment equipment) { 
+    	}
+    	public void removeExtraBooking(ExtraBooking extraBooking) {
+    	}
 
-    /**
-     * Returns the until.
-     * 
-     * @return the until
-     */
-    public Date getUntil() {
-	return until;
-    }
-
-    private final Bill bill;
-    private final int[] chipCards;
-    private final int[] equipments;
-    private final int[] extraBookings;
-    private final int[] fellowGuests;
-    private final Date from;
-    private final int[] pitchBookings;
-    private final Guest responsibleGuest;
-    private final Date until;
+    private Guest guest;
+    private Duration duration;
+    private Vector<PitchBooking> pitchBookings;
+    private Vector<Guest> fellowGuests;
+    private Vector<Equipment> equipments;
+    private Vector<ExtraBooking> extraBookings;
+    private Vector<Chipcard> chipcards;
+    private Vector<BillItem> bill;
 }

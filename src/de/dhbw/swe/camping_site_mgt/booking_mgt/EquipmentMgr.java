@@ -30,6 +30,8 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
  * @author GieSeel
  * @version 1.0
  */
+@Deprecated
+// Wird im BookingMgr gemacht
 public class EquipmentMgr extends BaseDataObjectMgr {
 
     /**

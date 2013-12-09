@@ -19,15 +19,15 @@ public class Site extends BaseDataObject {
      * @param id
      * @param description
      * @param labeling
-     * @param openingHours
+     * @param opening_hours
      * @param type
      */
     public Site(final int id, final String description, final String labeling,
-	    final String openingHours, final Site_Type type) {
+	    final String opening_hours, final Site_Type type) {
 	super(id);
 	this.description = description;
 	this.labeling = labeling;
-	this.openingHours = openingHours;
+	this.opening_hours = opening_hours;
 	this.type = type;
     }
 
@@ -36,12 +36,12 @@ public class Site extends BaseDataObject {
      * 
      * @param description
      * @param labeling
-     * @param openingHours
+     * @param opening_hours
      * @param type
      */
     public Site(final String description, final String labeling,
-	    final String openingHours, final Site_Type type) {
-	this(0, description, labeling, openingHours, type);
+	    final String opening_hours, final Site_Type type) {
+	this(0, description, labeling, opening_hours, type);
     }
 
     /**
@@ -54,7 +54,7 @@ public class Site extends BaseDataObject {
 	final Site object = (Site) dataObject;
 	if (this.description.equals(object.getDescription())
 		&& this.labeling.equals(object.getLabeling())
-		&& this.openingHours.equals(object.getOpeningHours())
+		&& this.opening_hours.equals(object.getOpeningHours())
 		&& this.type.equals(object.getType())) {
 	    return true;
 	}
@@ -85,7 +85,7 @@ public class Site extends BaseDataObject {
      * @return the openingHours
      */
     public String getOpeningHours() {
-	return openingHours;
+	return opening_hours;
     }
 
     /**
@@ -109,6 +109,6 @@ public class Site extends BaseDataObject {
 
     private final String description;
     private final String labeling;
-    private final String openingHours;
+    private final String opening_hours;
     private final Site_Type type;
 }

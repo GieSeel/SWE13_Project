@@ -1,5 +1,5 @@
 /**
- * Comments for file PitchBookingMgr.java
+ * Comments for file ChipCardMgr.java
  *
  * @author   GieSeel
  *
@@ -16,27 +16,20 @@
  * copied or distributed with electronic tools or by paper copy or 
  * any other process without written authorization of GieSeel.
  */
-package de.dhbw.swe.camping_site_mgt.booking_mgt;
+package de.dhbw.swe.camping_site_mgt.common;
 
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.*;
 
-import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
-import de.dhbw.swe.camping_site_mgt.common.Duration;
-import de.dhbw.swe.camping_site_mgt.common.DurationMgr;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.AccessableDatabase;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
+import de.dhbw.swe.camping_site_mgt.common.database_mgt.*;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
-import de.dhbw.swe.camping_site_mgt.place_mgt.Pitch;
-import de.dhbw.swe.camping_site_mgt.place_mgt.PitchMgr;
 
 /**
- * The manager class for the {@link PitchBooking} objects.
+ * The manager class for the {@link Chipcard} objects.
  * 
  * @author GieSeel
  * @version 1.0
  */
-public class PitchBookingMgr extends BaseDataObjectMgr {
+public class ChipcardMgr extends BaseDataObjectMgr {
 
     /**
      * Constructor.
@@ -44,21 +37,20 @@ public class PitchBookingMgr extends BaseDataObjectMgr {
      * @param db
      *            the {@link AccessableDatabase}
      */
-    public PitchBookingMgr(final AccessableDatabase db, PitchMgr thePitchMgr, DurationMgr theDurationMgr) {
+    public ChipcardMgr(final AccessableDatabase db, DurationMgr theDurationMgr) {
 	super(db);
-	pitchMgr = thePitchMgr;
 	durationMgr = theDurationMgr;
 	load();
     }
 
     @Override
     public String getTableName() {
-	return new PitchBooking().getTableName();
+	return new Chipcard().getTableName();
     }
 
     @Override
     protected boolean evenUpdateInUse() {
-	return false;
+	return true;
     }
 
     @Override
@@ -68,10 +60,9 @@ public class PitchBookingMgr extends BaseDataObjectMgr {
 
     @Override
     protected Vector<BaseDataObjectMgr> getSubMgr() {
-	final Vector<BaseDataObjectMgr> subMgr = new Vector<>();
-	subMgr.add(pitchMgr);
-	subMgr.add(durationMgr);
-	return subMgr;
+    	final Vector<BaseDataObjectMgr> subMgr = new Vector<>();
+    	subMgr.add(durationMgr);
+    	return subMgr;
     }
 
     @Override
@@ -80,14 +71,10 @@ public class PitchBookingMgr extends BaseDataObjectMgr {
 	if (map.containsKey("id")) {
 	    id = (int) map.get("id");
 	}
-//	final boolean electricity = (boolean) map.get("electricity"); // TODO
-	final Pitch pitch = (Pitch) map.get("pitch");
 	final Duration duration = (Duration) map.get("duration");
 
-	return new PitchBooking(id, pitch, duration);
+	return new Chipcard(id, duration);
     }
-
-    /** The {@link PitchMgr}. */
-    private PitchMgr pitchMgr;
+    
     private DurationMgr durationMgr;
 }

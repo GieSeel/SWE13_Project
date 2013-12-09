@@ -3,6 +3,7 @@ package de.dhbw.swe.camping_site_mgt.common.database_mgt;
 import java.util.*;
 
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.*;
+import de.dhbw.swe.camping_site_mgt.common.neu.NEU_DatabaseConnector;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.statusbar.StatusBarController;
 
 /**
@@ -18,7 +19,8 @@ public class DatabasController implements AccessableDatabase {
      */
     public DatabasController() {
 	ObjectFieldAccess.setDb(this);
-	dbConnector = new DatabaseConnector();
+//	dbConnector = new DatabaseConnector();
+	dbConnector = new NEU_DatabaseConnector();
     }
 
     /**
@@ -85,5 +87,6 @@ public class DatabasController implements AccessableDatabase {
     private boolean connectedWithDb = false;
 
     /** The {@link DatabaseConnector}. */
-    private final DatabaseConnector dbConnector;
+//    private final DatabaseConnector dbConnector;
+    private final NEU_DatabaseConnector dbConnector;
 }

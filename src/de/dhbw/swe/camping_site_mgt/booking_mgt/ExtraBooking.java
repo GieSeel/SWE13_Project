@@ -10,14 +10,15 @@ public class ExtraBooking extends BaseDataObject {
     }
 
     public ExtraBooking(final int id, final String labeling, final String name,
-	    final Site site) {
+	    final Site site){//, Duration duration) {
 	super(id);
 	this.labeling = labeling;
 	this.name = name;
 	this.site = site;
+//	this.duration = duration;
     }
 
-    public ExtraBooking(final String labeling, final String name, final Site site) {
+    public ExtraBooking(final String labeling, final String name, final Site site){//, Duration duration) {
 	this(0, labeling, name, site);
     }
 
@@ -63,18 +64,27 @@ public class ExtraBooking extends BaseDataObject {
     public Site getSite() {
 	return site;
     }
+    
 
-    /**
+//    /**
+//	 * @return the duration
+//	 */
+//	public Duration getDuration() {
+//		return duration;
+//	}
+
+	/**
      * {@inheritDoc}.
      * 
      * @see de.dhbw.swe.camping_site_mgt.common.BaseDataObject#getTableName()
      */
     @Override
     public String getTableName() {
-	return "extrabooking";
+	return "extra_booking";
     }
 
     private final String labeling;
     private final String name;
     private final Site site;
+//    private Duration duration;
 }

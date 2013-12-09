@@ -23,9 +23,9 @@ public interface PitchInterface {
     String getCharacteristics();
 
     /**
-     * @return the delivery point {@link Site}.
+     * @return the delivery point {@link Deliverypoint}.
      */
-    Site getDeliveryPoint();
+//    Deliverypoint getDeliverypoint();
 
     /**
      * @return the height of the Pitch in <code>dm</code>.
@@ -75,7 +75,7 @@ public interface PitchInterface {
      * 
      * @return the usage
      */
-    Usage getUsage();
+//    Usage getUsage();
 
     /**
      * @return the width of the {@link Pitch}.

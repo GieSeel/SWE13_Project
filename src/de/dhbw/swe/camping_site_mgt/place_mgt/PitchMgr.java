@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObjectMgr;
+import de.dhbw.swe.camping_site_mgt.common.IntArrayParser;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.AccessableDatabase;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
@@ -16,20 +17,20 @@ import de.dhbw.swe.camping_site_mgt.common.logging.CampingLogger;
  */
 public class PitchMgr extends BaseDataObjectMgr {
 
-    /** The {@link SiteMgr}. */
-    private static SiteMgr siteMgr;
+    /** The {@link DeliverypointMgr}. */
+    private DeliverypointMgr deliverypointMgr;
 
     /**
      * Constructor.
      * 
      * @param db
      *            the {@link AccessableDatabase}
-     * @param theSiteMgr
-     *            the {@link SiteMgr}
+     * @param theDeliverypointMgr
+     *            the {@link DeliverypointMgr}
      */
-    public PitchMgr(final AccessableDatabase db, final SiteMgr theSiteMgr) {
+    public PitchMgr(final AccessableDatabase db, final DeliverypointMgr theDeliverypointMgr) {
 	super(db);
-	siteMgr = theSiteMgr;
+	deliverypointMgr = theDeliverypointMgr;
 	load();
     }
 
@@ -51,7 +52,7 @@ public class PitchMgr extends BaseDataObjectMgr {
     @Override
     protected Vector<BaseDataObjectMgr> getSubMgr() {
 	final Vector<BaseDataObjectMgr> subMgr = new Vector<>();
-	subMgr.add(siteMgr);
+	subMgr.add(deliverypointMgr);
 	return subMgr;
     }
 
@@ -65,12 +66,12 @@ public class PitchMgr extends BaseDataObjectMgr {
 	final String characteristics = (String) map.get("characteristics");
 	final int height = (int) map.get("height");
 
-	final Pitch_NatureOfSoil natureOfSoil;
-	final int natureOfSoilOrdinal = (int) map.get("natureOfSoil");
-	natureOfSoil = Pitch_NatureOfSoil.values()[natureOfSoilOrdinal];
+	final Pitch_NatureOfSoil nature_of_soil;
+	final int nature_of_soilOrdinal = (int) map.get("nature_of_soil");
+	nature_of_soil = Pitch_NatureOfSoil.values()[nature_of_soilOrdinal];
 
-	final int[] xCoords = (int[]) map.get("xCoords");
-	final int[] yCoords = (int[]) map.get("yCoords");
+	final int[] x_coords = IntArrayParser.parseArray((String) map.get("x_coords"));
+	final int[] y_coords = IntArrayParser.parseArray((String) map.get("y_coords"));
 
 	final Pitch_Type type;
 	final int typeOrdinal = (int) map.get("type");
@@ -78,9 +79,9 @@ public class PitchMgr extends BaseDataObjectMgr {
 
 	final int width = (int) map.get("width");
 
-	final Site deliveryPoint = (Site) map.get("site");
+	final Deliverypoint deliveryPoint = (Deliverypoint) map.get("deliverypoint");
 
 	return new Pitch(id, type, area, deliveryPoint, characteristics,
-		natureOfSoil, width, height, xCoords, yCoords);
+		nature_of_soil, width, height, x_coords, y_coords);
     }
 }

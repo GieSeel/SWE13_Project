@@ -40,6 +40,7 @@ public interface MapInformationInterface extends Displayable {
      *            the delivery {@link Site}
      */
     void setPitchDeliveryPoint(Site deliveryPoint);
+//    void setPitchDeliveryPoint(Deliverypoint deliveryPoint);
 
     /**
      * Set the {@link Pitch} expanse information on screen.
@@ -70,18 +71,18 @@ public interface MapInformationInterface extends Displayable {
     /**
      * Set the {@link Pitch} nature of soil information on screen.
      * 
-     * @param natureOfSoil
+     * @param string
      *            the {@link Pitch_NatureOfSoil}
      */
-    void setPitchSoil(Pitch_NatureOfSoil natureOfSoil);
+    void setPitchSoil(Pitch_NatureOfSoil string);
 
     /**
      * Set the {@link Pitch} type information on screen.
      * 
-     * @param type
+     * @param string
      *            the {@link Pitch_Type}
      */
-    void setPitchType(Pitch_Type type);
+    void setPitchType(Pitch_Type string);
 
     /**
      * Unregisters a {@link MapInformationListener}.

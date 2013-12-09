@@ -5,7 +5,8 @@ import java.util.HashMap;
 import javax.swing.JComponent;
 
 import de.dhbw.swe.camping_site_mgt.common.Delegate;
-import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
+import de.dhbw.swe.camping_site_mgt.common.neu.NEU_DatabaseConnector;
+import de.dhbw.swe.camping_site_mgt.common.neu.NEU_Pitch;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.Displayable;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.area.Area;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map.view.Map;
@@ -17,10 +18,17 @@ public class MapController implements Displayable {
     public MapController(final String mapPath,
 	    final HashMap<String, Area> theAreas, final PitchMgr thePitchMgr) {
 	pitchMgr = thePitchMgr;
+	
+	
+	NEU_DatabaseConnector NEU_dbConnector = NEU_DatabaseConnector.getInstance();
 
+//	final HashMap<Integer, PitchInterface> pitches = new HashMap<>();
+//	for (final DataObject object : thePitchMgr.getAllObjects().values()) {
+//	    pitches.put(object.getId(), (PitchInterface) object);
+//	}
 	final HashMap<Integer, PitchInterface> pitches = new HashMap<>();
-	for (final DataObject object : thePitchMgr.getAllObjects().values()) {
-	    pitches.put(object.getId(), (PitchInterface) object);
+	for (NEU_Pitch object : NEU_dbConnector.getPitches()) {
+		pitches.put(object.getId(), (PitchInterface) object);
 	}
 
 	calculateAreaPitchCounts(theAreas, pitches);

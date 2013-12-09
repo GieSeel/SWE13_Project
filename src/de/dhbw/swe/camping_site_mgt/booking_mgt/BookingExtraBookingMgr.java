@@ -33,11 +33,11 @@ import de.dhbw.swe.camping_site_mgt.place_mgt.*;
  * @author GieSeel
  * @version 1.0
  */
-public class ExtraBookingMgr extends BaseDataObjectMgr {
+public class BookingExtraBookingMgr extends BaseDataObjectMgr {
 
     /** The {@link SiteMgr}. */
-    private SiteMgr siteMgr;
-//    private DurationMgr durationMgr;
+    private ExtraBookingMgr extraBookingMgr;
+    private DurationMgr durationMgr;
 
     /**
      * Constructor.
@@ -47,10 +47,10 @@ public class ExtraBookingMgr extends BaseDataObjectMgr {
      * @param theSiteMgr
      *            the {@link SiteMgr}
      */
-    public ExtraBookingMgr(final AccessableDatabase db, final SiteMgr theSiteMgr) {//, DurationMgr theDurationMgr) {
+    public BookingExtraBookingMgr(final AccessableDatabase db, final ExtraBookingMgr theExtraBookingMgr, DurationMgr theDurationMgr) {
 	super(db);
-	siteMgr = theSiteMgr;
-//	durationMgr = theDurationMgr;
+	extraBookingMgr = theExtraBookingMgr;
+	durationMgr = theDurationMgr;
 	load();
     }
 
@@ -61,7 +61,7 @@ public class ExtraBookingMgr extends BaseDataObjectMgr {
      */
     @Override
     public String getTableName() {
-	return new ExtraBooking().getTableName();
+	return new BookingExtraBooking().getTableName();
     }
 
     /**
@@ -92,8 +92,8 @@ public class ExtraBookingMgr extends BaseDataObjectMgr {
     @Override
     protected Vector<BaseDataObjectMgr> getSubMgr() {
 	final Vector<BaseDataObjectMgr> subMgr = new Vector<>();
-	subMgr.add(siteMgr);
-//	subMgr.add(durationMgr);
+	subMgr.add(extraBookingMgr);
+	subMgr.add(durationMgr);
 	return subMgr;
     }
 
@@ -108,11 +108,9 @@ public class ExtraBookingMgr extends BaseDataObjectMgr {
 	if (map.containsKey("id")) {
 	    id = (int) map.get("id");
 	}
-	final String labeling = (String) map.get("labeling");
-	final String name = (String) map.get("name");
-	final Site site = (Site) map.get("site");
-//	final Duration duration = (Duration) map.get("duration");
+	final ExtraBooking extraBooking = (ExtraBooking) map.get("extraBooking");
+	final Duration duration = (Duration) map.get("duration");
 
-	return new ExtraBooking(id, labeling, name, site);
+	return new BookingExtraBooking(id, extraBooking, duration);
     }
 }

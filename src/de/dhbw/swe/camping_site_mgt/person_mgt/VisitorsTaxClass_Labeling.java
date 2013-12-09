@@ -3,6 +3,7 @@ package de.dhbw.swe.camping_site_mgt.person_mgt;
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageMgr;
 import de.dhbw.swe.camping_site_mgt.common.language_mgt.LanguageProperties;
 
+@Deprecated
 public enum VisitorsTaxClass_Labeling {
     BUSYSEASON(LanguageProperties.LABELING_VISITORSTAXCLASSS_BUSYSEASON), BUSYSEASON_REDUCED(
 	    LanguageProperties.LABELING_VISITORSTAXCLASSS_BUSYSEASONREDUCED), LOWSEASON(

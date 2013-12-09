@@ -6,7 +6,8 @@ import javax.swing.JComponent;
 
 import de.dhbw.swe.camping_site_mgt.gui_mgt.Displayable;
 import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.area.AreaInterface;
-import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map_info.view.*;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map_info.view.MapInformationListener;
+import de.dhbw.swe.camping_site_mgt.gui_mgt.map_mgt.map_info.view.MapInformationPanel;
 import de.dhbw.swe.camping_site_mgt.place_mgt.PitchInterface;
 
 public class MapInformationController implements Displayable {
@@ -42,7 +43,7 @@ public class MapInformationController implements Displayable {
 	}
 	view.setPitchName(pitch.getName());
 	view.setPitchType(pitch.getType());
-	view.setPitchDeliveryPoint(pitch.getDeliveryPoint());
+//	view.setPitchDeliveryPoint(pitch.getDeliverypoint());
 	view.setPitchExpanse(pitch.getWidth(), pitch.getHeight());
 	final Rectangle bounds = pitch.getShape().getBounds();
 	view.setPitchSoil(pitch.getNatureOfSoil());

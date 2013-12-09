@@ -1,22 +1,26 @@
 package de.dhbw.swe.camping_site_mgt.booking_mgt;
 
+
 import de.dhbw.swe.camping_site_mgt.common.BaseDataObject;
+import de.dhbw.swe.camping_site_mgt.common.Duration;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 import de.dhbw.swe.camping_site_mgt.place_mgt.Pitch;
 
 public class PitchBooking extends BaseDataObject {
-    public PitchBooking() {
-	this(false, new Pitch());
+    
+	public PitchBooking() {
+	this(new Pitch(), new Duration());
+    }
+    
+    public PitchBooking(final Pitch pitch, final Duration duration) {
+	this(0, pitch, duration);
     }
 
-    public PitchBooking(final boolean electricity, final Pitch pitch) {
-	this(0, electricity, pitch);
-    }
-
-    public PitchBooking(final int id, final boolean electricity, final Pitch pitch) {
+    public PitchBooking(final int id, final Pitch pitch, final Duration duration) {
 	super(id);
-	this.electricity = electricity;
 	this.pitch = pitch;
+	this.duration = duration;
+	this.electricity = false; // TODO electricity verwenden
     }
 
     /**
@@ -50,7 +54,7 @@ public class PitchBooking extends BaseDataObject {
      */
     @Override
     public String getTableName() {
-	return "pitchbooking";
+	return "booking_pitch_booking";
     }
 
     /**
@@ -62,6 +66,15 @@ public class PitchBooking extends BaseDataObject {
 	return electricity;
     }
 
+    public Duration getDuration() {
+		return duration;
+	}
+
+	public void setDuration(Duration duration) {
+		this.duration = duration;
+	}
+
     private final boolean electricity;
-    private final Pitch pitch;
+    private Duration duration;
+	private final Pitch pitch;
 }

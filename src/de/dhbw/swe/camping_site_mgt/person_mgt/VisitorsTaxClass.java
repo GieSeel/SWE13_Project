@@ -4,6 +4,7 @@ import de.dhbw.swe.camping_site_mgt.common.BaseDataObject;
 import de.dhbw.swe.camping_site_mgt.common.Euro;
 import de.dhbw.swe.camping_site_mgt.common.database_mgt.DataObject;
 
+@Deprecated
 public class VisitorsTaxClass extends BaseDataObject {
 
     /**
