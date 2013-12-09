@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 09. Dez 2013 um 09:05
+-- Erstellungszeit: 09. Dez 2013 um 09:28
 -- Server Version: 5.6.11
 -- PHP-Version: 5.5.3
 
@@ -447,6 +447,7 @@ CREATE TABLE IF NOT EXISTS `pitch` (
   `characteristics` varchar(255) NOT NULL,
   `x_coords` text NOT NULL,
   `y_coords` text NOT NULL,
+  `site_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -454,8 +455,10 @@ CREATE TABLE IF NOT EXISTS `pitch` (
 -- Daten für Tabelle `pitch`
 --
 
-INSERT INTO `pitch` (`id`, `area`, `type`, `height`, `width`, `nature_of_soil`, `characteristics`, `x_coords`, `y_coords`) VALUES
-(12, 'B', 0, 50, 50, 0, 'Platz mit Strom und Wasseranschluss', '15, 150, 20, 30', '30, 150, 15, 30');
+INSERT INTO `pitch` (`id`, `area`, `type`, `height`, `width`, `nature_of_soil`, `characteristics`, `x_coords`, `y_coords`, `site_id`) VALUES
+(1, 'A', 0, 100, 100, 0, 'In the west!\\nJust one direkt neighbour!', '[7, 21, 39, 24]', '[1354, 1336, 1351, 1369]', 278),
+(2, 'A', 1, 100, 100, 1, 'In the west!\\nJust two direkt neighbour!', '[23, 36, 53, 40]', '[1335, 1319, 1333, 1349]', 278),
+(12, 'B', 0, 50, 50, 0, 'Platz mit Strom und Wasseranschluss', '15, 150, 20, 30', '30, 150, 15, 30', 0);
 
 -- --------------------------------------------------------
 
