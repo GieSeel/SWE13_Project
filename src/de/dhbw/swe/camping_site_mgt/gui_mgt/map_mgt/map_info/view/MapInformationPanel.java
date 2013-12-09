@@ -32,7 +32,7 @@ public class MapInformationPanel implements MapInformationInterface {
 	initTANatureOfSoil();
 	initTACharacteristics();
 	initDeliveryPoint();
-
+	initButtons();
     }
 
     @Override
@@ -134,6 +134,17 @@ public class MapInformationPanel implements MapInformationInterface {
 	return null;
     }
 
+    private void initButtons() {
+	serviceBtn = new JButton(LM.get(LP.BTN_SERVICE));
+	view.add(serviceBtn);
+
+	addToBookingBtn = new JButton(LM.get(LP.BTN_ADD_TO_BOOKING));
+	view.add(addToBookingBtn);
+
+	bookBtn = new JButton(LM.get(LP.BTN_BOOK));
+	view.add(bookBtn);
+    }
+
     private void initComponentWidth() {
 	view.setPreferredSize(new Dimension(mapInfoComponentWidth,
 		(int) (Gui.screenSize.height * 0.8)));
@@ -203,10 +214,12 @@ public class MapInformationPanel implements MapInformationInterface {
 	view.add(LM.get(LP.PITCH) + ":", pitchNameTf);
     }
 
+    private JButton addToBookingBtn;
+
     private JTextField areaTf;
 
+    private JButton bookBtn;
     private JTextArea characteristicsTa;
-
     private final Color defaultBgColor = new Color(238, 238, 238);
     private final Delegate<MapInformationListener> delegate = new Delegate<>(
 	    MapInformationListener.class);
@@ -218,6 +231,7 @@ public class MapInformationPanel implements MapInformationInterface {
     private JTextField pitchNameTf;
     private JTextArea pitchSizeTa;
     private JTextArea pitchTypeTa;
+    private JButton serviceBtn;
     private ShapePanel shapePnl;
 
     /** The view. */
