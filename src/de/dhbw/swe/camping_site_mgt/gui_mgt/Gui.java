@@ -47,14 +47,20 @@ public class Gui extends JFrame {
     /** The screen size. */
     public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
+    private static Boolean fullscreen = true;
+
     /** The {@link LanguageMgr}. */
     private final static LanguageMgr LM = LanguageMgr.getInstance();
 
     /** The {@link CampingLogger}. */
     private static CampingLogger logger = CampingLogger.getLogger(Gui.class);
-
     /**   */
     private static final long serialVersionUID = 1L;
+
+    public static void setScreenSize(final int width, final int height) {
+	screenSize = new Dimension(width, height);
+	fullscreen = false;
+    }
 
     /**
      * Constructor.
@@ -138,9 +144,10 @@ public class Gui extends JFrame {
      * positioning and sizing of the frame according to the screen;
      */
     private void sizeFrame() {
-	setUndecorated(true);
-	setExtendedState(JFrame.MAXIMIZED_BOTH);
-	final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	if (fullscreen) {
+	    setUndecorated(true);
+	    setExtendedState(JFrame.MAXIMIZED_BOTH);
+	}
 	setBounds(0, 0, screenSize.width, screenSize.height);
     }
 
