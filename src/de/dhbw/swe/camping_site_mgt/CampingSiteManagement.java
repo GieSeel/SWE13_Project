@@ -20,7 +20,7 @@ public class CampingSiteManagement {
 	if (args != null && args.length > 0) {
 	    if (args != null && args[0].length() > 0) {
 		if (args[0].contains("?") || args[0].contains("help")) {
-		    System.out.println("use as args:\t<host name> <database name>(optional)");
+		    System.out.println("use as args:\t<host name> <database name> <width>x<height>");
 		    return;
 		}
 		HOST_NAME = args[0];
@@ -28,6 +28,14 @@ public class CampingSiteManagement {
 		if (args.length > 1 && args[1].length() > 0) {
 		    DATABASE_NAME = args[1];
 		    logger.info("Database name changed to:\t" + DATABASE_NAME);
+		    if (args.length > 2 && args[2].length() > 0) {
+			final String[] resolution = args[2].split("x");
+			final int width = Integer.parseInt(resolution[0]);
+			final int height = Integer.parseInt(resolution[1]);
+			Gui.setScreenSize(width, height);
+			logger.info("Screen resolution changed to:\t" + width
+				+ " x " + height);
+		    }
 		}
 	    }
 	}

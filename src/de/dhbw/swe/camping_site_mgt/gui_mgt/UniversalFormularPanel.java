@@ -67,6 +67,7 @@ public class UniversalFormularPanel extends JPanel {
 	gbc.gridx = 0;
 	gbc.anchor = GridBagConstraints.FIRST_LINE_START;
 	final JLabel titleLb = new JLabel(title);
+	titleLb.setToolTipText(title);
 	add(titleLb, gbc);
 
 	gbc.gridx = 1;

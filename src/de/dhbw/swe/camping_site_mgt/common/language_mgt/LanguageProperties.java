@@ -14,6 +14,9 @@ public interface LanguageProperties {
     String ARRANGEMENT_EMPLOYEEROLE_ADMINISTRATOR = "Administrator";
     String ARRANGEMENT_EMPLOYEEROLE_LABORATORYASSISTANT = "Laboratory Assistant";
     String ARRANGEMENT_EMPLOYEEROLE_RECEPTIONSTAFF = "Reception Staff";
+    String BTN_ADD_TO_BOOKING = "Add to booking";
+    String BTN_BOOK = "Book";
+    String BTN_SERVICE = "Service";
     String CLICK_TO_DESELECT = "click to deselect";
     /** The click to select property. */
     String CLICK_TO_SELECT = "click to select";
@@ -80,6 +83,8 @@ public interface LanguageProperties {
     String LABELING_BILLITEM_ICEBOX = "Icebox";
     String LABELING_BILLITEM_PARKINGPLACE = "Parkingplace";
     String LABELING_BILLITEM_TENTPITCH = "Tentpitch";
+    String LABELING_BILLITEM_VISITORSTAXCLASSS = "Visitorstaxclass";
+    String LABELING_BILLITEM_VISITORSTAXCLASSS_REDUCED = "Visitorstaxclass Reduced";
     String LABELING_EMPLOYEEROLE_CARETAKER = "Caretaker";
     String LABELING_EMPLOYEEROLE_CLEANER = "Cleaner";
     String LABELING_EMPLOYEEROLE_CONDUCTOR = "Conductor";
@@ -121,12 +126,10 @@ public interface LanguageProperties {
     String TYPE_SITE_DELIVERYPOINT = "Delivery Point";
     String TYPE_SITE_ELECTRICALPOWER = "Electrical Power";
     String TYPE_SITE_ENTRANCE = "Entrance";
+
     String TYPE_SITE_FIREPLACE = "Fireplace";
     String TYPE_SITE_OTHER = "Other";
     String TYPE_SITE_RECEPTION = "Reception";
-    String LABELING_BILLITEM_VISITORSTAXCLASSS = "Visitorstaxclass";
-    String LABELING_BILLITEM_VISITORSTAXCLASSS_REDUCED = "Visitorstaxclass Reduced";
-
     String TYPE_SITE_SALE = "Sale";
     String TYPE_SITE_SANITARYFACILLITIES = "Sanitary Facillities";
     String TYPE_SITE_SERVICE = "Service";
